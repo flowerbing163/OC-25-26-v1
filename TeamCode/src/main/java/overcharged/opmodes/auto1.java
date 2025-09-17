@@ -89,6 +89,7 @@ public class auto1 extends OpMode {
                     motif.add('P');
                     motif.add('G');
                 }
+                telemetry.addLine(String.valueOf(motif.get(0) + motif.get(1) + motif.get(2)));
         }
     }
 
