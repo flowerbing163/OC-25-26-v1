@@ -3,11 +3,8 @@
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <LynxModule name="Control Hub" port="173">
 
-            <goBILDA5202SeriesMotor name="driveLF" port="0" />
-            <goBILDA5202SeriesMotor name="driveLB" port="1" />
-            <goBILDA5202SeriesMotor name="driveRF" port="2" />
-            <goBILDA5202SeriesMotor name="driveRB" port="3" />
-            <goBILDAPinpoint name="pinpoint" port="0" bus="0" />
+            <goBILDA5202SeriesMotor name="turret" port="3" />
+
 
         </LynxModule>
     </LynxUsbDevice>

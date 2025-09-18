@@ -29,6 +29,7 @@ public class alignmentTest extends OpMode {
         robot = new RobotMecanum(this, false, false);
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
         limelight.pipelineSwitch(1);
+        limelight.start();
 
     }
 
