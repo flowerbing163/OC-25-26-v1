@@ -34,8 +34,13 @@ public class alignmentTest extends OpMode {
     }
 
     public void loop(){
-        float tx = (float) limelight.getLatestResult().getFiducialResults().get(1).getTargetXDegrees();
-        telemetry.addData("tx: ", tx);
+        try {
+            float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
+            telemetry.addData("tx: ", tx);
+        } catch(IndexOutOfBoundsException e1) {
+            telemetry.addLine("L");
+        }
+
 
     }
 }
