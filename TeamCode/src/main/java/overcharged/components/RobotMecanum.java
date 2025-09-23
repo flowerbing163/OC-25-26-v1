@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import overcharged.config.RobotConstants;
+import overcharged.opmodes.turretTuner;
 
 /**
  * Overcharged Team #12599
@@ -25,6 +26,8 @@ public class RobotMecanum {
     public OcMotor driveLeftBack;
     public OcMotor driveRightFront;
     public OcMotor driveRightBack;
+
+    public turret turret;
 
 
     public MecanumDrive drive;
@@ -101,6 +104,14 @@ public class RobotMecanum {
                 numberMissing++;
             }
             this.driveRightBack = driveRightBack;
+            try {
+                turret = new turret(hardwareMap);
+
+            } catch (Exception e) {
+                RobotLog.ee(RobotConstants.TAG_R, "missing: intake " + e.getMessage());
+                missing = missing + ", turret";
+                numberMissing++;
+            }
 
             this.drive = createDrive();
         }

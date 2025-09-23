@@ -5,15 +5,15 @@ import static overcharged.config.RobotConstants.TAG_SL;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
-import com.pedropathing.follower.Follower;
-import com.pedropathing.follower.FollowerConstants;
+//import com.pedropathing.follower.Follower;
+//import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.drivetrains.Mecanum;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.constants.DriveEncoderConstants;
 import com.pedropathing.ftc.localization.constants.PinpointConstants;
 import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
-import com.pedropathing.localization.Localizer;
-import com.pedropathing.paths.PathConstraints;
+//import com.pedropathing.localization.Localizer;
+//import com.pedropathing.paths.PathConstraints;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.limelightvision.LLResult;
@@ -48,7 +48,7 @@ public class auto1 extends OpMode {
     private int initState;
     public int motifID;
     List<Character> motif = new ArrayList<>();
-    private Follower follower;
+    //private Follower follower;
     long tempTime;
 
 

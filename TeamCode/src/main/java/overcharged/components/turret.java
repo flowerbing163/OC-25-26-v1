@@ -15,7 +15,7 @@ import overcharged.config.RobotConstants;
 public class turret {
     public final OcMotorEx turret;
 
-    public float kp = 0.115f;
+    public float kp = 0.04f;
     public double start;
 
     public static double p = 18;
@@ -38,27 +38,9 @@ public class turret {
     }
 
     public float getSquid() {
-        long now = System.nanoTime();
-        double dt = (now - lastTime) / 1e9;
-        lastTime = now;
-
         double error = target - getCurrentPosition();
-
-        integral += error * dt;
-        integral = Math.max(-500, Math.min(500, integral));
-        if (Math.abs(error) < 10) integral = 0;
-
-        double derivative = (error - lastError) / (dt > 0 ? dt : 1e-3);
-        derivative = 0.8 * derivativePrev + 0.2 * derivative;
-        derivativePrev = derivative;
-
-        lastError = error;
-
-        double feedforward = f;
-
-        double power = feedforward + (kp * Math.sqrt(Math.abs(error)) * Math.signum(error)) + (i * integral) + (d * derivative);
-
-        return (float) Math.max(-1, Math.min(1, power));
+        double power = kp * Math.sqrt(Math.abs(error)) * Math.signum(error);
+        return (float) power;
     }
 
     public double getCurrentPosition() {
@@ -91,6 +73,7 @@ public class turret {
         this.useSquID = useSquID;
         this.target = target;
         this.multiplier = multiplier;
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void update() {
@@ -119,4 +102,10 @@ public class turret {
 
     public void setPIDF(double p, double i, double d, double f) { this.p = p; this.i = i; this.d = d; this.f = f; }
 
+    public void moveEncoderTo(int pos, float power){
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turret.setTargetPosition(pos);
+        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turret.setPower(power);
+    }
 }
