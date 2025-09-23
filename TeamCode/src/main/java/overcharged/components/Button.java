@@ -5,53 +5,8 @@ package overcharged.components;
  */
 public class Button
 {
-    public final static Button DRONESHOOTER = new Button();
-    public final static Button LEFTPIXEL = new Button();
-    public final static Button SLIGHT_UP = new Button();
-    public final static Button SLIGHT_DOWN = new Button();
-    public final static Button RIGHTPIXEL = new Button();
     public final static Button INTAKE = new Button();
-    public final static Button INTAKEOUT = new Button();
-    public final static Button OUTTAKE = new Button();
-    public final static Button TRANSFER = new Button();
-    public final static Button DEPOTILT = new Button();
-    public final static Button DEPODOOR = new Button();
-    public final static Button INTAKEDOOR = new Button();
-    public final static Button INTAKETILT = new Button();
-    public final static Button NOPOWER = new Button();
-    public final static Button VSLIDES_STOP = new Button();
-    public final static Button CLAW = new Button();
-    public final static Button RELEASE = new Button();
-    public final static Button HANGRON = new Button();
-    public final static Button WALL = new Button();
-    public final static Button HIGH1 = new Button();
-    public final static Button HIGH2 = new Button();
-    public final static Button MED = new Button();
 
-    public final static Button BTN_SLOWM = new Button();
-    public final static Button CYCLE_MODE = new Button();
-    public final static Button BTN_ALIGNER = new Button();
-    public final static Button BTN_AUTOGRAB = new Button();
-    public final static Button BTN_BOTTOM = new Button();
-    public final static Button BTN_L1 = new Button();
-    public final static Button BTN_L2 = new Button();
-    public final static Button BTN_L3 = new Button();
-    public final static Button BTN_L4 = new Button();
-    public final static Button BTN_SLIDEON = new Button();
-    public final static Button BTN_SLIDEDOWN = new Button();
-    public final static Button BTN_TURRET = new Button();
-    public final static Button BTN_TEST = new Button();
-    public final static Button BTN_TEST1 = new Button();
-    public final static Button TURRET_RESET = new Button();
-    public final static Button SLIDE_RESET = new Button();
-    public final static Button LOWER = new Button();
-    public final static Button TURRET_LEFT = new Button();
-    public final static Button TURRET_RIGHT = new Button();
-    public final static Button SET_ZERO = new Button();
-    public final static Button RESET_H = new Button();
-
-
-    public final static Button BTN_STRAIGHTEN = new Button();
 
     public final static Button BTN_PLUS = new Button();
     public final static Button BTN_MINUS = new Button();
@@ -60,54 +15,6 @@ public class Button
     public final static Button BTN_PREV = new Button();
     public final static Button BTN_START = new Button();
     public final static Button BTN_BACK = new Button();
-    public final static Button BTN_MIN = new Button();
-    public final static Button BTN_MAX = new Button();
-    public final static Button BTN_TUCK_IN = new Button();
-    public final static Button BTN_LATCH = new Button();
-    public final static Button BTN_LATCH_READY = new Button();
-    public final static Button BTN_MID = new Button();
-    public final static Button BTN_IN = new Button();
-    public final static Button BTN_OUT = new Button();
-    public final static Button BTN_INTAKE = new Button();
-    public final static Button BTN_OUTTAKE = new Button();
-    public final static Button BTN_OPEN = new Button();
-    public final static Button BTN_HORIZONTAL = new Button();
-    public final static Button BTN_CLOSE = new Button();
-    public static final Button BTN_VERTICAL = new Button(); //B
-    public static final Button BTN_TANK = new Button();  //A
-    public static final Button BTN_SNAKE = new Button();  //X
-    public static final Button BTN_CRAB = new Button();  //X
-    public static final Button BTN_SWERVE = new Button();  //B
-    public static final Button BTN_AUTOMOBILE = new Button(); //B
-    public static final Button BTN_HANG = new Button(); //y
-    public static final Button BTN_INITAKE_LIMIT = new Button(); //y
-    public static final Button BTN_SUPERSLOW_MODE = new Button(); //LB
-    public static final Button BTN_SLOW_MODE = new Button(); //RB
-    public static final Button BTN_MARKER_DUMPER = new Button(); //DPAD UP/DOWN
-    public static final Button BTN_DUMPER = new Button();
-    public static final Button BTN_AUTO = new Button();
-    public static final Button BTN_STICK = new Button();
-    public static final Button BTN_INTAKE_HOLDER = new Button();
-    public static final Button BTN_LENGTHWISE = new Button();
-    public static final Button BTN_CAPSTONE = new Button();
-
-    /// Virtual Fourbar
-    public static final Button BTN_DOWN = new Button();
-    public static final Button BTN_UP = new Button();
-    public static final Button BTN_LEVEL1 = new Button();
-    public static final Button BTN_LEVEL2 = new Button();
-    public static final Button BTN_LEVEL3 = new Button();
-    public static final Button BTN_LEVEL4 = new Button();
-    //public static final Button BTN_BOTTOM = new Button();
-    public static final Button BTN_FOURBAR = new Button();
-    public static final Button BTN_FOURBAR_ROTATE = new Button();
-    public static final Button BTN_AUTOMATION = new Button();
-
-    public static final Button BTN_SLIDE = new Button();
-    public static final Button BTN_SLIDE_UP = new Button();
-    public static final Button BTN_SLIDE_DOWN = new Button();
-    public static final Button BTN_SLIDE_IN = new Button();
-    public static final Button BTN_SLIDE_OUT = new Button();
 
 
     ///Assign buttons to intake controls
