@@ -1,0 +1,36 @@
+package overcharged.components;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+public class intake {
+    public DcMotor intake;
+
+    public intake(HardwareMap hardwareMap){
+        intake = hardwareMap.dcMotor.get("intake");
+
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void in(){
+        intake.setPower(1f);
+    }
+
+    public void slowIn(){
+        intake.setPower(0.7f);
+    }
+
+
+    public void off(){
+        intake.setPower(0);
+    }
+
+    public void out(){
+        intake.setPower(-0.8f);
+    }
+
+    public void slowOut() {intake.setPower(-0.515f);}
+}

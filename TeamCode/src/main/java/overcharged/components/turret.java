@@ -19,6 +19,9 @@ public class turret {
     public float ki;
     public double start;
 
+    public static final int START = 0;
+    public static final int NORMAL = 0;
+
     public static double p = 18;
     public static double i = 0.0002;
     public static double d = 0.0005;
@@ -124,4 +127,6 @@ public class turret {
         turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turret.setPower(power);
     }
+
+
 }

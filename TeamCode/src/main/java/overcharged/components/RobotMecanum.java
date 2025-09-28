@@ -28,6 +28,8 @@ public class RobotMecanum {
     public OcMotor driveRightBack;
 
     public turret turret;
+    public intake intake;
+    public indexer indexer;
 
 
     public MecanumDrive drive;
@@ -104,18 +106,32 @@ public class RobotMecanum {
                 numberMissing++;
             }
             this.driveRightBack = driveRightBack;
-            try {
-                turret = new turret(hardwareMap);
-
-            } catch (Exception e) {
-                RobotLog.ee(RobotConstants.TAG_R, "missing: intake " + e.getMessage());
-                missing = missing + ", turret";
-                numberMissing++;
-            }
 
             this.drive = createDrive();
         }
         //TODO: all components
+        try {
+            intake = new intake(hardwareMap);
+        } catch (Exception e){
+            RobotLog.ee(RobotConstants.TAG_R,  "missing: intake " + e.getMessage());
+            missing = missing + ", intake";
+            numberMissing++;
+        }
+        try {
+            turret = new turret(hardwareMap);
+
+        } catch (Exception e) {
+            RobotLog.ee(RobotConstants.TAG_R, "missing: intake " + e.getMessage());
+            missing = missing + ", turret";
+            numberMissing++;
+        }
+        try {
+            indexer = new indexer(hardwareMap);
+        } catch (Exception e) {
+            RobotLog.ee(RobotConstants.TAG_R, "missing: indexer " + e.getMessage());
+            missing = missing + ", indexer";
+            numberMissing++;
+        }
     }
 
 
