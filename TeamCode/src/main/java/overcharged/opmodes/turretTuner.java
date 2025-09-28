@@ -13,12 +13,14 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 public class turretTuner extends OpMode {
     private RobotMecanum robot;
 
-    public static float kP = 0.07f;
+    public static float kP = 0.03f;
+    public static float kI;
     public static int target = 0;
 
     public void loop(){
         robot.turret.setUseSquID(true, target, 1f);
         robot.turret.setKp(kP);
+        robot.turret.setKi(kI);
         robot.turret.update();
     }
 
