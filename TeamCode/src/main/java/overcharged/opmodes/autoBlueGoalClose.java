@@ -1,43 +1,29 @@
 package overcharged.opmodes;
 
-import static overcharged.config.RobotConstants.TAG_SL;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
-//import com.pedropathing.follower.Follower;
-//import com.pedropathing.follower.FollowerConstants;
-import com.pedropathing.ftc.drivetrains.Mecanum;
-import com.pedropathing.ftc.drivetrains.MecanumConstants;
-import com.pedropathing.ftc.localization.constants.DriveEncoderConstants;
-import com.pedropathing.ftc.localization.constants.PinpointConstants;
-import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
-//import com.pedropathing.localization.Localizer;
-//import com.pedropathing.paths.PathConstraints;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.paths.PathBuilder;
+import com.pedropathing.paths.PathChain;
+import com.pedropathing.geometry.Pose;
+import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.BezierCurve;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
-import overcharged.components.colorSensor;
 
 import java.util.List;
 import java.util.ArrayList;
 
-@Autonomous(name = "protoAuto", group = "0Autonomous")
-public class auto1 extends OpMode {
+@Autonomous(name = "blue goal close", group = "0Autonomous")
+public class autoBlueGoalClose extends OpMode {
     private RobotMecanum robot;
     private ElapsedTime pathTimer;
     MultipleTelemetry telems;
@@ -48,14 +34,32 @@ public class auto1 extends OpMode {
     private int initState;
     public int motifID;
     List<Character> motif = new ArrayList<>();
-    //private Follower follower;
+    private static Follower follower;
     long tempTime;
 
+    public static Pose startPose = new Pose(13.908, 110.099); //heading: 0
+    public static Pose shootPose = new Pose(51.576, 94.452); //heading: 144 deg
 
+    public static PathBuilder builder = new PathBuilder(follower);
+
+    public static PathChain startToShoot, shootToPPG, PPGtoShoot, shootToPGP, PGPtoShoot;
+
+    public void buildPaths() {
+        startToShoot = builder.addPath(new BezierLine(startPose, shootPose)).setLinearHeadingInterpolation(0, 143.7).build();
+        shootToPPG = builder.addPath(new BezierCurve(shootPose, new Pose(51, 86), new Pose(17.095, 86))).setTangentHeadingInterpolation().build();
+        PPGtoShoot = builder.addPath(new BezierLine(new Pose(17.095, 86), shootPose)).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(144)).build();
+        shootToPGP = builder.addPath(new BezierCurve(shootPose, new Pose(51, 63.5), new Pose(17.095, 63.5))).setTangentHeadingInterpolation().build();
+        PGPtoShoot = builder.addPath(new BezierLine(new Pose(17.095, 63.5), shootPose)).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(144)).build();
+    }
     public void setInitState(int state) {
         initState = state;
         //pathTimer.reset();
         initBody();
+    }
+    public void setPathState(int state) {
+        pathState = state;
+        pathTimer.reset();
+        autoPath();
     }
 
     public void initBody() {
@@ -93,6 +97,15 @@ public class auto1 extends OpMode {
         }
     }
 
+    public void autoPath() {
+        switch(pathState){
+            case 10:
+                follower.followPath(startToShoot, true);
+                setPathState(11);
+
+        }
+    }
+
     @Override
     public void loop() {
 
@@ -101,6 +114,15 @@ public class auto1 extends OpMode {
     @Override
     public void init() {
         initBody();
+
+        buildPaths();
     }
+
+    @Override
+    public void start() {
+        setPathState(10);
+        autoPath();
+    }
+
 
 }

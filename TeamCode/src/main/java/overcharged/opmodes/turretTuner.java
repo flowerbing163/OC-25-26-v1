@@ -14,14 +14,18 @@ public class turretTuner extends OpMode {
     private RobotMecanum robot;
 
     public static float kP = 0.03f;
-    public static float kI;
+    public static float kI = 0.0002f;
+    public static float f = 0.003f;
     public static int target = 0;
 
     public void loop(){
         robot.turret.setUseSquID(true, target, 1f);
         robot.turret.setKp(kP);
         robot.turret.setKi(kI);
+        robot.turret.setF(f);
         robot.turret.update();
+        telemetry.addData("current target: ", robot.turret.getTarget());
+        telemetry.addData("current pos: ", robot.turret.getCurrentPosition());
     }
 
     public void init(){
