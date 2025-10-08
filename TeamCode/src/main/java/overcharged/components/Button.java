@@ -15,9 +15,15 @@ public class Button
     public final static Button BTN_PREV = new Button();
     public final static Button BTN_START = new Button();
     public final static Button BTN_BACK = new Button();
+    public final static Button BTN_MAX = new Button();
+    public final static Button BTN_MIN = new Button();
+    public final static Button BTN_MID = new Button();
 
 
     ///Assign buttons to intake controls
+    public static final Button BTN_TTABLE = new Button();
+    public static final Button BTN_KICKER = new Button();
+
     public static final Button BTN_COLLECT = new Button(); //RT2
     public static final Button BTN_REJECT = new Button(); //LT2
     public static final Button BTN_SPEED = new Button(); //x, b

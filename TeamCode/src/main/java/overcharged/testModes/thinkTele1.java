@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
+import overcharged.components.indexer;
 
 
 @Config
@@ -26,6 +27,7 @@ public class thinkTele1 extends OpMode{
     double slowPower = 1;
 
     boolean intakeOn = false;
+    boolean kicker = false;
 
     public void init() {
         try {
@@ -69,11 +71,24 @@ public class thinkTele1 extends OpMode{
             }
         }
 
-        float turretTurn = gamepad2.right_stick_x;
-        if(turretTurn > 0.2) {
-            robot.turret.setPower(turretTurn);
+        if (gamepad2.x && Button.BTN_TTABLE.canPress(timestamp)) {
+            robot.indexer.setOne();
+        }
+        if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp)) {
+            robot.indexer.setTwo();
+        }
+        if (gamepad2.b && Button.BTN_TTABLE.canPress(timestamp)) {
+            robot.indexer.setThree();
         }
 
-
+        if (gamepad2.y && Button.BTN_KICKER.canPress(timestamp)) {
+            if(!kicker) {
+                kicker = true;
+                robot.kicker.setKick();
+            } else if (kicker) {
+                kicker = false;
+                robot.kicker.setInit();
+            }
+        }
     }
 }

@@ -30,6 +30,7 @@ public class RobotMecanum {
     public turret turret;
     public intake intake;
     public indexer indexer;
+    public kicker kicker;
 
 
     public MecanumDrive drive;
@@ -130,6 +131,13 @@ public class RobotMecanum {
         } catch (Exception e) {
             RobotLog.ee(RobotConstants.TAG_R, "missing: indexer " + e.getMessage());
             missing = missing + ", indexer";
+            numberMissing++;
+        }
+        try {
+            kicker = new kicker(hardwareMap);
+        } catch (Exception e) {
+            RobotLog.ee(RobotConstants.TAG_R, "missing: kicker " + e.getMessage());
+            missing = missing + ", kicker";
             numberMissing++;
         }
     }

@@ -5,14 +5,20 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 public class indexer {
     public OcServo indexer;
 
-    public static final float INIT = 0f;
+    public static final float ONE = 17f;
+    public static final float TWO = 110f;
+    public static final float THREE = 206f;
 
     public indexer(HardwareMap hardwareMap) {
-        indexer = new OcServo(hardwareMap, "indexer", INIT);
+        indexer = new OcServo(hardwareMap, "indexer", TWO);
     }
     public void setPosition(float pos){
         indexer.setPosition(pos);
     }
 
-    public void setInit() { indexer.setPosition(INIT); }
+    public void setOne() { indexer.setPosition(ONE); }
+
+    public void setTwo() { indexer.setPosition(TWO); }
+
+    public void setThree() { indexer.setPosition(THREE); }
 }
