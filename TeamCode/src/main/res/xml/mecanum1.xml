@@ -15,8 +15,8 @@
 
         <LynxModule name="Expansion Hub 2" port="2">
 
-            <goBILDA5202SeriesMotor name="driveLB" port="0" />
-            <goBILDA5202SeriesMotor name="driveLF" port="1" />
+            <goBILDA5202SeriesMotor name="driveLB" port="3" />
+            <goBILDA5202SeriesMotor name="driveLF" port="2" />
 
 
 

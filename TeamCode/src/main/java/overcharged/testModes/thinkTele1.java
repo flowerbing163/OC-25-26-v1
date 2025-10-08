@@ -29,6 +29,13 @@ public class thinkTele1 extends OpMode{
     boolean intakeOn = false;
     boolean kicker = false;
 
+    intakeState intakeMode = intakeState.OFF;
+    public enum intakeState {
+        OFF,
+        IN,
+        OUT,
+    }
+
     public void init() {
         try {
             telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -62,10 +69,20 @@ public class thinkTele1 extends OpMode{
         robot.driveRightBack.setPower(backRightPower);
 
         if(gamepad1.right_trigger > 0.8 && Button.INTAKE.canPress(timestamp)) {
-            if(!intakeOn) {
+            if(intakeMode == intakeState.OFF || intakeMode == intakeState.OUT) {
                 robot.intake.in();
                 intakeOn = true;
-            } else if(intakeOn) {
+            } else if(intakeMode == intakeState.IN) {
+                robot.intake.off();
+                intakeOn = false;
+            }
+        }
+
+        if(gamepad1.left_trigger > 0.8 && Button.INTAKE.canPress(timestamp)) {
+            if(intakeMode == intakeState.OFF || intakeMode == intakeState.IN) {
+                robot.intake.out();
+                intakeOn = true;
+            } else if(intakeMode == intakeState.OUT) {
                 robot.intake.off();
                 intakeOn = false;
             }
