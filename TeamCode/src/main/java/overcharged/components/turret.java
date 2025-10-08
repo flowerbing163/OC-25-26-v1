@@ -15,16 +15,17 @@ import overcharged.config.RobotConstants;
 public class turret {
     public final OcMotorEx turret;
 
-    public float kp = 0.04f;
+    public float kp = 0.035f;
+    public float ki;
     public double start;
 
     public static final int START = 0;
     public static final int NORMAL = 0;
 
     public static double p = 18;
-    public static double i = 0.0002;
+    public static double i = 0.00015;
     public static double d = 0.0005;
-    public static double f = 0.003;
+    public static double f = 0.01;
 
     private boolean useSquID = false;
     private double target = 0;
@@ -42,8 +43,21 @@ public class turret {
 
     public float getSquid() {
         double error = target - getCurrentPosition();
-        double power = kp * Math.sqrt(Math.abs(error)) * Math.signum(error);
-        return (float) power;
+        long now = System.nanoTime();
+        double dt = (now - lastTime) / 1e9;
+        lastTime = now;
+
+        integral += error * dt;
+        integral = Math.min(500, Math.max(-500, integral));
+        if (Math.abs(error) < 6) {
+            integral = 0;
+        }
+
+        lastError = error;
+        double feedforward = f;
+
+        double power = (feedforward + ((kp * Math.sqrt(Math.abs(error)) * Math.signum(error)) + (i * integral)));
+        return (float) Math.max(-1, Math.min(1, power));
     }
 
     public double getCurrentPosition() {
@@ -102,6 +116,12 @@ public class turret {
     public void setKp(float kp) {
         this.kp = kp;
     }
+
+    public void setKi(float ki){this.i = ki;}
+
+    public void setF(float f){this.f = f;}
+
+
 
     public void setPIDF(double p, double i, double d, double f) { this.p = p; this.i = i; this.d = d; this.f = f; }
 
