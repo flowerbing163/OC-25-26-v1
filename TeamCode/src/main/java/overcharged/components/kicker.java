@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 public class kicker {
     public OcServo kicker;
 
-    public static final float INIT = 47f;
+    public static final float INIT = 42f;
     public static final float KICK = 0f;
 
     public kicker(HardwareMap hardwareMap) {

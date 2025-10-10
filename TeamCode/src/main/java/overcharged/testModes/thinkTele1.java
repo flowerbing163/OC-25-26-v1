@@ -29,6 +29,8 @@ public class thinkTele1 extends OpMode{
     boolean intakeOn = false;
     boolean kicker = false;
 
+    ElapsedTime temp;
+
     intakeState intakeMode = intakeState.OFF;
     public enum intakeState {
         OFF,
@@ -45,12 +47,20 @@ public class thinkTele1 extends OpMode{
             telemetry.addData("Init Failed", e.getMessage());
             telemetry.update();
         }
+        temp = new ElapsedTime();
     }
 
     public void loop() {
+        // telemetry
+        telemetry.addData("lag: ", temp);
+
+
         //per loop things
         robot.clearBulkCache();
         long timestamp = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
+        temp.reset();
+
 
         //Driving
         double y = gamepad1.left_stick_y;
