@@ -6,9 +6,10 @@
 
             <goBILDA5202SeriesMotor name="driveRF" port="0" />
             <goBILDA5202SeriesMotor name="driveRB" port="1" />
+            <goBILDA5202SeriesMotor name="topShooter" port="2" />
             <goBILDA5202SeriesMotor name="intake" port="3" />
 
-            <goBILDAPinpoint name="pinpoint" port="0" bus="0" />
+            <goBILDAPinpoint name="pinpoint" port="0" bus="3" />
 
         </LynxModule>
 
@@ -17,6 +18,7 @@
 
             <goBILDA5202SeriesMotor name="driveLB" port="3" />
             <goBILDA5202SeriesMotor name="driveLF" port="2" />
+            <goBILDA5202SeriesMotor name="botShooter" port="1" />
 
 
 
@@ -24,6 +26,7 @@
 
         <LynxModule name="Servo Hub 3" port="3">
 
+            <Servo name="hood" port="0" />
             <Servo name="indexer" port="2" />
             <Servo name="kicker" port="3" />
 

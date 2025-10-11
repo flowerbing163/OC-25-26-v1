@@ -28,6 +28,13 @@ public class thinkTele1 extends OpMode{
 
     boolean intakeOn = false;
     boolean kicker = false;
+    boolean shooting = false;
+    boolean canTurn = true;
+
+    float hoodStick;
+    float tempHood;
+
+    long kickTimer = 0;
 
     ElapsedTime temp;
 
@@ -53,6 +60,9 @@ public class thinkTele1 extends OpMode{
     public void loop() {
         // telemetry
         telemetry.addData("lag: ", temp);
+        telemetry.addData("hoodstick: ", hoodStick);
+        telemetry.addData("temphood: ", tempHood);
+        telemetry.addData("hood pos: ", robot.hood.getCurrentPos());
 
 
         //per loop things
@@ -81,41 +91,63 @@ public class thinkTele1 extends OpMode{
         if(gamepad1.right_trigger > 0.8 && Button.INTAKE.canPress(timestamp)) {
             if(intakeMode == intakeState.OFF || intakeMode == intakeState.OUT) {
                 robot.intake.in();
-                intakeOn = true;
+                intakeMode = intakeState.IN;
             } else if(intakeMode == intakeState.IN) {
                 robot.intake.off();
-                intakeOn = false;
+                intakeMode = intakeState.OFF;
             }
         }
 
         if(gamepad1.left_trigger > 0.8 && Button.INTAKE.canPress(timestamp)) {
             if(intakeMode == intakeState.OFF || intakeMode == intakeState.IN) {
                 robot.intake.out();
-                intakeOn = true;
+                intakeMode = intakeState.OUT;
             } else if(intakeMode == intakeState.OUT) {
                 robot.intake.off();
-                intakeOn = false;
+                intakeMode = intakeState.OFF;
             }
         }
 
-        if (gamepad2.x && Button.BTN_TTABLE.canPress(timestamp)) {
+        if (gamepad2.x && Button.BTN_TTABLE.canPress(timestamp) && canTurn) {
             robot.indexer.setOne();
         }
-        if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp)) {
+        if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn) {
             robot.indexer.setTwo();
         }
-        if (gamepad2.b && Button.BTN_TTABLE.canPress(timestamp)) {
+        if (gamepad2.b && Button.BTN_TTABLE.canPress(timestamp) && canTurn) {
             robot.indexer.setThree();
         }
 
         if (gamepad2.y && Button.BTN_KICKER.canPress(timestamp)) {
-            if(!kicker) {
-                kicker = true;
-                robot.kicker.setKick();
-            } else if (kicker) {
-                kicker = false;
-                robot.kicker.setInit();
+            kicker = true;
+            canTurn = false;
+            kickTimer = System.currentTimeMillis();
+            robot.kicker.setKick();
+        }
+        if(kicker && System.currentTimeMillis()-kickTimer > 600){
+            robot.kicker.setInit();
+            kicker = false;
+            canTurn = true;
+            kickTimer = 0;
+        }
+
+        if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp)) {
+            if(!shooting) {
+                robot.shooter.shoot();
+                shooting = true;
+            } else if(shooting) {
+                robot.shooter.off();
+                shooting = false;
             }
         }
+
+        hoodStick = -((float) gamepad2.left_stick_y)*1f;
+        if(Math.abs(hoodStick) >= 0.07) {
+            tempHood = robot.hood.getCurrentPos() + hoodStick;
+            tempHood = Math.max(robot.hood.INIT, Math.min(tempHood, 255));
+            robot.hood.setPosition(tempHood);
+        }
+
+
     }
 }

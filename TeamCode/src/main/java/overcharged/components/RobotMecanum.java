@@ -29,9 +29,10 @@ public class RobotMecanum {
 
     public turret turret;
     public intake intake;
+    public shooter shooter;
     public indexer indexer;
     public kicker kicker;
-
+    public hood hood;
 
     public MecanumDrive drive;
 
@@ -119,6 +120,13 @@ public class RobotMecanum {
             numberMissing++;
         }
         try {
+            shooter = new shooter(hardwareMap);
+        } catch (Exception e){
+            RobotLog.ee(RobotConstants.TAG_R,  "missing: shooter " + e.getMessage());
+            missing = missing + ", shooter";
+            numberMissing++;
+        }
+        try {
             turret = new turret(hardwareMap);
 
         } catch (Exception e) {
@@ -129,8 +137,8 @@ public class RobotMecanum {
         try {
             indexer = new indexer(hardwareMap);
         } catch (Exception e) {
-            RobotLog.ee(RobotConstants.TAG_R, "missing: indexer " + e.getMessage());
-            missing = missing + ", indexer";
+            RobotLog.ee(RobotConstants.TAG_R, "missing: hood " + e.getMessage());
+            missing = missing + ", hood";
             numberMissing++;
         }
         try {
@@ -138,6 +146,13 @@ public class RobotMecanum {
         } catch (Exception e) {
             RobotLog.ee(RobotConstants.TAG_R, "missing: kicker " + e.getMessage());
             missing = missing + ", kicker";
+            numberMissing++;
+        }
+        try {
+            hood = new hood(hardwareMap);
+        } catch (Exception e) {
+            RobotLog.ee(RobotConstants.TAG_R, "missing: hood " + e.getMessage());
+            missing = missing + ", hood";
             numberMissing++;
         }
     }

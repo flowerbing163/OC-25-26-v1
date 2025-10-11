@@ -114,9 +114,11 @@ tester123
         //OcServo intakeTilt = robot.intakeTilt.intakeTilt;
         OcServo indexer = robot.indexer.indexer;
         OcServo kicker = robot.kicker.kicker;
+        OcServo hood = robot.hood.hood;
         //servos.add(intakeTilt);
         servos.add(indexer);
         servos.add(kicker);
+        servos.add(hood);
 
 
 
@@ -131,6 +133,9 @@ tester123
                         kicker,
                         robot.kicker.INIT,
                         robot.kicker.KICK),
+                new ServoTestInfo(
+                        hood,
+                        robot.hood.INIT)
         };
 
         int testCounter = 0;
