@@ -19,6 +19,7 @@
             <goBILDA5202SeriesMotor name="driveLB" port="3" />
             <goBILDA5202SeriesMotor name="driveLF" port="2" />
             <goBILDA5202SeriesMotor name="botShooter" port="1" />
+            <goBILDA5202SeriesMotor name="turret" port="0" />
 
 
 

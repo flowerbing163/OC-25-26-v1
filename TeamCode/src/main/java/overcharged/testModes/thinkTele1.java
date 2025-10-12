@@ -33,6 +33,7 @@ public class thinkTele1 extends OpMode{
 
     float hoodStick;
     float tempHood;
+    float turretTurn;
 
     long kickTimer = 0;
 
@@ -148,6 +149,9 @@ public class thinkTele1 extends OpMode{
             robot.hood.setPosition(tempHood);
         }
 
-
+        turretTurn = ((float) gamepad2.right_stick_x)*0.4f;
+        if(Math.abs(turretTurn) > 0.04) {
+            robot.turret.setPower(turretTurn);
+        }
     }
 }
