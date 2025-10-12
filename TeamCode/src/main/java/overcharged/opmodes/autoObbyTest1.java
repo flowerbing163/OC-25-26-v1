@@ -1,23 +1,15 @@
 package overcharged.opmodes;
 
-import static overcharged.config.RobotConstants.TAG_A;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
 
-import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
-import overcharged.components.colorSensor;
-import overcharged.components.hslides;
-import overcharged.components.vSlides;
 
 import com.pedropathing.follower.Follower;
 
