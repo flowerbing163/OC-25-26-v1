@@ -24,16 +24,19 @@ public class thinkTele1 extends OpMode{
 
     RobotMecanum robot;
 
+    Limelight3A limelight;
+
     double slowPower = 1;
+    int calcPosition;
 
     boolean intakeOn = false;
     boolean kicker = false;
     boolean shooting = false;
+    boolean autoAiming = false;
     boolean canTurn = true;
 
     float hoodStick;
     float tempHood;
-    float turretTurn;
 
     long kickTimer = 0;
 
@@ -56,6 +59,11 @@ public class thinkTele1 extends OpMode{
             telemetry.update();
         }
         temp = new ElapsedTime();
+        robot.indexer.setOne();
+        limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
+        limelight.pipelineSwitch(1);
+        limelight.start();
+        robot.turret.setUseSquID(true,0,1f);
     }
 
     public void loop() {
@@ -64,10 +72,12 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("hoodstick: ", hoodStick);
         telemetry.addData("temphood: ", tempHood);
         telemetry.addData("hood pos: ", robot.hood.getCurrentPos());
+        telemetry.addData("turret pos: ", robot.turret.getCurrentPosition());
 
 
         //per loop things
         robot.clearBulkCache();
+        robot.turret.update();
         long timestamp = System.currentTimeMillis();
         long time = System.currentTimeMillis();
         temp.reset();
@@ -149,9 +159,29 @@ public class thinkTele1 extends OpMode{
             robot.hood.setPosition(tempHood);
         }
 
-        turretTurn = ((float) gamepad2.right_stick_x)*0.4f;
-        if(Math.abs(turretTurn) > 0.04) {
-            robot.turret.setPower(turretTurn);
+        if(gamepad1.x && Button.BTN_LIMELIGHT.canPress(timestamp)) {
+            if(!autoAiming) {
+                try {
+                    float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
+                    if (Math.abs(tx) > 2f) {
+                        calcPosition = (int) (-(3.52673611) * tx);
+                        robot.turret.setUseSquID(true, calcPosition);
+                    }
+                } catch (IndexOutOfBoundsException e1){
+                    telemetry.addLine("I can't see, manual adjust");
+                }
+                autoAiming = true;
+            }
+            else {
+                robot.turret.setUseSquID(false, 0);
+                if (Math.abs(gamepad2.right_stick_x) >= 0.2) {
+                    robot.turret.setPower(gamepad2.right_stick_x);
+                }
+                autoAiming = false;
+            }
         }
+
+
+
     }
 }
