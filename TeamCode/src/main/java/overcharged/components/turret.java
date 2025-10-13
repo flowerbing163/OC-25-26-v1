@@ -14,7 +14,7 @@ public class turret {
     public float ki;
     public double start;
 
-    public static final int START = 0;
+    public static final int START = -197;
     public static final int NORMAL = 0;
 
     public static double p = 18;
@@ -66,7 +66,7 @@ public class turret {
     public void setPower(float power) {
         if (turret != null) {
             RobotLog.ii(TAG_SL, "Set slide motor power to " + power);
-            turret.setPower(getPowerR());
+            turret.setPower(power);
             if (power == 0f) {
                 turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
@@ -90,7 +90,7 @@ public class turret {
 
     public void update() {
         if (useSquID) {
-            setPowerBoth(getSquid());
+            setPower(getSquid());
         }
     }
 

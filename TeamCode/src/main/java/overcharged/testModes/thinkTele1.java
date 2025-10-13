@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
 import overcharged.components.indexer;
+import overcharged.components.turret;
 
 
 @Config
@@ -35,8 +36,11 @@ public class thinkTele1 extends OpMode{
     boolean autoAiming = false;
     boolean canTurn = true;
 
+    boolean checker = false;
+
     float hoodStick;
     float tempHood;
+    float turretTurn;
 
     long kickTimer = 0;
 
@@ -59,11 +63,12 @@ public class thinkTele1 extends OpMode{
             telemetry.update();
         }
         temp = new ElapsedTime();
-        robot.indexer.setOne();
+        robot.indexer.setTwo();
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
         limelight.pipelineSwitch(1);
         limelight.start();
-        robot.turret.setUseSquID(true,0,1f);
+        robot.turret.setUseSquID(false,0,1f);
+        robot.turret.moveEncoderTo(turret.START, 1f);
     }
 
     public void loop() {
@@ -72,12 +77,14 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("hoodstick: ", hoodStick);
         telemetry.addData("temphood: ", tempHood);
         telemetry.addData("hood pos: ", robot.hood.getCurrentPos());
+        telemetry.addData("turretTurn: ", turretTurn);
         telemetry.addData("turret pos: ", robot.turret.getCurrentPosition());
+        telemetry.addData("test: ", checker);
 
 
         //per loop things
         robot.clearBulkCache();
-        robot.turret.update();
+        //robot.turret.update();
         long timestamp = System.currentTimeMillis();
         long time = System.currentTimeMillis();
         temp.reset();
@@ -155,10 +162,10 @@ public class thinkTele1 extends OpMode{
         hoodStick = -((float) gamepad2.left_stick_y)*1f;
         if(Math.abs(hoodStick) >= 0.07) {
             tempHood = robot.hood.getCurrentPos() + hoodStick;
-            tempHood = Math.max(robot.hood.INIT, Math.min(tempHood, 255));
+            tempHood = Math.max(robot.hood.INIT, Math.min(tempHood, robot.hood.MAX-4));
             robot.hood.setPosition(tempHood);
         }
-
+        /*
         if(gamepad1.x && Button.BTN_LIMELIGHT.canPress(timestamp)) {
             if(!autoAiming) {
                 try {
@@ -180,8 +187,18 @@ public class thinkTele1 extends OpMode{
                 autoAiming = false;
             }
         }
+         */
 
-
+        turretTurn = ((float)gamepad2.right_stick_x)*0.5f;
+        if(Math.abs(turretTurn) >= 0.05) {
+            robot.turret.setUseSquID(false, 0);
+            robot.turret.setPower(turretTurn);
+            checker = true;
+        } else if (Math.abs(turretTurn) < 0.05){
+            robot.turret.setUseSquID(false, 0);
+            robot.turret.setPower(0);
+            checker = false;
+        }
 
     }
 }
