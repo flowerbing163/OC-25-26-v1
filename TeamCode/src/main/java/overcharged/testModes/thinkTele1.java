@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
-import overcharged.components.turretSquid;
+import overcharged.components.turrets;
 
 
 @Config
@@ -39,6 +39,8 @@ public class thinkTele1 extends OpMode{
 
     int shootStep = 0;
     int shootRepStep = 0;
+    float tempShootPower = 0;
+    float shootPower = 0;
 
     long kickTimer = 0;
     long shootTimer = 0;
@@ -69,7 +71,7 @@ public class thinkTele1 extends OpMode{
         limelight.pipelineSwitch(1);
         limelight.start();
          */
-        robot.turrets.moveEncoderTo(turretSquid.START, 1f);
+        robot.turrets.moveEncoderTo(turrets.START, 1f);
     }
 
     public void loop() {
@@ -81,6 +83,7 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("turretTurn: ", turretTurn);
         telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
         telemetry.addData("test: ", checker);
+        telemetry.addData("shoot power: ", tempShootPower);
 
 
         //per loop things
@@ -163,7 +166,7 @@ public class thinkTele1 extends OpMode{
         hoodStick = -((float) gamepad2.left_stick_y)*1f;
         if(Math.abs(hoodStick) >= 0.07) {
             tempHood = robot.hood.getCurrentPos() + hoodStick;
-            tempHood = Math.max(robot.hood.INIT, Math.min(tempHood, robot.hood.MAX-4));
+            tempHood = Math.max(robot.hood.MAX, Math.min(tempHood, robot.hood.INIT-4));
             robot.hood.setPosition(tempHood);
         }
 

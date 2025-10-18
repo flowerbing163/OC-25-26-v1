@@ -6,10 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 
-public class turret {
-    public final OcMotorEx turret;
+public class turrets {
+    public final OcMotorEx turrets;
 
-    public static final int START = -197;
+    public static final int START = -131;
+    public static final int MIN = 300;
+    public static final int MAX = -552;
     public static final int NORMAL = 0;
 
     public static double p = 18;
@@ -18,21 +20,21 @@ public class turret {
     public static double f = 0.01;
 
 
-    public turret(HardwareMap hardwareMap) {
-        turret = new OcMotorEx(hardwareMap, "turret", DcMotor.Direction.FORWARD, DcMotor.RunMode.RUN_USING_ENCODER);
+    public turrets(HardwareMap hardwareMap) {
+        turrets = new OcMotorEx(hardwareMap, "turret", DcMotor.Direction.FORWARD, DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public double getCurrentPosition() {
-        return turret.getCurrentPosition();
+        return turrets.getCurrentPosition();
     }
 
     public void setPower(float power) {
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        if (turret != null) {
+        turrets.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (turrets != null) {
             RobotLog.ii(TAG_SL, "Set slide motor power to " + power);
-            turret.setPower(power);
+            turrets.setPower(power);
             if (power == 0f) {
-                turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                turrets.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
         } else {
             RobotLog.ii(TAG_SL, "Not setting power for motorL");
@@ -46,14 +48,14 @@ public class turret {
     }
 
     public float getPowerR() {
-        return turret.getPower();
+        return turrets.getPower();
     }
 
     public void moveEncoderTo(int pos, float power){
-        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        turret.setTargetPosition(pos);
-        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        turret.setPower(power);
+        turrets.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turrets.setTargetPosition(pos);
+        turrets.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turrets.setPower(power);
     }
 
 

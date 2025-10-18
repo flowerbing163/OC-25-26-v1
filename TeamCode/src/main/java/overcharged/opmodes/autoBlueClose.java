@@ -119,7 +119,7 @@ public class autoBlueClose extends OpMode {
                 // shooter sequence:
                 // rotate turret motor to align w/ goal
                 // set hood servo pos
-                robot.shooter.shoot(); // turn flywheel on and shoot
+                robot.shooter.shoot(1); // turn flywheel on and shoot
                 setPathState(12);
                 break;
             case 12:

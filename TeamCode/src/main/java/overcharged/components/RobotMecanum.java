@@ -27,7 +27,7 @@ public class RobotMecanum {
     public OcMotor driveRightBack;
 
     public turretSquid turret;
-    public turret turrets;
+    public turrets turrets;
     public intake intake;
     public shooter shooter;
     public indexer indexer;
@@ -130,15 +130,15 @@ public class RobotMecanum {
             turret = new turretSquid(hardwareMap);
 
         } catch (Exception e) {
-            RobotLog.ee(RobotConstants.TAG_R, "missing: intake " + e.getMessage());
+            RobotLog.ee(RobotConstants.TAG_R, "missing: turretSquid " + e.getMessage());
             missing = missing + ", turret";
             numberMissing++;
         }
         try {
-            turrets = new turret(hardwareMap);
+            turrets = new turrets(hardwareMap);
 
         } catch (Exception e) {
-            RobotLog.ee(RobotConstants.TAG_R, "missing: intake " + e.getMessage());
+            RobotLog.ee(RobotConstants.TAG_R, "missing: turretManual " + e.getMessage());
             missing = missing + ", turret";
             numberMissing++;
         }
