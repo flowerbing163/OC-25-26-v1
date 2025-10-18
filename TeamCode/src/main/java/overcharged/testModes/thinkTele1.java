@@ -37,7 +37,12 @@ public class thinkTele1 extends OpMode{
     float tempHood;
     double turretTurn;
 
+    int shootStep = 0;
+    int shootRepStep = 0;
+
     long kickTimer = 0;
+    long shootTimer = 0;
+
 
     ElapsedTime temp;
 
@@ -147,7 +152,7 @@ public class thinkTele1 extends OpMode{
 
         if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp)) {
             if(!shooting) {
-                robot.shooter.shoot();
+                robot.shooter.shoot(1);
                 shooting = true;
             } else if(shooting) {
                 robot.shooter.off();
@@ -169,6 +174,15 @@ public class thinkTele1 extends OpMode{
         } else if (Math.abs(turretTurn) < 0.05){
             robot.turrets.setPower(0);
             checker = false;
+        }
+
+        if(gamepad2.left_bumper && Button.BTN_TTABLE.canPress(timestamp)){
+            robot.indexer.setOne();
+            shootStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if(shootStep == 1 && System.currentTimeMillis()-shootTimer > 400){
+
         }
 
     }
