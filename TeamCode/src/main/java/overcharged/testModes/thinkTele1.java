@@ -3,20 +3,15 @@ package overcharged.testModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
-import overcharged.components.indexer;
-import overcharged.components.turret;
+import overcharged.components.turretSquid;
 
 
 @Config
@@ -40,7 +35,7 @@ public class thinkTele1 extends OpMode{
 
     float hoodStick;
     float tempHood;
-    float turretTurn;
+    double turretTurn;
 
     long kickTimer = 0;
 
@@ -64,11 +59,12 @@ public class thinkTele1 extends OpMode{
         }
         temp = new ElapsedTime();
         robot.indexer.setTwo();
+        /*
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
         limelight.pipelineSwitch(1);
         limelight.start();
-        robot.turret.setUseSquID(false,0,1f);
-        robot.turret.moveEncoderTo(turret.START, 1f);
+         */
+        robot.turrets.moveEncoderTo(turretSquid.START, 1f);
     }
 
     public void loop() {
@@ -78,7 +74,7 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("temphood: ", tempHood);
         telemetry.addData("hood pos: ", robot.hood.getCurrentPos());
         telemetry.addData("turretTurn: ", turretTurn);
-        telemetry.addData("turret pos: ", robot.turret.getCurrentPosition());
+        telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
         telemetry.addData("test: ", checker);
 
 
@@ -165,38 +161,13 @@ public class thinkTele1 extends OpMode{
             tempHood = Math.max(robot.hood.INIT, Math.min(tempHood, robot.hood.MAX-4));
             robot.hood.setPosition(tempHood);
         }
-        /*
-        if(gamepad1.x && Button.BTN_LIMELIGHT.canPress(timestamp)) {
-            if(!autoAiming) {
-                try {
-                    float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                    if (Math.abs(tx) > 2f) {
-                        calcPosition = (int) (-(3.52673611) * tx);
-                        robot.turret.setUseSquID(true, calcPosition);
-                    }
-                } catch (IndexOutOfBoundsException e1){
-                    telemetry.addLine("I can't see, manual adjust");
-                }
-                autoAiming = true;
-            }
-            else {
-                robot.turret.setUseSquID(false, 0);
-                if (Math.abs(gamepad2.right_stick_x) >= 0.2) {
-                    robot.turret.setPower(gamepad2.right_stick_x);
-                }
-                autoAiming = false;
-            }
-        }
-         */
 
-        turretTurn = ((float)gamepad2.right_stick_x)*0.5f;
+        turretTurn = -(gamepad2.right_stick_x)*0.5;
         if(Math.abs(turretTurn) >= 0.05) {
-            robot.turret.setUseSquID(false, 0);
-            robot.turret.setPower(turretTurn);
+            robot.turrets.setPower((float)turretTurn);
             checker = true;
         } else if (Math.abs(turretTurn) < 0.05){
-            robot.turret.setUseSquID(false, 0);
-            robot.turret.setPower(0);
+            robot.turrets.setPower(0);
             checker = false;
         }
 
