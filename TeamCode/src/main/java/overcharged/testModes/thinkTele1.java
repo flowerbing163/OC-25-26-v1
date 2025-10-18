@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
+import overcharged.components.hood;
 import overcharged.components.turrets;
 
 
@@ -163,7 +164,7 @@ public class thinkTele1 extends OpMode{
             }
         }
 
-        hoodStick = -((float) gamepad2.left_stick_y)*1f;
+        hoodStick = ((float) gamepad2.left_stick_y)*1f;
         if(Math.abs(hoodStick) >= 0.07) {
             tempHood = robot.hood.getCurrentPos() + hoodStick;
             tempHood = Math.max(robot.hood.MAX, Math.min(tempHood, robot.hood.INIT-4));
@@ -180,12 +181,51 @@ public class thinkTele1 extends OpMode{
         }
 
         if(gamepad2.left_bumper && Button.BTN_TTABLE.canPress(timestamp)){
+            shootStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if(shootStep == 1 && System.currentTimeMillis()-shootTimer > 10){
             robot.indexer.setOne();
             shootStep += 1;
             shootTimer = System.currentTimeMillis();
         }
-        if(shootStep == 1 && System.currentTimeMillis()-shootTimer > 400){
+        if(shootStep == 2 && System.currentTimeMillis()-shootTimer > 200){
+            robot.kicker.setKick();
+            shootStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if(shootStep == 3 && System.currentTimeMillis()-shootTimer > 300){
+            robot.kicker.setInit();
+            shootStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if(shootStep == 4 && System.currentTimeMillis()-shootTimer > 300 && shootRepStep == 0){
+            robot.indexer.setTwo();
+            shootStep = 2;
+            shootRepStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if(shootStep == 4 && System.currentTimeMillis()-shootTimer > 300 && shootRepStep == 1){
+            robot.indexer.setThree();
+            shootStep = 2;
+            shootRepStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if(shootStep == 4 && System.currentTimeMillis()-shootTimer > 300 && shootRepStep == 2){
+            robot.indexer.setTwo();
+            shootStep = 0;
+            shootRepStep = 0;
+            shootTimer = 0;
+        }
 
+        if(gamepad2.dpad_left && Button.BTN_HOOD.canPress(timestamp)){
+            robot.hood.setPosition(hood.CLOSE);
+        }
+        if(gamepad2.dpad_up && Button.BTN_HOOD.canPress(timestamp)){
+            robot.hood.setPosition(hood.MIDDLE);
+        }
+        if(gamepad2.dpad_right && Button.BTN_HOOD.canPress(timestamp)){
+            robot.hood.setPosition(hood.DEFENSE);
         }
 
     }
