@@ -27,9 +27,9 @@ public class alignmentTestBlue extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new RobotMecanum(this, false, false);
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
-        limelight.pipelineSwitch(1);
+        limelight.pipelineSwitch(0);
         limelight.start();
-        robot.turret.setUseSquID(true, -11);
+        robot.turret.setUseSquID(true, 37);
     }
 
     public void loop(){
@@ -60,11 +60,11 @@ public class alignmentTestBlue extends OpMode {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 telemetry.addData("current pos", robot.turret.getCurrentPosition());
                 telemetry.addData("tx: ", tx);
-                if (Math.abs(tx) >= 1.75f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) {
+                if (Math.abs(tx) >= 1.75f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
                     calcPosition = -((int) (2.3511574*tx));
-                    if (-11 + calcPosition >= -423 && -11 + calcPosition <= 423) {
-                        telemetry.addData("calc pos", -11 + calcPosition);
-                        robot.turret.setUseSquID(true, -11+calcPosition, 0.7f);
+                    if (37 + calcPosition >= -423 && -11 + calcPosition <= 423) {
+                        telemetry.addData("calc pos", 37 + calcPosition);
+                        robot.turret.setUseSquID(true, 37+calcPosition, 0.75f);
                     }
 
                 }

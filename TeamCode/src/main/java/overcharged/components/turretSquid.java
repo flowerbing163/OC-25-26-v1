@@ -83,6 +83,7 @@ public class turretSquid {
         turret.setPower(power);
     }
 
+    public void setUseSquID(boolean useSquID) {this.useSquID = useSquID;}
     public void setUseSquID(boolean useSquID, int target) {
         this.useSquID = useSquID;
         this.target = target;

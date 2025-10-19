@@ -118,6 +118,46 @@ public class thinkTele1 extends OpMode{
         robot.driveRightFront.setPower(frontRightPower);
         robot.driveRightBack.setPower(backRightPower);
 
+//        try {
+//            float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
+//            telemetry.addData("tx: ", tx);
+//        }
+//        catch (IndexOutOfBoundsException e1) {
+//            telemetry.addLine("Cannot see, manually adjust");
+//        }
+//
+//        if (gamepad1.a && Button.BTN_LIMELIGHT.canPress(timestamp)) {
+//            autoAiming = !autoAiming;
+//        }
+//        if (autoAiming) {
+//            robot.turret.setUseSquID(true);
+//            try {
+//                float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
+//                if (Math.abs(tx) >= 1.75f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
+//                    calcPosition = -((int) (2.3511574 * tx));
+//                    if (37 + calcPosition >= -423 && 37 + calcPosition <= 423) {
+//                        telemetry.addData("calc pos", 37 + calcPosition);
+//                        robot.turret.setUseSquID(true, 37 + calcPosition, 0.75f);
+//                    }
+//
+//                }
+//            }
+//            catch (IndexOutOfBoundsException e1){
+//                telemetry.addLine("cant see vro :skull:");
+//            }
+//        }
+//        else {
+//            robot.turret.setUseSquID(false);
+//            turretTurn = -(gamepad2.right_stick_x)*0.5;
+//            if(Math.abs(turretTurn) >= 0.05) {
+//                robot.turrets.setPower((float)turretTurn);
+//                checker = true;
+//            } else if (Math.abs(turretTurn) < 0.05){
+//                robot.turrets.setPower(0);
+//                checker = false;
+//            }
+//        }
+
         if(gamepad1.right_trigger > 0.8 && Button.INTAKE.canPress(timestamp)) {
             if(intakeMode == intakeState.OFF || intakeMode == intakeState.OUT) {
                 robot.intake.in();
@@ -137,23 +177,25 @@ public class thinkTele1 extends OpMode{
                 intakeMode = intakeState.OFF;
             }
         }
+        if(gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn) {
+            if (indexerPos == indexerState.INIT) {
+                robot.indexer.setOne();
+                indexerPos = indexerState.ONE;
+            }
+            else if (indexerPos == indexerState.ONE) {
+                robot.indexer.setTwo();
+                indexerPos = indexerState.TWO;
+            }
+            else if (indexerPos == indexerState.TWO) {
+                robot.indexer.setThree();
+                indexerPos = indexerState.THREE;
+            }
+            else if (indexerPos == indexerState.THREE) {
+                robot.indexer.setTwo();
+                indexerPos = indexerState.INIT;
+            }
+        }
 
-        if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn && indexerPos == indexerState.INIT) {
-            robot.indexer.setOne();
-            indexerPos = indexerState.ONE;
-        }
-        else if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn && indexerPos == indexerState.ONE) {
-            robot.indexer.setTwo();
-            indexerPos = indexerState.TWO;
-        }
-        else if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn && indexerPos == indexerState.TWO) {
-            robot.indexer.setThree();
-            indexerPos = indexerState.THREE;
-        }
-        else if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn && indexerPos == indexerState.THREE) {
-            robot.indexer.setTwo();
-            indexerPos = indexerState.INIT;
-        }
 
         if (gamepad2.y && Button.BTN_KICKER.canPress(timestamp)) {
             kicker = true;
@@ -185,14 +227,7 @@ public class thinkTele1 extends OpMode{
             robot.hood.setPosition(tempHood);
         }
 
-        turretTurn = -(gamepad2.right_stick_x)*0.5;
-        if(Math.abs(turretTurn) >= 0.05) {
-            robot.turrets.setPower((float)turretTurn);
-            checker = true;
-        } else if (Math.abs(turretTurn) < 0.05){
-            robot.turrets.setPower(0);
-            checker = false;
-        }
+
 
         if(gamepad2.left_bumper && Button.BTN_TTABLE.canPress(timestamp)){
             shootStep += 1;

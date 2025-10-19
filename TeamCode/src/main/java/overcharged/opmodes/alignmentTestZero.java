@@ -15,7 +15,7 @@ public class alignmentTestZero extends OpMode {
     RobotMecanum robot;
     Limelight3A limelight;
 
-    float turretMove; //gear ratio is 1:25, for every one rotation of motor, 1 tooth of 25-teeth gear moves
+    float turretMove;
     int aligned;
     boolean testOn = false;
     boolean autoAiming = false;

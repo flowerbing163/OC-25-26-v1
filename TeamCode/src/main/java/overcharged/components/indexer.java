@@ -6,8 +6,8 @@ public class indexer {
     public OcServo indexer;
 
     public static final float ONE = 211f;//17f;
-    public static final float TWO = 114f;
-    public static final float THREE = 19f;//206f;
+    public static final float TWO = 115f;
+    public static final float THREE = 20f;//206f;
 
     public indexer(HardwareMap hardwareMap) {
         indexer = new OcServo(hardwareMap, "indexer", TWO);
