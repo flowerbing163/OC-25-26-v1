@@ -131,7 +131,7 @@ public class RobotMecanum {
 
         } catch (Exception e) {
             RobotLog.ee(RobotConstants.TAG_R, "missing: turretSquid " + e.getMessage());
-            missing = missing + ", turret";
+            missing = missing + ", turretSquid";
             numberMissing++;
         }
         try {

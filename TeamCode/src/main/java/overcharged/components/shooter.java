@@ -31,8 +31,12 @@ public class shooter {
         botShooter.setPower(power);
     }
 
+
     public void shoot(float power) {
         setPowerBoth(power);
+    }
+    public void shoot() {
+        setPowerBoth(1);
     }
 
     public void off() {

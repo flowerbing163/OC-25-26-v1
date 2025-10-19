@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import overcharged.components.RobotMecanum;
 
 @Config
-@TeleOp(name="driving", group="test")
+@TeleOp(name="drive", group="test")
 public class testDriveTeleOp extends OpMode {
     RobotMecanum robot;
     public void init() {

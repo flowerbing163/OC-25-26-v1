@@ -6,20 +6,19 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import overcharged.components.Button;
 
 import overcharged.components.RobotMecanum;
 
 @Config
-@TeleOp(name = "alignment test sonic", group = "!!Teleop")
-public class alignmentTestBlue extends OpMode {
+@TeleOp(name = "alignment test zero'd", group = "!!Teleop")
+public class alignmentTestZero extends OpMode {
     RobotMecanum robot;
     Limelight3A limelight;
 
     float turretMove; //gear ratio is 1:25, for every one rotation of motor, 1 tooth of 25-teeth gear moves
     int aligned;
     boolean testOn = false;
-    boolean autoAiming = true;
+    boolean autoAiming = false;
     int calcPosition;
 
 
@@ -29,51 +28,32 @@ public class alignmentTestBlue extends OpMode {
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
         limelight.pipelineSwitch(1);
         limelight.start();
-        robot.turret.setUseSquID(true, -11);
+        robot.turret.setUseSquID(true,0,1f);
     }
 
     public void loop(){
-        //Driving
-        double y = gamepad1.left_stick_y;
-        double x = -gamepad1.left_stick_x * 1.1;
-        double rx = -gamepad1.right_stick_x;
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-
-        double frontLeftPower = ((y + x + rx) / denominator);
-        double backLeftPower = ((y - x + rx) / denominator);
-        double frontRightPower = ((y - x - rx) / denominator);
-        double backRightPower = ((y + x - rx) / denominator);
-
-        robot.driveLeftFront.setPower(frontLeftPower);
-        robot.driveLeftBack.setPower(backLeftPower);
-        robot.driveRightFront.setPower(frontRightPower);
-        robot.driveRightBack.setPower(backRightPower);
         long timestamp = System.currentTimeMillis();
         robot.turret.update();
 
-
-        if (gamepad1.a && Button.BTN_LIMELIGHT.canPress(timestamp)) {
-            autoAiming = !autoAiming;
-        }
-        if (autoAiming) {
-            try {
-                float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
+//        if(gamepad1.a && Button.TURRET_LEFT.canPress(timestamp) && !testOn){
+//            robot.turret.setUseSquID(true, aligned, 0.5f);
+//            testOn = true;
+//        } else if(gamepad1.a && Button.TURRET_LEFT.canPress(timestamp) && testOn){
+//            robot.turret.setUseSquID(false, 0);
+//            testOn = false;
+//        }
+        try {
+            float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
+            telemetry.addData("tx: ", tx);
+            if (Math.abs(tx) > 2f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) {
+                calcPosition = -((int) ((2.3511574 * tx + .5)));
                 telemetry.addData("current pos", robot.turret.getCurrentPosition());
-                telemetry.addData("tx: ", tx);
-                if (Math.abs(tx) >= 1.75f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) {
-                    calcPosition = -((int) (2.3511574*tx));
-                    if (-11 + calcPosition >= -423 && -11 + calcPosition <= 423) {
-                        telemetry.addData("calc pos", -11 + calcPosition);
-                        robot.turret.setUseSquID(true, -11+calcPosition, 0.7f);
-                    }
-
-                }
-            } catch (IndexOutOfBoundsException e1) {
-                telemetry.addLine("Cannot see, manually adjust");
+                telemetry.addData("calc pos", calcPosition);
+                robot.turret.setUseSquID(true, 0, 0.75f);
             }
         }
-        if(!autoAiming) {
-            robot.turret.setUseSquID(false, -11);
+        catch (IndexOutOfBoundsException e1) {
+            telemetry.addLine("Cannot see, manually adjust");
         }
 //        if(gamepad1.x && Button.BTN_LIMELIGHT.canPress(timestamp)) {
 //            if(!autoAiming) {

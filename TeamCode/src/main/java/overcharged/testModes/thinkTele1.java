@@ -49,6 +49,13 @@ public class thinkTele1 extends OpMode{
 
     ElapsedTime temp;
 
+    indexerState indexerPos = indexerState.INIT;
+    public enum indexerState {
+        INIT,
+        ONE,
+        TWO,
+        THREE,
+    }
     intakeState intakeMode = intakeState.OFF;
     public enum intakeState {
         OFF,
@@ -131,14 +138,21 @@ public class thinkTele1 extends OpMode{
             }
         }
 
-        if (gamepad2.x && Button.BTN_TTABLE.canPress(timestamp) && canTurn) {
+        if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn && indexerPos == indexerState.INIT) {
             robot.indexer.setOne();
+            indexerPos = indexerState.ONE;
         }
-        if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn) {
+        else if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn && indexerPos == indexerState.ONE) {
             robot.indexer.setTwo();
+            indexerPos = indexerState.TWO;
         }
-        if (gamepad2.b && Button.BTN_TTABLE.canPress(timestamp) && canTurn) {
+        else if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn && indexerPos == indexerState.TWO) {
             robot.indexer.setThree();
+            indexerPos = indexerState.THREE;
+        }
+        else if (gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn && indexerPos == indexerState.THREE) {
+            robot.indexer.setTwo();
+            indexerPos = indexerState.INIT;
         }
 
         if (gamepad2.y && Button.BTN_KICKER.canPress(timestamp)) {
