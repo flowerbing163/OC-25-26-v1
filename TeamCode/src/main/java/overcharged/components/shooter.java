@@ -39,6 +39,11 @@ public class shooter {
         setPowerBoth(1);
     }
 
+    public void intake() {
+        setPowerBoth(-0.5f);
+    }
+
+
     public void off() {
         setPowerBoth(0);
     }

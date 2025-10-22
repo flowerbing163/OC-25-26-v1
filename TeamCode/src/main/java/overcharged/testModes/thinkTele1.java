@@ -9,10 +9,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import overcharged.actions.actions;
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
 import overcharged.components.hood;
 import overcharged.components.turrets;
+import overcharged.actions.fastShoot;
 
 
 @Config
@@ -20,6 +22,8 @@ import overcharged.components.turrets;
 public class thinkTele1 extends OpMode{
 
     RobotMecanum robot;
+
+    actions actionHandler = new actions();
 
     Limelight3A limelight;
 
@@ -29,6 +33,7 @@ public class thinkTele1 extends OpMode{
     boolean intakeOn = false;
     boolean kicker = false;
     boolean shooting = false;
+    boolean shooterTaking = false;
     boolean autoAiming = false;
     boolean canTurn = true;
 
@@ -68,6 +73,7 @@ public class thinkTele1 extends OpMode{
             telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
             robot = new RobotMecanum(this, false, false);
             robot.setBulkReadManual();
+            actionHandler.fastShootSys(robot);
         } catch (Exception e) {
             telemetry.addData("Init Failed", e.getMessage());
             telemetry.update();
@@ -97,6 +103,8 @@ public class thinkTele1 extends OpMode{
         //per loop things
         robot.clearBulkCache();
         //robot.turret.update();
+        actionHandler.fastShootSeq();
+
         long timestamp = System.currentTimeMillis();
         long time = System.currentTimeMillis();
         temp.reset();
@@ -157,6 +165,14 @@ public class thinkTele1 extends OpMode{
 //                checker = false;
 //            }
 //        }
+        turretTurn = -(gamepad2.right_stick_x)*0.5;
+        if(Math.abs(turretTurn) >= 0.05) {
+            robot.turrets.setPower((float)turretTurn);
+            checker = true;
+        } else if (Math.abs(turretTurn) < 0.05){
+            robot.turrets.setPower(0);
+            checker = false;
+        }
 
         if(gamepad1.right_trigger > 0.8 && Button.INTAKE.canPress(timestamp)) {
             if(intakeMode == intakeState.OFF || intakeMode == intakeState.OUT) {
@@ -214,12 +230,25 @@ public class thinkTele1 extends OpMode{
             if(!shooting) {
                 robot.shooter.shoot(1);
                 shooting = true;
+                shooterTaking = false;
             } else if(shooting) {
                 robot.shooter.off();
                 shooting = false;
+                shooterTaking = false;
             }
         }
 
+        if(gamepad2.left_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp)) {
+            if(!shooterTaking) {
+                robot.shooter.intake();
+                shooting = false;
+                shooterTaking = true;
+            } else if(shooterTaking) {
+                robot.shooter.off();
+                shooting = false;
+                shooterTaking = false;
+            }
+        }
         hoodStick = ((float) gamepad2.left_stick_y)*1f;
         if(Math.abs(hoodStick) >= 0.07) {
             tempHood = robot.hood.getCurrentPos() + hoodStick;
@@ -227,44 +256,8 @@ public class thinkTele1 extends OpMode{
             robot.hood.setPosition(tempHood);
         }
 
-
-
         if(gamepad2.left_bumper && Button.BTN_TTABLE.canPress(timestamp)){
-            shootStep += 1;
-            shootTimer = System.currentTimeMillis();
-        }
-        if(shootStep == 1 && System.currentTimeMillis()-shootTimer > 10){
-            robot.indexer.setOne();
-            shootStep += 1;
-            shootTimer = System.currentTimeMillis();
-        }
-        if(shootStep == 2 && System.currentTimeMillis()-shootTimer > 200){
-            robot.kicker.setKick();
-            shootStep += 1;
-            shootTimer = System.currentTimeMillis();
-        }
-        if(shootStep == 3 && System.currentTimeMillis()-shootTimer > 300){
-            robot.kicker.setInit();
-            shootStep += 1;
-            shootTimer = System.currentTimeMillis();
-        }
-        if(shootStep == 4 && System.currentTimeMillis()-shootTimer > 300 && shootRepStep == 0){
-            robot.indexer.setTwo();
-            shootStep = 2;
-            shootRepStep += 1;
-            shootTimer = System.currentTimeMillis();
-        }
-        if(shootStep == 4 && System.currentTimeMillis()-shootTimer > 300 && shootRepStep == 1){
-            robot.indexer.setThree();
-            shootStep = 2;
-            shootRepStep += 1;
-            shootTimer = System.currentTimeMillis();
-        }
-        if(shootStep == 4 && System.currentTimeMillis()-shootTimer > 300 && shootRepStep == 2){
-            robot.indexer.setTwo();
-            shootStep = 0;
-            shootRepStep = 0;
-            shootTimer = 0;
+            actionHandler.startFastShoot();
         }
 
         if(gamepad2.dpad_left && Button.BTN_HOOD.canPress(timestamp)){
@@ -276,6 +269,7 @@ public class thinkTele1 extends OpMode{
         if(gamepad2.dpad_right && Button.BTN_HOOD.canPress(timestamp)){
             robot.hood.setPosition(hood.DEFENSE);
         }
+
 
     }
 }
