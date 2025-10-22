@@ -29,7 +29,7 @@ public class alignmentTestBlue extends OpMode {
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
         limelight.pipelineSwitch(0);
         limelight.start();
-        robot.turret.setUseSquID(true, 37);
+        robot.turret.setUseSquID(true, 0);
     }
 
     public void loop(){
@@ -51,6 +51,15 @@ public class alignmentTestBlue extends OpMode {
         long timestamp = System.currentTimeMillis();
         robot.turret.update();
 
+        try {
+            if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) {
+                float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
+                telemetry.addData("RED GOAL TX: ", tx);
+            }
+        }
+        catch (IndexOutOfBoundsException e1) {
+            telemetry.addLine("Cannot see, manually adjust");
+        }
 
         if (gamepad1.a && Button.BTN_LIMELIGHT.canPress(timestamp)) {
             autoAiming = !autoAiming;
@@ -62,9 +71,9 @@ public class alignmentTestBlue extends OpMode {
                 telemetry.addData("tx: ", tx);
                 if (Math.abs(tx) >= 1.75f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
                     calcPosition = -((int) (2.3511574*tx));
-                    if (37 + calcPosition >= -423 && -11 + calcPosition <= 423) {
-                        telemetry.addData("calc pos", 37 + calcPosition);
-                        robot.turret.setUseSquID(true, 37+calcPosition, 0.75f);
+                    if (calcPosition >= -423 && calcPosition <= 423) {
+                        telemetry.addData("calc pos", calcPosition);
+                        robot.turret.setUseSquID(true, calcPosition, 0.7f);
                     }
 
                 }
@@ -73,7 +82,13 @@ public class alignmentTestBlue extends OpMode {
             }
         }
         if(!autoAiming) {
-            robot.turret.setUseSquID(false, -11);
+            robot.turret.setUseSquID(false);
+            float turretTurn = -(gamepad2.right_stick_x)*0.5f;
+            if(Math.abs(turretTurn) >= 0.05) {
+                robot.turrets.setPower((float)turretTurn);
+            } else if (Math.abs(turretTurn) < 0.05){
+                robot.turrets.setPower(0);
+            }
         }
 //        if(gamepad1.x && Button.BTN_LIMELIGHT.canPress(timestamp)) {
 //            if(!autoAiming) {
