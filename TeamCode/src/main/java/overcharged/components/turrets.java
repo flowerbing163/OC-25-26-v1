@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 public class turrets {
     public final OcMotorEx turrets;
 
-    public static final int START = 0;
+    public static final int START = -44;
     public static final int MIN = 300;
     public static final int MAX = -552;
     public static final int NORMAL = 0;
