@@ -14,7 +14,6 @@ import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
 import overcharged.components.hood;
 import overcharged.components.turrets;
-import overcharged.actions.fastShoot;
 
 
 @Config
@@ -51,16 +50,8 @@ public class thinkTele1 extends OpMode{
     long kickTimer = 0;
     long shootTimer = 0;
 
-
     ElapsedTime temp;
 
-    indexerState indexerPos = indexerState.INIT;
-    public enum indexerState {
-        INIT,
-        ONE,
-        TWO,
-        THREE,
-    }
     intakeState intakeMode = intakeState.OFF;
     public enum intakeState {
         OFF,
@@ -74,6 +65,7 @@ public class thinkTele1 extends OpMode{
             robot = new RobotMecanum(this, false, false);
             robot.setBulkReadManual();
             actionHandler.fastShootSys(robot);
+            actionHandler.indexerSys(robot);
         } catch (Exception e) {
             telemetry.addData("Init Failed", e.getMessage());
             telemetry.update();
@@ -90,19 +82,21 @@ public class thinkTele1 extends OpMode{
     public void loop() {
         // telemetry
         telemetry.addData("lag: ", temp);
-        telemetry.addData("hoodstick: ", hoodStick);
-        telemetry.addData("temphood: ", tempHood);
+        //telemetry.addData("hoodstick: ", hoodStick);
+        //telemetry.addData("temphood: ", tempHood);
         telemetry.addData("hood pos: ", robot.hood.getCurrentPos());
-        telemetry.addData("turretTurn: ", turretTurn);
+        //telemetry.addData("turretTurn: ", turretTurn);
         telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
-        telemetry.addData("test: ", checker);
-        telemetry.addData("shoot power: ", tempShootPower);
+        //telemetry.addData("test: ", checker);
+        //telemetry.addData("shoot power: ", tempShootPower);
 
 
         //per loop things
         robot.clearBulkCache();
         robot.turret.update();
+
         actionHandler.fastShootSeq();
+        actionHandler.indMoveSeq();
 
         long timestamp = System.currentTimeMillis();
         long time = System.currentTimeMillis();
@@ -124,9 +118,11 @@ public class thinkTele1 extends OpMode{
         robot.driveLeftBack.setPower(backLeftPower);
         robot.driveRightFront.setPower(frontRightPower);
         robot.driveRightBack.setPower(backRightPower);
+        //
+
 
         try {
-            if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) {
+            if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue 24 red
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 telemetry.addData("RED GOAL TX: ", tx);
             }
@@ -167,6 +163,7 @@ public class thinkTele1 extends OpMode{
             }
         }
 
+        //intake
         if(gamepad1.right_trigger > 0.8 && Button.INTAKE.canPress(timestamp)) {
             if(intakeMode == intakeState.OFF || intakeMode == intakeState.OUT) {
                 robot.intake.in();
@@ -177,6 +174,7 @@ public class thinkTele1 extends OpMode{
             }
         }
 
+        //outtake
         if(gamepad1.left_trigger > 0.8 && Button.INTAKE.canPress(timestamp)) {
             if(intakeMode == intakeState.OFF || intakeMode == intakeState.IN) {
                 robot.intake.out();
@@ -186,26 +184,13 @@ public class thinkTele1 extends OpMode{
                 intakeMode = intakeState.OFF;
             }
         }
+
+        //indexer manual move
         if(gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn) {
-            if (indexerPos == indexerState.INIT) {
-                robot.indexer.setOne();
-                indexerPos = indexerState.ONE;
-            }
-            else if (indexerPos == indexerState.ONE) {
-                robot.indexer.setTwo();
-                indexerPos = indexerState.TWO;
-            }
-            else if (indexerPos == indexerState.TWO) {
-                robot.indexer.setThree();
-                indexerPos = indexerState.THREE;
-            }
-            else if (indexerPos == indexerState.THREE) {
-                robot.indexer.setTwo();
-                indexerPos = indexerState.INIT;
-            }
+            actionHandler.startIndMove();
         }
 
-
+        //manual kicker
         if (gamepad2.y && Button.BTN_KICKER.canPress(timestamp)) {
             kicker = true;
             canTurn = false;
@@ -219,6 +204,7 @@ public class thinkTele1 extends OpMode{
             kickTimer = 0;
         }
 
+        //shoot
         if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp)) {
             if(!shooting) {
                 robot.shooter.shoot(1);
@@ -231,6 +217,7 @@ public class thinkTele1 extends OpMode{
             }
         }
 
+        //shooter intake
         if(gamepad2.left_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp)) {
             if(!shooterTaking) {
                 robot.shooter.intake();
@@ -243,6 +230,7 @@ public class thinkTele1 extends OpMode{
             }
         }
 
+        //manual hood
         hoodStick = ((float) gamepad2.left_stick_y)*1f;
         if(Math.abs(hoodStick) >= 0.07) {
             tempHood = robot.hood.getCurrentPos() + hoodStick;
@@ -250,12 +238,12 @@ public class thinkTele1 extends OpMode{
             robot.hood.setPosition(tempHood);
         }
 
-
-
+        //fast shoot
         if(gamepad2.left_bumper && Button.BTN_TTABLE.canPress(timestamp)){
             actionHandler.startFastShoot();
         }
 
+        //preset hood pos
         if(gamepad2.dpad_left && Button.BTN_HOOD.canPress(timestamp)){
             robot.hood.setPosition(hood.CLOSE);
         }

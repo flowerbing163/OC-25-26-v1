@@ -1,6 +1,9 @@
 package overcharged.actions;
 
+import com.qualcomm.robotcore.robot.Robot;
+
 import overcharged.components.RobotMecanum;
+import overcharged.testModes.thinkTele1;
 
 public class actions {
     private RobotMecanum robot;
@@ -60,7 +63,50 @@ public class actions {
         shootTimer = System.currentTimeMillis();
     }
     //
-    //more actions
+    //indexer(turntable) move
+    private enum indexerState {
+        INIT,
+        ONE,
+        TWO,
+        THREE,
+    }
+    indexerState indexerPos;
+    private boolean indMove;
 
+    public void indexerSys(RobotMecanum robot) {
+        this.robot = robot;
+        this.indexerPos = indexerState.INIT;
+        this.indMove = false;
+    }
+
+    public void indMoveSeq() {
+        if (!indMove) {
+            return;
+        }
+        switch (indexerPos) {
+            case INIT:
+                robot.indexer.setOne();
+                indexerPos = indexerState.ONE;
+                break;
+            case ONE:
+                robot.indexer.setTwo();
+                indexerPos = indexerState.TWO;
+                break;
+            case TWO:
+                robot.indexer.setThree();
+                indexerPos = indexerState.THREE;
+                break;
+            case THREE:
+                robot.indexer.setTwo();
+                indexerPos = indexerState.INIT;
+                break;
+        }
+        indMove = false;
+    }
+
+    public void startIndMove() {
+        indMove = true;
+    }
+    //
 
 }
