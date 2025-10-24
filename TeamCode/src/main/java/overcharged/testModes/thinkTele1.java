@@ -89,6 +89,9 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
         //telemetry.addData("test: ", checker);
         //telemetry.addData("shoot power: ", tempShootPower);
+        telemetry.addData("shooter power", robot.shooter.getCurrentSpeed());
+        telemetry.addData("shoot target", robot.shooter.targetSpeed);
+        telemetry.addData("shoot PID", robot.shooter.getPID());
 
 
         //per loop things
@@ -207,7 +210,7 @@ public class thinkTele1 extends OpMode{
         //shoot
         if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp)) {
             if(!shooting) {
-                robot.shooter.shoot(1);
+                robot.shooter.shoot();
                 shooting = true;
                 shooterTaking = false;
             } else if(shooting) {

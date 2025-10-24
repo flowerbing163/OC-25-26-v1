@@ -1,20 +1,11 @@
 package overcharged.components;
 
-import static overcharged.config.RobotConstants.TAG_H;
 import static overcharged.config.RobotConstants.TAG_SL;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
-
-import org.opencv.core.Mat;
-
-import java.util.ArrayList;
-import java.util.List;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
 public class shooter {
@@ -26,9 +17,12 @@ public class shooter {
     public double integral;
     public double lastTime;
     public double kp = 10;
-    public double kd = 0.0002;
-    public double ki = 0.0005;
+    public double d = 0.0002;
+    public double i = 0.0005;
     public double f = 0.003;
+
+    //TODO: motor velocity at max spin(1f) = 30.15929
+    //TODO: make
 
     private double derivativePrev = 0;
 
@@ -102,39 +96,36 @@ public class shooter {
     }
 
     public float getPID() {
+        double error = targetSpeed - getCurrentSpeed();
         long now = System.nanoTime();
         double dt = (now - lastTime) / 1e9;
         lastTime = now;
+        if(error<0.05){
+            return (float) targetSpeed;
+        }
+        else {
+            integral += error * dt;
+            integral = Math.min(500, Math.max(-500, integral));
+            if (Math.abs(error) < 0.05) {
+                integral = 0;
+            }
 
-        double currentSpeed = (getCurrentSpeed() - lastError) / dt;
+            double derivative = (error - lastError) / dt;
 
-        double error = targetSpeed - currentSpeed;
 
-        double pTerm = kp * error;
+            double feedforward = f;
 
-        integral += error * dt;
-        integral = Math.max(-500, Math.min(500, integral));
-        if (Math.abs(error) < 0.1) integral = 0;
-
-        double iTerm = ki * integral;
-
-        double derivative = (error - lastError) / (dt > 0 ? dt : 1e-3);
-        derivative = 0.8 * derivativePrev + 0.2 * derivative;
-        derivativePrev = derivative;
-        lastError = error;
-
-        double dTerm = kd * derivative;
-
-        double power = f + pTerm + iTerm + dTerm;
-
-        return (float) Math.max(-1, Math.min(1, power));
+            double power = (feedforward + ((kp + (i * integral) + (d * derivative))));
+            lastError = error;
+            return (float) Math.max(-1, Math.min(1, power));
+        }
     }
 
     public double getCurrentSpeed() {
         return (getPowerB()+getPowerT())/2;
     }
 
-    public void setUsePID(boolean usePID, int target) {
+    public void setUsePID(boolean usePID, double target) {
         this.usePID = usePID;
         this.targetSpeed = target;
     }
@@ -143,7 +134,9 @@ public class shooter {
         this.kp = kp;
     }
 
-    public void setPIDF(double p, double i, double d, double f) { this.kp = p; this.ki = i; this.kd = d; this.f = f; }
+    public void setPIDF(double p, double i, double d, double f) { this.kp = p; this.i = i; this.d = d; this.f = f; }
+
+    public double getError() {return targetSpeed - getCurrentSpeed();}
 
 
 }

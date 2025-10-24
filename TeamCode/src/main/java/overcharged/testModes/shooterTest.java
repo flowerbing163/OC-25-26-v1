@@ -19,9 +19,11 @@ import overcharged.components.turretSquid;
 public class shooterTest extends OpMode {
     private RobotMecanum robot;
 
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+
     public static float kP = 0.07f;
     public static int target = 0;
-    public static double p = 18;
+    public static double p = 10;
     public static double i = 0.0001;
     public static double d = 0.0005;
     public static double f = 0;
@@ -29,13 +31,17 @@ public class shooterTest extends OpMode {
 
     public void init() {
         robot = new RobotMecanum(this, false, false);
+        telemetry = dashboard.getTelemetry();
     }
 
     public void loop() {
         long timestamp = System.currentTimeMillis();
         telemetry.addData("shooting speed", robot.shooter.getCurrentSpeed());
         telemetry.addData("shoot target", robot.shooter.targetSpeed);
+        telemetry.addData("top motor speed", robot.shooter.getPowerT());
         telemetry.addData("shoot PID", robot.shooter.getPID());
+        telemetry.addData("error", robot.shooter.getError());
+        telemetry.update();
 
         robot.shooter.setUsePID(true, target);
         robot.shooter.setKp(kP);
