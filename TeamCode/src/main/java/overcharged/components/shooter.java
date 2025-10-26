@@ -13,6 +13,8 @@ public class shooter {
     public final OcMotorEx botShooter;
 
     public double targetSpeed;
+    public double targetDist;
+    public double hood = 40;
     public double lastError;
     public double integral;
     public double lastTime;
@@ -96,38 +98,23 @@ public class shooter {
     }
 
     public float getPID() {
-        double error = targetSpeed - getCurrentSpeed();
-        long now = System.nanoTime();
-        double dt = (now - lastTime) / 1e9;
-        lastTime = now;
-        if(error<0.05){
-            return (float) targetSpeed;
-        }
-        else {
-            integral += error * dt;
-            integral = Math.min(500, Math.max(-500, integral));
-            if (Math.abs(error) < 0.05) {
-                integral = 0;
-            }
-
-            double derivative = (error - lastError) / dt;
-
-
-            double feedforward = f;
-
-            double power = (feedforward + ((kp + (i * integral) + (d * derivative))));
-            lastError = error;
-            return (float) Math.max(-1, Math.min(1, power));
-        }
+        //double hood = hood;
+        //power outputs in velocity of shoot, finpower converts to motor power
+        float power = (float)Math.sqrt((9.81*Math.pow(targetDist, 2))/(2*Math.pow(Math.cos(hood), 2)*(targetDist*Math.tan(hood)-0.70485)));
+        float finPower = (float)(power/30.15929);
+        return (float) Math.max(-1, Math.min(finPower, 1));
     }
 
     public double getCurrentSpeed() {
         return (getPowerB()+getPowerT())/2;
     }
 
-    public void setUsePID(boolean usePID, double target) {
+    public double getCurrentPos() {return Math.round((topShooter.getCurrentPosition()+botShooter.getCurrentPosition())/2);}
+
+    public void setUsePID(boolean usePID, double target, double hood) {
         this.usePID = usePID;
-        this.targetSpeed = target;
+        this.targetDist = target/1000;
+        this.hood = hood;
     }
 
     public void setKp(float kp) {

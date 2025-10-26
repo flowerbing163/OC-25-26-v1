@@ -41,12 +41,15 @@ public class shooterTest extends OpMode {
         telemetry.addData("top motor speed", robot.shooter.getPowerT());
         telemetry.addData("shoot PID", robot.shooter.getPID());
         telemetry.addData("error", robot.shooter.getError());
+        telemetry.addData("encoder pos: ", robot.shooter.getCurrentPos());
+
         telemetry.update();
 
-        robot.shooter.setUsePID(true, target);
+        robot.shooter.setUsePID(true, target, robot.hood.getCurrentAngle());
         robot.shooter.setKp(kP);
         robot.shooter.setPIDF(p, i, d, f);
         robot.shooter.update();
+
 
     }
 }

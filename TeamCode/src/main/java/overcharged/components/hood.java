@@ -18,6 +18,10 @@ public class hood {
 
     public float getCurrentPos() {return hood.getPosition(); }
 
+    public float getCurrentAngle() {
+        return (float) (Math.toRadians(40));
+    }
+
     public void setInit() { hood.setPosition(INIT); }
 
     public void setClose() {hood.setPosition(CLOSE);}
