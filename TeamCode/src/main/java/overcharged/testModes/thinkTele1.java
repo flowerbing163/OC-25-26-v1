@@ -121,7 +121,6 @@ public class thinkTele1 extends OpMode{
         robot.driveLeftBack.setPower(backLeftPower);
         robot.driveRightFront.setPower(frontRightPower);
         robot.driveRightBack.setPower(backRightPower);
-        //
 
 
         try {
@@ -141,13 +140,12 @@ public class thinkTele1 extends OpMode{
             robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                if (Math.abs(tx) >= 1.75f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
-                    calcPosition = -((int) (2.3511574 * tx));
-                    if (calcPosition >= -423 && calcPosition <= 423) {
-                        telemetry.addData("calc pos", calcPosition);
-                        robot.turret.setUseSquID(true, calcPosition, 0.7f);
+                if (Math.abs(tx) >= 1.5f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
+                    calcPosition = (int) (-2.8081 * tx - 0.7685);
+                    telemetry.addData("calc pos", calcPosition);
+                    if (robot.turret.getCurrentPosition() + calcPosition >= -250 && robot.turret.getCurrentPosition() + calcPosition <= 350) {
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
                     }
-
                 }
             }
             catch (IndexOutOfBoundsException e1){

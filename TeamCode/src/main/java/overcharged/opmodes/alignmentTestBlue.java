@@ -51,6 +51,8 @@ public class alignmentTestBlue extends OpMode {
         long timestamp = System.currentTimeMillis();
         robot.turret.update();
 
+        telemetry.addData("turret pos: ", robot.turret.getCurrentPosition());
+
         try {
             if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
@@ -65,25 +67,25 @@ public class alignmentTestBlue extends OpMode {
             autoAiming = !autoAiming;
         }
         if (autoAiming) {
+            robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                telemetry.addData("current pos", robot.turret.getCurrentPosition());
-                telemetry.addData("tx: ", tx);
-                if (Math.abs(tx) >= 1.75f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
-                    calcPosition = -((int) (2.3511574*tx));
+                if (limelight.isRunning() && Math.abs(tx) >= 1.75f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) { //20 blue, 24 red
+                    calcPosition = (int) (-2.8081 * tx - 0.7685);
                     if (calcPosition >= -423 && calcPosition <= 423) {
                         telemetry.addData("calc pos", calcPosition);
                         robot.turret.setUseSquID(true, calcPosition, 0.7f);
                     }
 
                 }
-            } catch (IndexOutOfBoundsException e1) {
-                telemetry.addLine("Cannot see, manually adjust");
+            }
+            catch (IndexOutOfBoundsException e1){
+                telemetry.addLine("cant see vro :skull:");
             }
         }
-        if(!autoAiming) {
+        else {
             robot.turret.setUseSquID(false);
-            float turretTurn = -(gamepad2.right_stick_x)*0.5f;
+            float turretTurn = -(gamepad2.right_stick_x)*0.35f;
             if(Math.abs(turretTurn) >= 0.05) {
                 robot.turrets.setPower((float)turretTurn);
             } else if (Math.abs(turretTurn) < 0.05){
