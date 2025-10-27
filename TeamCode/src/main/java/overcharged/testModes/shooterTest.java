@@ -19,7 +19,7 @@ import overcharged.components.turretSquid;
 public class shooterTest extends OpMode {
     private RobotMecanum robot;
 
-    FtcDashboard dashboard = FtcDashboard.getInstance();
+    //FtcDashboard dashboard = FtcDashboard.getInstance();
 
     public static float kP = 0.07f;
     public static int target = 0;
@@ -27,11 +27,18 @@ public class shooterTest extends OpMode {
     public static double i = 0.0001;
     public static double d = 0.0005;
     public static double f = 0;
+    public static double powerCoeff = 1.612;
+
+    float hoodStick;
+    float tempHood;
+
+    boolean kicker = false;
+    long kickTimer;
 
 
     public void init() {
         robot = new RobotMecanum(this, false, false);
-        telemetry = dashboard.getTelemetry();
+        //telemetry = dashboard.getTelemetry();
     }
 
     public void loop() {
@@ -42,13 +49,36 @@ public class shooterTest extends OpMode {
         telemetry.addData("shoot PID", robot.shooter.getPID());
         telemetry.addData("error", robot.shooter.getError());
         telemetry.addData("encoder pos: ", robot.shooter.getCurrentPos());
+        telemetry.addData("hood angle: ", Math.toDegrees(robot.hood.getCurrentAngle()));
+        telemetry.addData("power coeff: ", powerCoeff);
 
         telemetry.update();
 
         robot.shooter.setUsePID(true, target, robot.hood.getCurrentAngle());
         robot.shooter.setKp(kP);
         robot.shooter.setPIDF(p, i, d, f);
+        robot.shooter.setPowerCoeff(powerCoeff);
         robot.shooter.update();
+
+        //manual hood
+        hoodStick = ((float) gamepad1.left_stick_y)*1f;
+        if(Math.abs(hoodStick) >= 0.07) {
+            tempHood = robot.hood.getCurrentPos() + hoodStick;
+            tempHood = Math.max(robot.hood.MAX+2, Math.min(tempHood, robot.hood.INIT-2));
+            robot.hood.setPosition(tempHood);
+        }
+
+        if (gamepad1.y && Button.BTN_KICKER.canPress(timestamp)) {
+            kicker = true;
+            kickTimer = System.currentTimeMillis();
+            robot.kicker.setKick();
+        }
+        if(kicker && System.currentTimeMillis()-kickTimer > 600){
+            robot.kicker.setInit();
+            kicker = false;
+            kickTimer = 0;
+        }
+
 
 
     }
