@@ -124,9 +124,13 @@ public class thinkTele1 extends OpMode{
 
 
         try {
-            if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue 24 red
+            if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) { //20 blue 24 red
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
+                float ty = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetYDegrees();
                 telemetry.addData("RED GOAL TX: ", tx);
+                int distance = (int) ((642 - 406.15381) / Math.tan(Math.toRadians(ty)));
+                telemetry.addData("ty: ", ty);
+                telemetry.addData("distance to goal: ", distance);
             }
         }
         catch (IndexOutOfBoundsException e1) {

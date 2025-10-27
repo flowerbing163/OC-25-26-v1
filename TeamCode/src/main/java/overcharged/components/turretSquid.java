@@ -106,6 +106,7 @@ public class turretSquid {
     public void setKp(float kp) {
         this.kp = kp;
     }
+
     public double getTarget() {
         return target;
     }
