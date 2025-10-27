@@ -23,6 +23,8 @@ public class shooter {
     public double i = 0.0005;
     public double f = 0.003;
 
+    public double powerCoeff = 1.612;
+
     //TODO: motor velocity at max spin(1f) = 30.15929
     //TODO: make
 
@@ -101,7 +103,7 @@ public class shooter {
         //double hood = hood;
         //power outputs in velocity of shoot, finpower converts to motor power
         float power = (float)Math.sqrt((9.81*Math.pow(targetDist, 2))/(2*Math.pow(Math.cos(hood), 2)*(targetDist*Math.tan(hood)-0.70485)));
-        float finPower = (float)(power/30.15929);
+        float finPower = (float)(power/powerCoeff); //11 //11 is placeholder ball exiting velocity at max power
         return (float) Math.max(-1, Math.min(finPower, 1));
     }
 
@@ -122,6 +124,8 @@ public class shooter {
     }
 
     public void setPIDF(double p, double i, double d, double f) { this.kp = p; this.i = i; this.d = d; this.f = f; }
+
+    public void setPowerCoeff(double power) {this.powerCoeff = power;}
 
     public double getError() {return targetSpeed - getCurrentSpeed();}
 
