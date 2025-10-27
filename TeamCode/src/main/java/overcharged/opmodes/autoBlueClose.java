@@ -42,20 +42,20 @@ public class autoBlueClose extends OpMode {
     private static Follower follower;
     long tempTime;
 
-    public static Pose startPose = new Pose(15.490, 111.355); // heading: 0
-    public static Pose shootPose = new Pose(51.576, 94.452); // heading: 144 deg
+    public static Pose startPose = new Pose(13.526, 111.907); // heading: 0
+    public static Pose shootPose = new Pose(48, 96); // heading: 141 deg
 
     public static PathBuilder builder = new PathBuilder(follower);
 
     public static PathChain startToShoot, shootToPPG, PPGtoShoot, shootToPGP, PGPtoShoot, shootToEnd;
 
     public void buildPaths() {
-        startToShoot = builder.addPath(new BezierLine(startPose, shootPose)).setLinearHeadingInterpolation(0, 143.7).build();
-        shootToPPG = builder.addPath(new BezierCurve(shootPose, new Pose(51, 86), new Pose(17.095, 86))).setTangentHeadingInterpolation().build();
-        PPGtoShoot = builder.addPath(new BezierLine(new Pose(17.095, 86), shootPose)).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(144)).build();
-        shootToPGP = builder.addPath(new BezierCurve(shootPose, new Pose(51, 63.5), new Pose(17.095, 63.5))).setTangentHeadingInterpolation().build();
-        PGPtoShoot = builder.addPath(new BezierLine(new Pose(17.095, 63.5), shootPose)).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(144)).build();
-        shootToEnd = builder.addPath(new BezierLine(shootPose, new Pose(51.576, 94.452))).setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(180)).build();
+        startToShoot = builder.addPath(new BezierLine(startPose, shootPose)).setLinearHeadingInterpolation(0, 141).build();
+        shootToPPG = builder.addPath(new BezierCurve(shootPose, new Pose(48, 83.846), new Pose(17.139, 83.846))).setTangentHeadingInterpolation().build();
+        PPGtoShoot = builder.addPath(new BezierLine(new Pose(17.139, 83.846), shootPose)).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(141)).build();
+        shootToPGP = builder.addPath(new BezierCurve(shootPose, new Pose(48, 59.482), new Pose(17.139, 59.482))).setTangentHeadingInterpolation().build();
+        PGPtoShoot = builder.addPath(new BezierLine(new Pose(17.139, 59.482), shootPose)).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(141)).build();
+        shootToEnd = builder.addPath(new BezierLine(shootPose, new Pose(18, 69.732))).setLinearHeadingInterpolation(Math.toRadians(141), Math.toRadians(180)).build();
     }
     public void setInitState(int state) {
         initState = state;
