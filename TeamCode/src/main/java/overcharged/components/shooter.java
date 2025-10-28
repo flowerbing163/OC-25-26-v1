@@ -13,8 +13,8 @@ public class shooter {
     public final OcMotorEx botShooter;
 
     public double targetSpeed;
-    public double targetDist;
-    public double hood = 40;
+    public double targetDist = 1000;
+    public double hood = 50;
     public double lastError;
     public double integral;
     public double lastTime;
@@ -25,8 +25,8 @@ public class shooter {
 
     public double powerCoeff = 1.612;
 
-    //TODO: motor velocity at max spin(1f) = 30.15929
-    //TODO: make
+    //TODO: motor velocity at max spin(1f) = 1.612
+    //TODO:
 
     private double derivativePrev = 0;
 
@@ -101,9 +101,9 @@ public class shooter {
 
     public float getPID() {
         //double hood = hood;
-        //power outputs in velocity of shoot, finpower converts to motor power
+        //power outputs in velocity of shoot, finpower converts to motor power through vel of ball
         float power = (float)Math.sqrt((9.81*Math.pow(targetDist, 2))/(2*Math.pow(Math.cos(hood), 2)*(targetDist*Math.tan(hood)-0.70485)));
-        float finPower = (float)(power/powerCoeff); //11 //11 is placeholder ball exiting velocity at max power
+        float finPower = (float)(power/powerCoeff); //TODO: test whether this works for close zones
         return (float) Math.max(-1, Math.min(finPower, 1));
     }
 
@@ -113,9 +113,13 @@ public class shooter {
 
     public double getCurrentPos() {return Math.round((topShooter.getCurrentPosition()+botShooter.getCurrentPosition())/2);}
 
+    public void setUsePID(boolean usePID) {
+        this.usePID = usePID;
+    }
+
     public void setUsePID(boolean usePID, double target, double hood) {
         this.usePID = usePID;
-        this.targetDist = target/1000;
+        this.targetDist = target/1000; //convert mm to m
         this.hood = hood;
     }
 

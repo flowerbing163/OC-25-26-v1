@@ -9,7 +9,7 @@
             <goBILDA5202SeriesMotor name="driveLF" port="2" />
             <goBILDA5202SeriesMotor name="driveLB" port="3" />
 
-            <goBILDAPinpoint name="pinpoint" port="0" bus="3" />
+            <goBILDAPinpoint name="pinpoint" port="0" bus="2" />
 
         </LynxModule>
 

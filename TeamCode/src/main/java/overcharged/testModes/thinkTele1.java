@@ -36,6 +36,9 @@ public class thinkTele1 extends OpMode{
     boolean autoAiming = true;
     boolean canTurn = true;
 
+    boolean shootPID = false;
+    boolean shootPIDupdate = false;
+
     boolean checker = false;
 
     float hoodStick;
@@ -49,6 +52,8 @@ public class thinkTele1 extends OpMode{
 
     long kickTimer = 0;
     long shootTimer = 0;
+
+    int distance = 0;
 
     ElapsedTime temp;
 
@@ -128,7 +133,7 @@ public class thinkTele1 extends OpMode{
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 float ty = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetYDegrees();
                 telemetry.addData("RED GOAL TX: ", tx);
-                int distance = (int) ((642 - 406.15381) / Math.tan(Math.toRadians(ty)));
+                distance = (int) ((642 - 406.15381) / Math.tan(Math.toRadians(ty)));
                 telemetry.addData("ty: ", ty);
                 telemetry.addData("distance to goal: ", distance);
             }
@@ -210,30 +215,54 @@ public class thinkTele1 extends OpMode{
         }
 
         //shoot
-        if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp)) {
+        if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp) && !shootPID) {
             if(!shooting) {
                 robot.shooter.shoot();
+                shootPIDupdate = false;
                 shooting = true;
                 shooterTaking = false;
             } else if(shooting) {
                 robot.shooter.off();
+                shootPIDupdate = false;
                 shooting = false;
                 shooterTaking = false;
             }
         }
 
-        //shooter intake
-        if(gamepad2.left_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp)) {
-            if(!shooterTaking) {
-                robot.shooter.intake();
-                shooting = false;
-                shooterTaking = true;
-            } else if(shooterTaking) {
+        else if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp) && shootPID) {
+            if(!shooting) {
+                shootPIDupdate = true;
+                shooting = true;
+                shooterTaking = false;
+            } else if(shooting) {
                 robot.shooter.off();
+                shootPIDupdate = false;
                 shooting = false;
                 shooterTaking = false;
             }
         }
+
+        if(shootPIDupdate) {
+            robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());
+        } else if(!shootPIDupdate){
+            robot.shooter.setUsePID(false);
+        }
+
+        //shooter intake
+        if(gamepad2.left_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp) && !shootPID) {
+            if(!shooterTaking) {
+                robot.shooter.intake();
+                shootPIDupdate = false;
+                shooting = false;
+                shooterTaking = true;
+            } else if(shooterTaking) {
+                robot.shooter.off();
+                shootPIDupdate = false;
+                shooting = false;
+                shooterTaking = false;
+            }
+        }
+
 
         //manual hood
         hoodStick = ((float) gamepad2.left_stick_y)*1f;
