@@ -39,12 +39,12 @@ public class autoBlueFar extends OpMode {
     private static Follower follower;
     long tempTime;
 
-    public static Pose startPose = new Pose(56.175, 6.950); // heading: 0
+    public static Pose startPose = new Pose(56.175, 6.950); // heading: 90
     public static Pose shootPose = new Pose(59.986, 19.491); // heading: 114.4 deg
 
     public static PathBuilder builder = new PathBuilder(follower);
 
-    public static PathChain startToShoot, shootToGPP, GPPtoShoot, shootToLoadingPGP, LoadingPGPtoShoot, shootToEnd;
+    public static PathChain startToShoot, shootToGPP, GPPtoShoot, shootToLoadingPGP, LoadingPGPtoShoot, shootToPGP, PGPtoShoot, shootToEnd;
 
     public void buildPaths() {
         startToShoot = builder.addPath(new BezierLine(startPose, shootPose)).setLinearHeadingInterpolation(90, 114.4).build();
@@ -52,6 +52,8 @@ public class autoBlueFar extends OpMode {
         GPPtoShoot = builder.addPath(new BezierLine(new Pose(12.602, 35.958), shootPose)).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(114.4)).build();
         shootToLoadingPGP = builder.addPath(new BezierCurve(shootPose, new Pose(10.000, 40.000), new Pose(10.418, 10.900))).setTangentHeadingInterpolation().build();
         LoadingPGPtoShoot = builder.addPath(new BezierLine(new Pose(10.418, 10.900), shootPose)).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(114.4)).build();
+        shootToPGP = builder.addPath(new BezierCurve(shootPose,new Pose(59.986, 59.482),new Pose(12.602, 59.482))).setTangentHeadingInterpolation().build();
+        PGPtoShoot = builder.addPath(new BezierLine(new Pose(12.602, 59.482), new Pose(59.986, 19.491))).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(114.4)).build();
         shootToEnd = builder.addPath(new BezierLine(shootPose, new Pose(4.000, 35.958))).setLinearHeadingInterpolation(Math.toRadians(114.4), Math.toRadians(180)).build();
     }
     public void setInitState(int state) {
@@ -113,6 +115,7 @@ public class autoBlueFar extends OpMode {
                 setPathState(11);
                 break;
             case 11:
+                robot.intake.in();
                 // shooter sequence:
                 // rotate turret motor to align w/ goal
                 // set hood servo pos

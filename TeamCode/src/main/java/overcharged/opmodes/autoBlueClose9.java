@@ -122,10 +122,13 @@ public class autoBlueClose9 extends OpMode {
                 setPathState(11);
                 break;
             case 11: // robot preload: one = green, two = purp, three = purp
+                robot.intake.in();
                 robot.shooter.shoot();
 //                robot.hood.setClose(); TODO: calibrate hood position for (48, 96)
                 if (obbyID == 21 || motif.equals(Arrays.asList('G', 'P', 'P'))) {
                     long timestamp = System.currentTimeMillis();
+                    shootStep += 1;
+                    shootTimer = System.currentTimeMillis();
                     if (shootStep == 1 && timestamp - shootTimer > 10) {
                         robot.indexer.setOne();
                         shootStep += 1;
@@ -162,6 +165,8 @@ public class autoBlueClose9 extends OpMode {
                 }
                 else if (obbyID == 22 || motif.equals(Arrays.asList('P', 'G', 'P'))) {
                     long timestamp = System.currentTimeMillis();
+                    shootStep += 1;
+                    shootTimer = System.currentTimeMillis();
                     if (shootStep == 1 && timestamp - shootTimer > 10) {
                         robot.indexer.setTwo();
                         shootStep += 1;
@@ -198,6 +203,8 @@ public class autoBlueClose9 extends OpMode {
                 }
                 else if (obbyID == 23 || motif.equals(Arrays.asList('P', 'P', 'G'))) {
                     long timestamp = System.currentTimeMillis();
+                    shootStep += 1;
+                    shootTimer = System.currentTimeMillis();
                     if (shootStep == 1 && timestamp - shootTimer > 10) {
                         robot.indexer.setThree();
                         shootStep += 1;
@@ -235,7 +242,6 @@ public class autoBlueClose9 extends OpMode {
                 setPathState(12);
                 break;
             case 12:
-                robot.intake.in();
                 follower.followPath(shootToPPG);
                 setPathState(131);
                 break;

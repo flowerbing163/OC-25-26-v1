@@ -76,7 +76,7 @@ public class thinkTele1 extends OpMode{
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
         limelight.pipelineSwitch(1);
         limelight.start();
-        robot.turret.setUseSquID(true, 0, 1f);
+        robot.turret.setUseSquID(true, 211, 1f);
     }
 
     public void loop() {
@@ -147,8 +147,8 @@ public class thinkTele1 extends OpMode{
                 if (Math.abs(tx) >= 1.5f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
                     calcPosition = (int) (-2.8081 * tx - 0.7685);
                     telemetry.addData("calc pos", calcPosition);
-                    if (robot.turret.getCurrentPosition() + calcPosition >= -250 && robot.turret.getCurrentPosition() + calcPosition <= 350) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
+                    if (robot.turret.getCurrentPosition() + calcPosition >= -100 && robot.turret.getCurrentPosition() + calcPosition <= 633) {
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.8f);
                     }
                 }
             }
