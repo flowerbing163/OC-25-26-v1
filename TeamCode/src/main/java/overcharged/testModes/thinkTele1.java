@@ -94,14 +94,16 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
         //telemetry.addData("test: ", checker);
         //telemetry.addData("shoot power: ", tempShootPower);
-        telemetry.addData("shooter power", robot.shooter.getCurrentSpeed());
-        telemetry.addData("shoot target", robot.shooter.targetSpeed);
-        telemetry.addData("shoot PID", robot.shooter.getPID());
+        //telemetry.addData("shooter power: ", robot.shooter.getCurrentSpeed());
+        telemetry.addData("shoot PID: ", robot.shooter.getPID());
+        telemetry.addData("shoot pid on: ", shootPID);
+        telemetry.addData("distance to goal: ", distance);
 
 
         //per loop things
         robot.clearBulkCache();
         robot.turret.update();
+        robot.shooter.update();
 
         actionHandler.fastShootSeq();
         actionHandler.indMoveSeq();
@@ -135,7 +137,6 @@ public class thinkTele1 extends OpMode{
                 telemetry.addData("RED GOAL TX: ", tx);
                 distance = (int) ((646.1125 - 406.15381) / Math.tan(Math.toRadians(ty)));
                 telemetry.addData("ty: ", ty);
-                telemetry.addData("distance to goal: ", distance);
             }
         }
         catch (IndexOutOfBoundsException e1) {
@@ -215,7 +216,7 @@ public class thinkTele1 extends OpMode{
         }
 
         //shoot
-        if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp) && !shootPID) {
+        if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp)) {
             if (!shootPID) {
                 if (!shooting) {
                     robot.shooter.shoot();
@@ -229,7 +230,7 @@ public class thinkTele1 extends OpMode{
                     shooterTaking = false;
                 }
             }
-            else {
+            else if (shootPID){
                 if(!shooting) {
                     shootPIDupdate = true;
                     shooting = true;
@@ -244,11 +245,16 @@ public class thinkTele1 extends OpMode{
         }
 
         if(gamepad2.touchpad && Button.INTAKE.canPress(timestamp)) {
-            shootPID = !shootPID;
+            if(shootPID) {
+                shootPID = false;
+            } else if (!shootPID) {
+                shootPID = true;
+            }
         }
 
         if(shootPIDupdate) {
             robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());
+            telemetry.addLine("sigma");
         } else if(!shootPIDupdate){
             robot.shooter.setUsePID(false);
         }
@@ -278,7 +284,7 @@ public class thinkTele1 extends OpMode{
         }
 
         //fast shoot
-        if(gamepad2.left_bumper && Button.BTN_TTABLE.canPress(timestamp)){
+        if(gamepad1.left_bumper && Button.BTN_TTABLE.canPress(timestamp)){
             actionHandler.startFastShoot();
         }
 

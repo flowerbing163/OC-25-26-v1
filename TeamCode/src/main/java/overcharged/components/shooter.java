@@ -23,7 +23,7 @@ public class shooter {
     public double i = 0.0005;
     public double f = 0.003;
 
-    public double powerCoeff = 1.612;
+    public double powerCoeff = 6.35;
 
     //TODO: motor velocity at max spin(1f) = 1.612
     //TODO:
