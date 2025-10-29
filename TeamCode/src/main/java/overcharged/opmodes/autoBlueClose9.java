@@ -126,37 +126,36 @@ public class autoBlueClose9 extends OpMode {
                 robot.shooter.shoot();
 //                robot.hood.setClose(); TODO: calibrate hood position for (48, 96)
                 if (obbyID == 21 || motif.equals(Arrays.asList('G', 'P', 'P'))) {
-                    long timestamp = System.currentTimeMillis();
                     shootStep += 1;
                     shootTimer = System.currentTimeMillis();
-                    if (shootStep == 1 && timestamp - shootTimer > 10) {
+                    if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
                         robot.indexer.setOne();
                         shootStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 2 && timestamp - shootTimer > 250) {
+                    if (shootStep == 2 && System.currentTimeMillis() - shootTimer > 250) {
                         robot.kicker.setKick();
                         shootStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 3 && timestamp - shootTimer > 300) {
+                    if (shootStep == 3 && System.currentTimeMillis() - shootTimer > 300) {
                         robot.kicker.setInit();
                         shootStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 0) {
+                    if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 0) {
                         robot.indexer.setTwo();
                         shootStep = 2;
                         shootRepStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 1) {
+                    if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 1) {
                         robot.indexer.setThree();
                         shootStep = 2;
                         shootRepStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
+                    if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 350 && shootRepStep == 2) {
                         robot.indexer.setTwo();
                         shootStep = 0;
                         shootRepStep = 0;
@@ -164,37 +163,36 @@ public class autoBlueClose9 extends OpMode {
                     }
                 }
                 else if (obbyID == 22 || motif.equals(Arrays.asList('P', 'G', 'P'))) {
-                    long timestamp = System.currentTimeMillis();
                     shootStep += 1;
                     shootTimer = System.currentTimeMillis();
-                    if (shootStep == 1 && timestamp - shootTimer > 10) {
+                    if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
                         robot.indexer.setTwo();
                         shootStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 2 && timestamp - shootTimer > 250) {
+                    if (shootStep == 2 && System.currentTimeMillis() - shootTimer > 250) {
                         robot.kicker.setKick();
                         shootStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 3 && timestamp - shootTimer > 300) {
+                    if (shootStep == 3 && System.currentTimeMillis() - shootTimer > 300) {
                         robot.kicker.setInit();
                         shootStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 0) {
+                    if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 0) {
                         robot.indexer.setOne();
                         shootStep = 2;
                         shootRepStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 1) {
+                    if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 1) {
                         robot.indexer.setThree();
                         shootStep = 2;
                         shootRepStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
+                    if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 350 && shootRepStep == 2) {
                         robot.indexer.setTwo();
                         shootStep = 0;
                         shootRepStep = 0;
@@ -202,37 +200,36 @@ public class autoBlueClose9 extends OpMode {
                     }
                 }
                 else if (obbyID == 23 || motif.equals(Arrays.asList('P', 'P', 'G'))) {
-                    long timestamp = System.currentTimeMillis();
                     shootStep += 1;
                     shootTimer = System.currentTimeMillis();
-                    if (shootStep == 1 && timestamp - shootTimer > 10) {
+                    if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
                         robot.indexer.setThree();
                         shootStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 2 && timestamp - shootTimer > 250) {
+                    if (shootStep == 2 && System.currentTimeMillis() - shootTimer > 250) {
                         robot.kicker.setKick();
                         shootStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 3 && timestamp - shootTimer > 300) {
+                    if (shootStep == 3 && System.currentTimeMillis() - shootTimer > 300) {
                         robot.kicker.setInit();
                         shootStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 0) {
+                    if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 0) {
                         robot.indexer.setTwo();
                         shootStep = 2;
                         shootRepStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 1) {
+                    if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 1) {
                         robot.indexer.setOne();
                         shootStep = 2;
                         shootRepStep += 1;
-                        shootTimer = timestamp;
+                        shootTimer = System.currentTimeMillis();
                     }
-                    if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
+                    if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 350 && shootRepStep == 2) {
                         robot.indexer.setTwo();
                         shootStep = 0;
                         shootRepStep = 0;
@@ -242,6 +239,7 @@ public class autoBlueClose9 extends OpMode {
                 setPathState(12);
                 break;
             case 12:
+                robot.shooter.off();
                 follower.followPath(shootToPPG);
                 setPathState(131);
                 break;
@@ -252,118 +250,45 @@ public class autoBlueClose9 extends OpMode {
             case 132:
                 robot.shooter.shoot();
 //                robot.hood.setClose(); TODO: calibrate hood position for (48, 96)
-                if (obbyID == 21 || motif.equals(Arrays.asList('G', 'P', 'P'))) {
-                    long timestamp = System.currentTimeMillis();
-                    if (shootStep == 1 && timestamp - shootTimer > 10) {
-                        robot.indexer.setOne();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 2 && timestamp - shootTimer > 250) {
-                        robot.kicker.setKick();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 3 && timestamp - shootTimer > 300) {
-                        robot.kicker.setInit();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 0) {
-                        robot.indexer.setTwo();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 1) {
-                        robot.indexer.setThree();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
-                        robot.indexer.setTwo();
-                        shootStep = 0;
-                        shootRepStep = 0;
-                        shootTimer = 0;
-                    }
+                shootStep += 1;
+                shootTimer = System.currentTimeMillis();
+                if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
+                    robot.indexer.setOne();
+                    shootStep += 1;
+                    shootTimer = System.currentTimeMillis();
                 }
-                else if (obbyID == 22 || motif.equals(Arrays.asList('P', 'G', 'P'))) {
-                    long timestamp = System.currentTimeMillis();
-                    if (shootStep == 1 && timestamp - shootTimer > 10) {
-                        robot.indexer.setTwo();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 2 && timestamp - shootTimer > 250) {
-                        robot.kicker.setKick();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 3 && timestamp - shootTimer > 300) {
-                        robot.kicker.setInit();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 0) {
-                        robot.indexer.setOne();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 1) {
-                        robot.indexer.setThree();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
-                        robot.indexer.setTwo();
-                        shootStep = 0;
-                        shootRepStep = 0;
-                        shootTimer = 0;
-                    }
+                if (shootStep == 2 && System.currentTimeMillis() - shootTimer > 250) {
+                    robot.kicker.setKick();
+                    shootStep += 1;
+                    shootTimer = System.currentTimeMillis();
                 }
-                else if (obbyID == 23 || motif.equals(Arrays.asList('P', 'P', 'G'))) {
-                    long timestamp = System.currentTimeMillis();
-                    if (shootStep == 1 && timestamp - shootTimer > 10) {
-                        robot.indexer.setThree();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 2 && timestamp - shootTimer > 250) {
-                        robot.kicker.setKick();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 3 && timestamp - shootTimer > 300) {
-                        robot.kicker.setInit();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 0) {
-                        robot.indexer.setTwo();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 1) {
-                        robot.indexer.setOne();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
-                        robot.indexer.setTwo();
-                        shootStep = 0;
-                        shootRepStep = 0;
-                        shootTimer = 0;
-                    }
+                if (shootStep == 3 && System.currentTimeMillis() - shootTimer > 300) {
+                    robot.kicker.setInit();
+                    shootStep += 1;
+                    shootTimer = System.currentTimeMillis();
+                }
+                if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 0) {
+                    robot.indexer.setTwo();
+                    shootStep = 2;
+                    shootRepStep += 1;
+                    shootTimer = System.currentTimeMillis();
+                }
+                if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 1) {
+                    robot.indexer.setThree();
+                    shootStep = 2;
+                    shootRepStep += 1;
+                    shootTimer = System.currentTimeMillis();
+                }
+                if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 350 && shootRepStep == 2) {
+                    robot.indexer.setTwo();
+                    shootStep = 0;
+                    shootRepStep = 0;
+                    shootTimer = 0;
                 }
                 setPathState(14);
                 break;
             case 14:
-                robot.intake.in();
+                robot.shooter.off();
                 follower.followPath(shootToPGP);
                 setPathState(15);
                 break;
@@ -374,117 +299,45 @@ public class autoBlueClose9 extends OpMode {
             case 16:
                 robot.shooter.shoot();
 //                robot.hood.setClose(); TODO: calibrate hood position for (48, 96)
-                if (obbyID == 21 || motif.equals(Arrays.asList('G', 'P', 'P'))) {
-                    long timestamp = System.currentTimeMillis();
-                    if (shootStep == 1 && timestamp - shootTimer > 10) {
-                        robot.indexer.setOne();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 2 && timestamp - shootTimer > 250) {
-                        robot.kicker.setKick();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 3 && timestamp - shootTimer > 300) {
-                        robot.kicker.setInit();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 0) {
-                        robot.indexer.setTwo();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 1) {
-                        robot.indexer.setThree();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
-                        robot.indexer.setTwo();
-                        shootStep = 0;
-                        shootRepStep = 0;
-                        shootTimer = 0;
-                    }
+                shootStep += 1;
+                shootTimer = System.currentTimeMillis();
+                if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
+                    robot.indexer.setOne();
+                    shootStep += 1;
+                    shootTimer = System.currentTimeMillis();
                 }
-                else if (obbyID == 22 || motif.equals(Arrays.asList('P', 'G', 'P'))) {
-                    long timestamp = System.currentTimeMillis();
-                    if (shootStep == 1 && timestamp - shootTimer > 10) {
-                        robot.indexer.setTwo();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 2 && timestamp - shootTimer > 250) {
-                        robot.kicker.setKick();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 3 && timestamp - shootTimer > 300) {
-                        robot.kicker.setInit();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 0) {
-                        robot.indexer.setOne();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 1) {
-                        robot.indexer.setThree();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
-                        robot.indexer.setTwo();
-                        shootStep = 0;
-                        shootRepStep = 0;
-                        shootTimer = 0;
-                    }
+                if (shootStep == 2 && System.currentTimeMillis() - shootTimer > 250) {
+                    robot.kicker.setKick();
+                    shootStep += 1;
+                    shootTimer = System.currentTimeMillis();
                 }
-                else if (obbyID == 23 || motif.equals(Arrays.asList('P', 'P', 'G'))) {
-                    long timestamp = System.currentTimeMillis();
-                    if (shootStep == 1 && timestamp - shootTimer > 10) {
-                        robot.indexer.setThree();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 2 && timestamp - shootTimer > 250) {
-                        robot.kicker.setKick();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 3 && timestamp - shootTimer > 300) {
-                        robot.kicker.setInit();
-                        shootStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 0) {
-                        robot.indexer.setTwo();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 250 && shootRepStep == 1) {
-                        robot.indexer.setOne();
-                        shootStep = 2;
-                        shootRepStep += 1;
-                        shootTimer = timestamp;
-                    }
-                    if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
-                        robot.indexer.setTwo();
-                        shootStep = 0;
-                        shootRepStep = 0;
-                        shootTimer = 0;
-                    }
+                if (shootStep == 3 && System.currentTimeMillis() - shootTimer > 300) {
+                    robot.kicker.setInit();
+                    shootStep += 1;
+                    shootTimer = System.currentTimeMillis();
+                }
+                if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 0) {
+                    robot.indexer.setTwo();
+                    shootStep = 2;
+                    shootRepStep += 1;
+                    shootTimer = System.currentTimeMillis();
+                }
+                if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 250 && shootRepStep == 1) {
+                    robot.indexer.setThree();
+                    shootStep = 2;
+                    shootRepStep += 1;
+                    shootTimer = System.currentTimeMillis();
+                }
+                if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 350 && shootRepStep == 2) {
+                    robot.indexer.setTwo();
+                    shootStep = 0;
+                    shootRepStep = 0;
+                    shootTimer = 0;
                 }
                 setPathState(17);
                 break;
             case 17:
+                robot.intake.off();
                 follower.followPath(shootToEnd);
                 telems.addLine("Auto completed");
                 break;

@@ -81,7 +81,7 @@ public class thinkTele1 extends OpMode{
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
         limelight.pipelineSwitch(1);
         limelight.start();
-        robot.turret.setUseSquID(true, 211, 1f);
+        robot.turret.setUseSquID(true, 0, 1f);
     }
 
     public void loop() {
@@ -133,7 +133,7 @@ public class thinkTele1 extends OpMode{
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 float ty = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetYDegrees();
                 telemetry.addData("RED GOAL TX: ", tx);
-                distance = (int) ((642 - 406.15381) / Math.tan(Math.toRadians(ty)));
+                distance = (int) ((646.1125 - 406.15381) / Math.tan(Math.toRadians(ty)));
                 telemetry.addData("ty: ", ty);
                 telemetry.addData("distance to goal: ", distance);
             }
@@ -149,11 +149,11 @@ public class thinkTele1 extends OpMode{
             robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                if (Math.abs(tx) >= 1.5f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
+                if (Math.abs(tx) >= 1.25f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) { //20 blue, 24 red
                     calcPosition = (int) (-2.8081 * tx - 0.7685);
                     telemetry.addData("calc pos", calcPosition);
-                    if (robot.turret.getCurrentPosition() + calcPosition >= -100 && robot.turret.getCurrentPosition() + calcPosition <= 633) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.8f);
+                    if (robot.turret.getCurrentPosition() + calcPosition >= -211 && robot.turret.getCurrentPosition() + calcPosition <= 423) {
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.67f);
                     }
                 }
             }
@@ -216,30 +216,35 @@ public class thinkTele1 extends OpMode{
 
         //shoot
         if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp) && !shootPID) {
-            if(!shooting) {
-                robot.shooter.shoot();
-                shootPIDupdate = false;
-                shooting = true;
-                shooterTaking = false;
-            } else if(shooting) {
-                robot.shooter.off();
-                shootPIDupdate = false;
-                shooting = false;
-                shooterTaking = false;
+            if (!shootPID) {
+                if (!shooting) {
+                    robot.shooter.shoot();
+                    shootPIDupdate = false;
+                    shooting = true;
+                    shooterTaking = false;
+                } else if (shooting) {
+                    robot.shooter.off();
+                    shootPIDupdate = false;
+                    shooting = false;
+                    shooterTaking = false;
+                }
+            }
+            else {
+                if(!shooting) {
+                    shootPIDupdate = true;
+                    shooting = true;
+                    shooterTaking = false;
+                } else if(shooting) {
+                    robot.shooter.off();
+                    shootPIDupdate = false;
+                    shooting = false;
+                    shooterTaking = false;
+                }
             }
         }
 
-        else if(gamepad2.right_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp) && shootPID) {
-            if(!shooting) {
-                shootPIDupdate = true;
-                shooting = true;
-                shooterTaking = false;
-            } else if(shooting) {
-                robot.shooter.off();
-                shootPIDupdate = false;
-                shooting = false;
-                shooterTaking = false;
-            }
+        if(gamepad2.touchpad && Button.INTAKE.canPress(timestamp)) {
+            shootPID = !shootPID;
         }
 
         if(shootPIDupdate) {
