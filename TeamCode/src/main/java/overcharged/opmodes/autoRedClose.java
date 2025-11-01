@@ -6,7 +6,6 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -21,19 +20,9 @@ import overcharged.actions.actions;
 import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
-import overcharged.testModes.thinkTele1;
 
-import com.bylazar.configurables.PanelsConfigurables;
-import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.field.FieldManager;
-import com.bylazar.field.PanelsField;
-import com.bylazar.field.Style;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
-
-@Autonomous(name = "blue goal close NEW", group = "0Autonomous")
-public class autoBlueCloseV2 extends OpMode {
+@Autonomous(name = "red goal close", group = "0Autonomous")
+public class autoRedClose extends OpMode {
     private RobotMecanum robot;
     private ElapsedTime pathTimer;
     MultipleTelemetry telems;
@@ -64,38 +53,38 @@ public class autoBlueCloseV2 extends OpMode {
         NONE
     }
 
-    public static Pose startPose = new Pose(15, 113, Math.toRadians(90)); // heading: 90
+    public static Pose startPose = new Pose(129, 113, Math.toRadians(90)); // heading: 90
     private static Pose firstShoot, firstBall, secondShoot, secondBall;
 
     public static PathChain firstScore, firstTake, secondScore, secondTake, thirdScore;
 
     public void buildPoses() {
-        firstShoot = new Pose(45, 98, Math.toRadians(180));
-        firstBall = new Pose(17.5, 81, Math.toRadians(180));
-        secondShoot = new Pose(58, 78, Math.toRadians(180));
-        secondBall = new Pose(12.5, 56.5, Math.toRadians(180));
+        firstShoot = new Pose(99, 98, Math.toRadians(0));
+        firstBall = new Pose(126.5, 81, Math.toRadians(0));
+        secondShoot = new Pose(86, 78, Math.toRadians(0));
+        secondBall = new Pose(131.5, 56.5, Math.toRadians(0));
     }
 
     public void buildPaths() {
         firstScore = follower.pathBuilder()
-                .addPath(new BezierCurve(startPose,new Pose(29, 113), firstShoot))
+                .addPath(new BezierCurve(startPose,new Pose(115, 113), firstShoot))
                 .setLinearHeadingInterpolation(startPose.getHeading(), firstShoot.getHeading())
                 .build();
         firstTake = follower.pathBuilder()
-                .addPath(new BezierCurve(firstShoot,new Pose(63, 85), firstBall))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .addPath(new BezierCurve(firstShoot,new Pose(81, 85), firstBall))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         secondScore = follower.pathBuilder()
                 .addPath(new BezierLine(firstBall, secondShoot))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         secondTake = follower.pathBuilder()
-                .addPath(new BezierCurve(secondShoot, new Pose(51, 57) ,secondBall))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .addPath(new BezierCurve(secondShoot, new Pose(93, 57) ,secondBall))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         thirdScore = follower.pathBuilder()
                 .addPath(new BezierLine(secondBall, secondShoot))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
     }
 
@@ -109,7 +98,7 @@ public class autoBlueCloseV2 extends OpMode {
         switch(initState){
             case 10:
                 robot.turret.setUseSquID(false);
-                robot.turret.moveEncoderTo(turretSquid.blueCloseAutoStart, 0.7f);
+                robot.turret.moveEncoderTo(turretSquid.redCloseAutoStart, 0.7f);
                 setInitState(11);
                 break;
             case 11:
@@ -159,8 +148,8 @@ public class autoBlueCloseV2 extends OpMode {
         switch(pathState){
             case 10:
                 follower.followPath(firstScore);
-                robot.turret.setUseSquID(false, turretSquid.blueCloseFirstView);
-                robot.turrets.moveEncoderTo(turretSquid.blueCloseFirstView, 0.7f);
+                robot.turret.setUseSquID(false, turretSquid.redCloseFirstView);
+                robot.turrets.moveEncoderTo(turretSquid.redCloseFirstView, 0.7f);
                 colorMode = colorState.GPP;
                 setPathState(11);
                 break;
@@ -201,7 +190,7 @@ public class autoBlueCloseV2 extends OpMode {
                 if(!follower.isBusy()){
                     follower.setMaxPower(1);
                     //robot.turrets.moveEncoderTo(turretSquid.blueCloseShootReset, 0.7f);
-                    robot.turret.setUseSquID(false, turretSquid.blueCloseShootReset);
+                    robot.turret.setUseSquID(false, turretSquid.redCloseShootReset);
                     colorMode = colorState.GPP;
                     follower.followPath(secondScore);
                     setPathState(15);

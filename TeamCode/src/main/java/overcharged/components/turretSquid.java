@@ -11,9 +11,14 @@ public class turretSquid {
 
     public static final int START = -197;
     public static final int NORMAL = 0;
-    public static final int blueCloseAutoStart = -98;
+    public static final int blueCloseAutoStart = -120;
     public static final int blueCloseShootReset = 19;
-    public static final int blueCloseFirstView = 29;
+    public static final int blueCloseFirstView = -120;
+    public static final int redCloseAutoStart = 120;
+    public static final int redCloseShootReset = 0;
+    public static final int redCloseFirstView = 120;
+    public static final int minimum = -155;
+    public static final int maximum = 450;
 
     public float kp = 0.075f;
     public double start;
@@ -120,5 +125,7 @@ public class turretSquid {
 
     public void setPIDF(double p, double i, double d, double f) { this.p = p; this.i = i; this.d = d; this.f = f; }
 
+    public int getMax() { return maximum;}
+    public int getMin() {return minimum;}
 
 }
