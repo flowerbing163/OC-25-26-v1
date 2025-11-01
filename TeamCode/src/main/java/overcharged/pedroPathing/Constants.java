@@ -17,22 +17,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
 
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(10)
+            .mass(12.25)
             .forwardZeroPowerAcceleration(-32.675105304505486)
             .lateralZeroPowerAcceleration(-66.64383989507478)
             .useSecondaryTranslationalPIDF(true)
             .useSecondaryHeadingPIDF(true)
-            .useSecondaryDrivePIDF(true)
+            .useSecondaryDrivePIDF(false)
             .centripetalScaling(0.00036)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.25, 0, 0.025, 0.03))
-            .headingPIDFCoefficients(new PIDFCoefficients(1.1, 0, 0.09, 0.07))
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(1, 0.000001, 0, 0.6, 0))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.25, 0, 0.1, 0.07))
+            .headingPIDFCoefficients(new PIDFCoefficients(1.5, 0, 0.09, 0.07))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.015, 0.000005, 0.0007, 0.6, 0))
             .secondaryTranslationalPIDFCoefficients(
                     new PIDFCoefficients(0.11, 0, 0.02, 0.025)
             )
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1.2, 0, 0.01, 0.01))
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients( 0.8, 0.00001, 0.01, 0.01))
             .secondaryDrivePIDFCoefficients(
-                    new FilteredPIDFCoefficients(0.02, 0.00001, 0.0001, 0.6, 0)
+                    new FilteredPIDFCoefficients(0.008, 0.00001, 0.0001, 0.6, 0)
             );
 
     public static MecanumConstants driveConstants = new MecanumConstants()

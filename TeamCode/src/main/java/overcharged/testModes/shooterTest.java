@@ -27,7 +27,7 @@ public class shooterTest extends OpMode {
     public static double i = 0.0001;
     public static double d = 0.0005;
     public static double f = 0;
-    public static double powerCoeff = 1.612;
+    public static float powerCoeff = 1.612f;
 
     float hoodStick;
     float tempHood;
@@ -54,7 +54,7 @@ public class shooterTest extends OpMode {
 
         telemetry.update();
 
-        robot.shooter.setUsePID(true, target, robot.hood.getCurrentAngle());
+        //robot.shooter.setUsePID(true, target);
         robot.shooter.setKp(kP);
         robot.shooter.setPIDF(p, i, d, f);
         robot.shooter.setPowerCoeff(powerCoeff);

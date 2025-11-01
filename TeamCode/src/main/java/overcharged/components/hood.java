@@ -18,11 +18,78 @@ public class hood {
 
     public float getCurrentPos() {return hood.getPosition(); }
 
+    private boolean autoAdjust = false;
+    private double targetDist = 1000; // in mm
+    private double targetHeight = 0.70485; // in meters
+    private shooter shooterRef = null;
+
     public float getCurrentAngle() {
         return (float) (Math.toRadians(getCurrentPos()/9+25));
         // when hood is init: 40 = 225f // 50
         // when hood is max: 65 = 1f // 25
     }
+    public float angToPos(double angleRad) {
+        double angleDeg = Math.toDegrees(angleRad);
+        // Reverse the formula from getCurrentAngle()
+        // angleDeg = pos/9 + 25
+        // pos = (angleDeg - 25) * 9
+        float pos = (float)((angleDeg - 25) * 9);
+
+        return Math.max(MAX, Math.min(INIT, pos));
+    }
+    private double calcReqAng(double velocity, double distance) {
+        double distMeters = distance / 1000.0; // Convert mm to m
+        double g = 9.81;
+        double h = targetHeight;
+
+        double minAngle = Math.toRadians(25);
+        double maxAngle = Math.toRadians(50);
+        double target = g * distMeters * distMeters;
+        double vSquared = velocity * velocity;
+
+        for (int i = 0; i < 50; i++) {
+            double midAngle = (minAngle + maxAngle) / 2.0;
+
+            double cosTheta = Math.cos(midAngle);
+            double tanTheta = Math.tan(midAngle);
+            double value = vSquared * 2.0 * cosTheta * cosTheta * (distMeters * tanTheta - h);
+
+            if (Math.abs(value - target) < 0.01) {
+                return midAngle;
+            }
+
+            if (value < target) {
+                minAngle = midAngle;
+            } else {
+                maxAngle = midAngle;
+            }
+        }
+
+        return (minAngle + maxAngle) / 2.0;
+    }
+
+    public void setAutoAdjust(boolean enable, shooter shooter, double targetDistance) {
+        this.autoAdjust = enable;
+        this.shooterRef = shooter;
+        this.targetDist = targetDistance;
+    }
+
+    public void update() {
+        if (autoAdjust && shooterRef != null) {
+            double motorPower = shooterRef.getPowerT();
+            double velocity = motorPower * shooterRef.powerCoeff;
+
+            double reqAng = calcReqAng(velocity, targetDist);
+
+            float position = angToPos(reqAng) + 5;
+            hood.setPosition(position);
+        }
+    }
+
+    public void setTargetDistance(double distance) {
+        this.targetDist = distance;
+    }
+
 
     public void setInit() { hood.setPosition(INIT); }
 

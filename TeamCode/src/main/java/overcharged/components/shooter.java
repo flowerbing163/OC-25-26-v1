@@ -23,7 +23,9 @@ public class shooter {
     public double i = 0.0005;
     public double f = 0.003;
 
-    public double powerCoeff = 6.35;
+    public float power = 0f;
+    public float powerCoeff = 6.00f;
+    public double maxPow = 1.0;
 
     //TODO: motor velocity at max spin(1f) = 1.612
     //TODO:
@@ -100,7 +102,6 @@ public class shooter {
     }
 
     public float getPID() {
-        //double hood = hood;
         //power outputs in velocity of shoot, finpower converts to motor power through vel of ball
         float power = (float)Math.sqrt((9.81*Math.pow(targetDist, 2))/(2*Math.pow(Math.cos(hood), 2)*(targetDist*Math.tan(hood)-0.70485)));
         float finPower = (float)(power/powerCoeff); //TODO: test whether this works for close zones
@@ -108,7 +109,7 @@ public class shooter {
     }
 
     public double getCurrentSpeed() {
-        return (getPowerB()+getPowerT())/2;
+        return getPowerB();
     }
 
     public double getCurrentPos() {return Math.round((topShooter.getCurrentPosition()+botShooter.getCurrentPosition())/2);}
@@ -129,7 +130,7 @@ public class shooter {
 
     public void setPIDF(double p, double i, double d, double f) { this.kp = p; this.i = i; this.d = d; this.f = f; }
 
-    public void setPowerCoeff(double power) {this.powerCoeff = power;}
+    public void setPowerCoeff(float power) {this.powerCoeff = power;}
 
     public double getError() {return targetSpeed - getCurrentSpeed();}
 

@@ -13,6 +13,7 @@ public class turrets {
     public static final int MIN = 300;
     public static final int MAX = -552;
     public static final int NORMAL = 0;
+    public static final int blueCloseAutoStart = 274;
 
     public static double p = 18;
     public static double i = 0.00015;
