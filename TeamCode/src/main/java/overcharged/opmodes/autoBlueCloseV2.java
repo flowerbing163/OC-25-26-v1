@@ -173,7 +173,7 @@ public class autoBlueCloseV2 extends OpMode {
                 break;
             case 12:
                 if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(40.5)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39.5)));
                     setPathState(121);
                 }
                 break;
@@ -185,7 +185,7 @@ public class autoBlueCloseV2 extends OpMode {
                 }
                 break;
             case 13:
-                if(pathTimer.milliseconds() > 3000) {
+                if(pathTimer.milliseconds() > 2800) {
                     follower.followPath(firstTake);
                     //autoTurret = false;
                     setPathState(130);
@@ -210,7 +210,7 @@ public class autoBlueCloseV2 extends OpMode {
             case 15:
                 if(!follower.isBusy()) {
                     //robot.intake.off();
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(41)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(40.5)));
                     setPathState(151);
                 }
                 break;
@@ -221,7 +221,7 @@ public class autoBlueCloseV2 extends OpMode {
                 }
                 break;
             case 16:
-                if(pathTimer.milliseconds() > 3000) {
+                if(pathTimer.milliseconds() > 2800) {
                     follower.followPath(secondTake);
                     setPathState(160);
                 }
@@ -243,13 +243,21 @@ public class autoBlueCloseV2 extends OpMode {
                 break;
             case 18:
                 if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(40)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39.5)));
                     setPathState(19);
                 }
                 break;
             case 19:
                 if(pathTimer.milliseconds() > 300) {
                     actionHandler.startFastShoot();
+                    setPathState(20);
+                }
+                break;
+            case 20:
+                if(pathTimer.milliseconds() > 3000) {
+                    shootPIDupdate = false;
+                    autoTurret = false;
+                    robot.intake.off();
                     setPathState(100);
                 }
                 break;
