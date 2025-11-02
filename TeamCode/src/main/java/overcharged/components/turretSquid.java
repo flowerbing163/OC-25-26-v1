@@ -9,16 +9,17 @@ import com.qualcomm.robotcore.util.RobotLog;
 public class turretSquid {
     public final OcMotorEx turret;
 
+    public static final int center = 11;
     public static final int START = -197;
     public static final int NORMAL = 0;
-    public static final int blueCloseAutoStart = -120;
-    public static final int blueCloseShootReset = 19;
-    public static final int blueCloseFirstView = -120;
-    public static final int redCloseAutoStart = 120;
-    public static final int redCloseShootReset = 0;
-    public static final int redCloseFirstView = 120;
-    public static final int minimum = -155;
-    public static final int maximum = 450;
+    public static final int blueCloseAutoStart = center-194;
+    public static final int blueCloseShootReset = center-116;
+    public static final int blueCloseFirstView = center-116;
+    public static final int redCloseAutoStart = center+194;
+    public static final int redCloseShootReset = center+116;
+    public static final int redCloseFirstView = center+116;
+    public static final int minimum = center-117;
+    public static final int maximum = center+509;
 
     public float kp = 0.075f;
     public double start;

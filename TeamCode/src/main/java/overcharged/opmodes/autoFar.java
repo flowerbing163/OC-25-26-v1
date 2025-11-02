@@ -21,8 +21,8 @@ import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
 
-@Autonomous(name = "red goal close", group = "0Autonomous")
-public class autoRedClose extends OpMode {
+@Autonomous(name = "auto far", group = "0Autonomous")
+public class autoFar extends OpMode {
     private RobotMecanum robot;
     private ElapsedTime pathTimer;
     MultipleTelemetry telems;
@@ -53,44 +53,43 @@ public class autoRedClose extends OpMode {
         NONE
     }
 
-    public static Pose startPose = new Pose(129, 114, Math.toRadians(90)); // heading: 90
+    public static Pose startPose = new Pose(56, 6.75, Math.toRadians(90)); // heading: 90
     private static Pose firstShoot, firstBall, secondShoot, secondBall, endPose;
 
-    public static PathChain firstScore, firstTake, secondScore, secondTake, thirdScore, goEnd;
+    public static PathChain firstScore, firstTake, secondScore, secondTake, thirdScore, forward;
+
 
     public void buildPoses() {
-        firstShoot = new Pose(99, 98, Math.toRadians(0));
-        firstBall = new Pose(127, 81, Math.toRadians(0));
-        secondShoot = new Pose(86, 78, Math.toRadians(0));
-        secondBall = new Pose(132, 56.5, Math.toRadians(0));
-        endPose = new Pose(124, 72, Math.toRadians(0));
+//        firstShoot = new Pose(99, 98, Math.toRadians(0));
+//        firstBall = new Pose(126.5, 80.5, Math.toRadians(0));
+//        secondShoot = new Pose(87.5, 78, Math.toRadians(0));
+//        secondBall = new Pose(131.5, 56.5, Math.toRadians(0));
+        endPose = new Pose(56, 40, Math.toRadians(90));
+
     }
 
     public void buildPaths() {
-        firstScore = follower.pathBuilder()
-                .addPath(new BezierCurve(startPose,new Pose(115, 113), firstShoot))
-                .setLinearHeadingInterpolation(startPose.getHeading(), firstShoot.getHeading())
-                .build();
-        firstTake = follower.pathBuilder()
-                .addPath(new BezierCurve(firstShoot,new Pose(81, 85), firstBall))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        secondScore = follower.pathBuilder()
-                .addPath(new BezierLine(firstBall, secondShoot))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        secondTake = follower.pathBuilder()
-                .addPath(new BezierCurve(secondShoot, new Pose(93, 57) ,secondBall))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        thirdScore = follower.pathBuilder()
-                .addPath(new BezierLine(secondBall, secondShoot))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        goEnd = follower.pathBuilder()
-                .addPath(new BezierLine(secondShoot, endPose))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
+//        firstScore = follower.pathBuilder()
+//                .addPath(new BezierCurve(startPose,new Pose(115, 113), firstShoot))
+//                .setLinearHeadingInterpolation(startPose.getHeading(), firstShoot.getHeading())
+//                .build();
+//        firstTake = follower.pathBuilder()
+//                .addPath(new BezierCurve(firstShoot,new Pose(81, 85), firstBall))
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
+//                .build();
+//        secondScore = follower.pathBuilder()
+//                .addPath(new BezierLine(firstBall, secondShoot))
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
+//                .build();
+//        secondTake = follower.pathBuilder()
+//                .addPath(new BezierCurve(secondShoot, new Pose(93, 57) ,secondBall))
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
+//                .build();
+//        thirdScore = follower.pathBuilder()
+//                .addPath(new BezierLine(secondBall, secondShoot))
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
+//                .build();
+        forward = follower.pathBuilder().addPath(new BezierLine(startPose, endPose)).setConstantHeadingInterpolation(Math.toRadians(90)).build();
     }
 
     public void setInitState(int state) {
@@ -152,112 +151,10 @@ public class autoRedClose extends OpMode {
     public void autoPath() {
         switch(pathState){
             case 10:
-                follower.followPath(firstScore);
-                robot.turret.setUseSquID(false, turretSquid.redCloseFirstView);
-                robot.turrets.moveEncoderTo(turretSquid.redCloseFirstView, 0.7f);
-                colorMode = colorState.GPP;
-                setPathState(11);
+                follower.followPath(forward);
+                autoTurret = true;
+                setPathState(100);
                 break;
-            case 11:
-                if(follower.getCurrentTValue() >0.1) {
-                    autoTurret = true;
-                    robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());
-                    shootPIDupdate = true;
-                    setPathState(12);
-                }
-                break;
-            case 12:
-                if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39.5)));
-                    setPathState(121);
-                }
-                break;
-            case 121:
-                if(pathTimer.milliseconds()>200) {
-                    actionHandler.startFastShoot();
-                    robot.intake.in();
-                    setPathState(13);
-                }
-                break;
-            case 13:
-                if(pathTimer.milliseconds() > 2600) {
-                    follower.followPath(firstTake);
-                    //autoTurret = false;
-                    setPathState(130);
-                }
-                break;
-            case 130:
-                if(follower.getCurrentTValue() > 0.3) {
-                    follower.setMaxPower(0.5);
-                    setPathState(14);
-                }
-                break;
-            case 14:
-                if(!follower.isBusy()){
-                    follower.setMaxPower(1);
-                    //robot.turrets.moveEncoderTo(turretSquid.blueCloseShootReset, 0.7f);
-                    robot.turret.setUseSquID(false, turretSquid.redCloseShootReset);
-                    colorMode = colorState.GPP;
-                    follower.followPath(secondScore);
-                    setPathState(15);
-                }
-                break;
-            case 15:
-                if(!follower.isBusy()) {
-                    //robot.intake.off();
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(40.5)));
-                    setPathState(151);
-                }
-                break;
-            case 151:
-                if(pathTimer.milliseconds()>350) {
-                    actionHandler.startFastShoot();
-                    setPathState(16);
-                }
-                break;
-            case 16:
-                if(pathTimer.milliseconds() > 2500) {
-                    follower.followPath(secondTake);
-                    setPathState(160);
-                }
-                break;
-            case 160:
-                if(follower.getCurrentTValue() > 0.3) {
-                    follower.setMaxPower(0.5);
-                    setPathState(17);
-                    break;
-                }
-                break;
-            case 17:
-                if(!follower.isBusy()){
-                    follower.setMaxPower(1);
-                    colorMode = colorState.PPG;
-                    follower.followPath(thirdScore);
-                    setPathState(18);
-                }
-                break;
-            case 18:
-                if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39.5)));
-                    setPathState(19);
-                }
-                break;
-            case 19:
-                if(pathTimer.milliseconds() > 350) {
-                    actionHandler.startFastShoot();
-                    setPathState(20);
-                }
-                break;
-            case 20:
-                if(pathTimer.milliseconds() > 2800) {
-                    shootPIDupdate = false;
-                    autoTurret = false;
-                    robot.intake.off();
-                    setPathState(100);
-                }
-                break;
-
-
             case 100:
                 telemetry.addLine("TEST CASE TIME");
                 break;
@@ -324,41 +221,41 @@ public class autoRedClose extends OpMode {
         }
 
 
-        if(obbyID == 21) { //gpp
-            if(colorMode == colorState.GPP){ // yyy
-                actionHandler.fastShootSeq();
-            } else if (colorMode == colorState.PGP) { // nny
-                actionHandler.fastShootSeq213();
-            } else if (colorMode == colorState.PPG) { // nyn
-                actionHandler.fastShootSeq321();
-            }
-        }
-        else if (obbyID == 22) { //pgp
-            if(colorMode == colorState.GPP){
-                actionHandler.fastShootSeq213();
-            } else if (colorMode == colorState.PGP) {
-                actionHandler.fastShootSeq();
-            } else if (colorMode == colorState.PPG) {
-                actionHandler.fastShootSeq132();
-            }
-        }
-        else if (obbyID == 23){ //ppg
-            if(colorMode == colorState.GPP){
-                actionHandler.fastShootSeq321();
-            } else if (colorMode == colorState.PGP) {
-                actionHandler.fastShootSeq132();
-            } else if (colorMode == colorState.PPG) {
-                actionHandler.fastShootSeq();
-            }
-        }
+//        if(obbyID == 21) { //gpp
+//            if(colorMode == colorState.GPP){ // yyy
+//                actionHandler.fastShootSeq();
+//            } else if (colorMode == colorState.PGP) { // nny
+//                actionHandler.fastShootSeq213();
+//            } else if (colorMode == colorState.PPG) { // nyn
+//                actionHandler.fastShootSeq321();
+//            }
+//        }
+//        else if (obbyID == 22) { //pgp
+//            if(colorMode == colorState.GPP){
+//                actionHandler.fastShootSeq213();
+//            } else if (colorMode == colorState.PGP) {
+//                actionHandler.fastShootSeq();
+//            } else if (colorMode == colorState.PPG) {
+//                actionHandler.fastShootSeq132();
+//            }
+//        }
+//        else if (obbyID == 23){ //ppg
+//            if(colorMode == colorState.GPP){
+//                actionHandler.fastShootSeq321();
+//            } else if (colorMode == colorState.PGP) {
+//                actionHandler.fastShootSeq132();
+//            } else if (colorMode == colorState.PPG) {
+//                actionHandler.fastShootSeq();
+//            }
+//        }
 
     }
 
     @Override
     public void init_loop() {
-        initBody();
-        telemetry.addLine("Init looping");
-        telemetry.addLine("case: "+initState);
+//        initBody();
+//        telemetry.addLine("Init looping");
+//        telemetry.addLine("case: "+initState);
     }
 
     @Override

@@ -64,16 +64,17 @@ public class autoBlueCloseV2 extends OpMode {
         NONE
     }
 
-    public static Pose startPose = new Pose(15, 113, Math.toRadians(90)); // heading: 90
-    private static Pose firstShoot, firstBall, secondShoot, secondBall;
+    public static Pose startPose = new Pose(15, 114, Math.toRadians(90)); // heading: 90
+    private static Pose firstShoot, firstBall, secondShoot, secondBall, endPose;
 
-    public static PathChain firstScore, firstTake, secondScore, secondTake, thirdScore;
+    public static PathChain firstScore, firstTake, secondScore, secondTake, thirdScore, goEnd;
 
     public void buildPoses() {
         firstShoot = new Pose(45, 98, Math.toRadians(180));
-        firstBall = new Pose(17.5, 81, Math.toRadians(180));
+        firstBall = new Pose(17, 81, Math.toRadians(180));
         secondShoot = new Pose(58, 78, Math.toRadians(180));
-        secondBall = new Pose(12.5, 56.5, Math.toRadians(180));
+        secondBall = new Pose(12, 56.5, Math.toRadians(180));
+        endPose = new Pose(20, 72, Math.toRadians(180));
     }
 
     public void buildPaths() {
@@ -97,6 +98,10 @@ public class autoBlueCloseV2 extends OpMode {
                 .addPath(new BezierLine(secondBall, secondShoot))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
+        goEnd = follower.pathBuilder()
+                .addPath(new BezierLine(secondShoot, endPose))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
     }
 
     public void setInitState(int state) {
@@ -113,6 +118,7 @@ public class autoBlueCloseV2 extends OpMode {
                 setInitState(11);
                 break;
             case 11:
+                robot.indexer.setTwo();
                 setInitState(12);
                 break;
             case 12:
@@ -150,7 +156,7 @@ public class autoBlueCloseV2 extends OpMode {
                 break;
             case 13:
                 telemetry.addLine("INIT FINISHED");
-                telemetry.addLine(String.valueOf(motif.get(0) + motif.get(1) + motif.get(2)));
+                telemetry.addData("motif ID: ", obbyID);
                 break;
         }
     }
@@ -165,27 +171,28 @@ public class autoBlueCloseV2 extends OpMode {
                 setPathState(11);
                 break;
             case 11:
-                if(follower.getCurrentTValue() >0.1) {
+                if(follower.getCurrentTValue() >0.08) {
                     autoTurret = true;
+                    robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());
                     shootPIDupdate = true;
                     setPathState(12);
                 }
                 break;
             case 12:
                 if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39.5)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39)));
                     setPathState(121);
                 }
                 break;
             case 121:
-                if(pathTimer.milliseconds()>300) {
-                    actionHandler.startFastShoot();
+                if(pathTimer.milliseconds()>200) {
                     robot.intake.in();
+                    actionHandler.startFastShoot();
                     setPathState(13);
                 }
                 break;
             case 13:
-                if(pathTimer.milliseconds() > 2800) {
+                if(pathTimer.milliseconds() > 2600) {
                     follower.followPath(firstTake);
                     //autoTurret = false;
                     setPathState(130);
@@ -210,18 +217,18 @@ public class autoBlueCloseV2 extends OpMode {
             case 15:
                 if(!follower.isBusy()) {
                     //robot.intake.off();
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(40.5)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(40.)));
                     setPathState(151);
                 }
                 break;
             case 151:
-                if(pathTimer.milliseconds()>200) {
+                if(pathTimer.milliseconds()>300) {
                     actionHandler.startFastShoot();
                     setPathState(16);
                 }
                 break;
             case 16:
-                if(pathTimer.milliseconds() > 2800) {
+                if(pathTimer.milliseconds() > 2600) {
                     follower.followPath(secondTake);
                     setPathState(160);
                 }
@@ -243,7 +250,7 @@ public class autoBlueCloseV2 extends OpMode {
                 break;
             case 18:
                 if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39.5)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(40.5)));
                     setPathState(19);
                 }
                 break;
@@ -254,13 +261,25 @@ public class autoBlueCloseV2 extends OpMode {
                 }
                 break;
             case 20:
-                if(pathTimer.milliseconds() > 3000) {
+                if(pathTimer.milliseconds() > 2600) {
                     shootPIDupdate = false;
                     autoTurret = false;
                     robot.intake.off();
+                    setPathState(21);
+                }
+                break;
+            case 21:
+                if(!follower.isBusy()) {
+                    follower.followPath(goEnd);
+                    setPathState(22);
+                }
+                break;
+            case 22:
+                if(!follower.isBusy()) {
                     setPathState(100);
                 }
                 break;
+
 
 
 

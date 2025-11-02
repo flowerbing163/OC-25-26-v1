@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-@Autonomous(name = "blue goal close", group = "0Autonomous")
+@Autonomous(name = "blue goal close", group = "Autonomous")
 public class autoBlueClose9 extends OpMode {
     private RobotMecanum robot;
     private ElapsedTime pathTimer;

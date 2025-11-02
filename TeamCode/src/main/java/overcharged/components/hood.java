@@ -39,20 +39,18 @@ public class hood {
     }
     private double calcReqAng(double velocity, double distance) {
         double distMeters = distance / 1000.0; // Convert mm to m
-        double g = 9.81;
         double h = targetHeight;
 
         double minAngle = Math.toRadians(25);
         double maxAngle = Math.toRadians(50);
-        double target = g * distMeters * distMeters;
-        double vSquared = velocity * velocity;
+        double target = 9.81 * distMeters * distMeters;
 
         for (int i = 0; i < 50; i++) {
             double midAngle = (minAngle + maxAngle) / 2.0;
 
             double cosTheta = Math.cos(midAngle);
             double tanTheta = Math.tan(midAngle);
-            double value = vSquared * 2.0 * cosTheta * cosTheta * (distMeters * tanTheta - h);
+            double value = velocity * velocity * 2.0 * cosTheta * cosTheta * (distMeters * tanTheta - h);
 
             if (Math.abs(value - target) < 0.01) {
                 return midAngle;

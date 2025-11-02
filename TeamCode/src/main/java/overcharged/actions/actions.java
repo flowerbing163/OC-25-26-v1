@@ -15,9 +15,9 @@ public class actions {
     private int shootStep;
     private int shootRepStep;
 
-    private int kickPause = 340;
-    private int retractPause = 310;
-    private int setIndPause = 320;
+    private int kickPause = 300;
+    private int retractPause = 250;
+    private int setIndPause = 280;
 
     public void fastShootSys(RobotMecanum robot) {
         this.robot = robot;
@@ -55,7 +55,7 @@ public class actions {
             shootRepStep += 1;
             shootTimer = timestamp;
         }
-        if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
+        if (shootStep == 4 && timestamp - shootTimer > 280 && shootRepStep == 2) {
             robot.indexer.setTwo();
             shootStep = 0;
             shootRepStep = 0;
@@ -123,7 +123,7 @@ public class actions {
             shootRepStep += 1;
             shootTimer = timestamp;
         }
-        if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
+        if (shootStep == 4 && timestamp - shootTimer > 280 && shootRepStep == 2) {
             robot.indexer.setTwo();
             shootStep = 0;
             shootRepStep = 0;
@@ -160,7 +160,7 @@ public class actions {
             shootRepStep += 1;
             shootTimer = timestamp;
         }
-        if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
+        if (shootStep == 4 && timestamp - shootTimer > 280 && shootRepStep == 2) {
             robot.indexer.setTwo();
             shootStep = 0;
             shootRepStep = 0;
@@ -198,7 +198,7 @@ public class actions {
             shootRepStep += 1;
             shootTimer = timestamp;
         }
-        if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
+        if (shootStep == 4 && timestamp - shootTimer > 280 && shootRepStep == 2) {
             robot.indexer.setTwo();
             shootStep = 0;
             shootRepStep = 0;
@@ -235,7 +235,7 @@ public class actions {
             shootRepStep += 1;
             shootTimer = timestamp;
         }
-        if (shootStep == 4 && timestamp - shootTimer > 350 && shootRepStep == 2) {
+        if (shootStep == 4 && timestamp - shootTimer > 280 && shootRepStep == 2) {
             robot.indexer.setTwo();
             shootStep = 0;
             shootRepStep = 0;
