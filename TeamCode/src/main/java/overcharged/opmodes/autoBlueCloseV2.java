@@ -46,7 +46,6 @@ public class autoBlueCloseV2 extends OpMode {
     private int pathState;
     private int initState;
     public int motifID = 21;
-    List<Character> motif = new ArrayList<>();
     int obbyID;
     private Follower follower;
 
@@ -129,30 +128,20 @@ public class autoBlueCloseV2 extends OpMode {
                     telemetry.addLine("Cannot see");
                 }
                 if(motifID == 21){
-                    motif.add('G');
-                    motif.add('P');
-                    motif.add('P');
                     obbyID = motifID;
                     setInitState(13);
                 }
                 else if (motifID == 22){
-                    motif.add('P');
-                    motif.add('G');
-                    motif.add('P');
                     obbyID = motifID;
                     setInitState(13);
                 }
                 else if (motifID == 23){
-                    motif.add('P');
-                    motif.add('P');
-                    motif.add('G');
                     obbyID = motifID;
                     setInitState(13);
                 }
                 else {
                     obbyID = 21;
                 }
-                telemetry.addLine(String.valueOf(motif.get(0) + motif.get(1) + motif.get(2)));
                 break;
             case 13:
                 telemetry.addLine("INIT FINISHED");
