@@ -3,6 +3,7 @@ package overcharged.testModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -26,6 +27,8 @@ public class thinkTele1 extends OpMode{
     actions actionHandler = new actions();
 
     Limelight3A limelight;
+
+    BHI260IMU imu;
 
     double slowPower = 1;
     int calcPosition;

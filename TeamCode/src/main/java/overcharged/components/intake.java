@@ -10,7 +10,7 @@ public class intake {
     public intake(HardwareMap hardwareMap){
         intake = hardwareMap.dcMotor.get("intake");
 
-        intake.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
