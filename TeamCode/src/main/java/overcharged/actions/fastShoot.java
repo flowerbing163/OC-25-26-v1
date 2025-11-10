@@ -29,7 +29,7 @@ public class fastShoot {
             shootTimer = System.currentTimeMillis();
         }
         if(shootStep == 1 && System.currentTimeMillis()-shootTimer > 10){
-            robot.indexer.setOne();
+            robot.indexer.setTwo();
             shootStep += 1;
             shootTimer = System.currentTimeMillis();
         }
@@ -44,13 +44,13 @@ public class fastShoot {
             shootTimer = System.currentTimeMillis();
         }
         if(shootStep == 4 && System.currentTimeMillis()-shootTimer > 250 && shootRepStep == 0){
-            robot.indexer.setTwo();
+            robot.indexer.setThree();
             shootStep = 2;
             shootRepStep += 1;
             shootTimer = System.currentTimeMillis();
         }
         if(shootStep == 4 && System.currentTimeMillis()-shootTimer > 250 && shootRepStep == 1){
-            robot.indexer.setThree();
+            robot.indexer.setOne();
             shootStep = 2;
             shootRepStep += 1;
             shootTimer = System.currentTimeMillis();

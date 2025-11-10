@@ -25,11 +25,11 @@ public class actions {
         this.shootRepStep = 0;
         this.shootTimer = 0;
     }
-    public void fastShootSeq() { //123
+    public void fastShootSeq() { //231
         long timestamp = System.currentTimeMillis();
 
         if (shootStep == 1 && timestamp - shootTimer > 10) {
-            robot.indexer.setOne();
+            robot.indexer.setTwo();
             shootStep += 1;
             shootTimer = timestamp;
         }
@@ -44,13 +44,13 @@ public class actions {
             shootTimer = timestamp;
         }
         if (shootStep == 4 && timestamp - shootTimer > setIndPause && shootRepStep == 0) {
-            robot.indexer.setTwo();
+            robot.indexer.setThree();
             shootStep = 2;
             shootRepStep += 1;
             shootTimer = timestamp;
         }
         if (shootStep == 4 && timestamp - shootTimer > setIndPause && shootRepStep == 1) {
-            robot.indexer.setThree();
+            robot.indexer.setOne();
             shootStep = 2;
             shootRepStep += 1;
             shootTimer = timestamp;
@@ -130,11 +130,11 @@ public class actions {
             shootTimer = 0;
         }
     }
-    public void fastShootSeq231() { //231
+    public void fastShootSeq123() { //123
         long timestamp = System.currentTimeMillis();
 
         if (shootStep == 1 && timestamp - shootTimer > 10) {
-            robot.indexer.setTwo();
+            robot.indexer.setOne();
             shootStep += 1;
             shootTimer = timestamp;
         }
@@ -149,13 +149,13 @@ public class actions {
             shootTimer = timestamp;
         }
         if (shootStep == 4 && timestamp - shootTimer > setIndPause && shootRepStep == 0) {
-            robot.indexer.setThree();
+            robot.indexer.setTwo();
             shootStep = 2;
             shootRepStep += 1;
             shootTimer = timestamp;
         }
         if (shootStep == 4 && timestamp - shootTimer > setIndPause && shootRepStep == 1) {
-            robot.indexer.setOne();
+            robot.indexer.setThree();
             shootStep = 2;
             shootRepStep += 1;
             shootTimer = timestamp;
@@ -269,20 +269,20 @@ public class actions {
         }
         switch (indexerPos) {
             case INIT:
-                robot.indexer.setOne();
-                indexerPos = indexerState.ONE;
+                robot.indexer.setThree();
+                indexerPos = indexerState.THREE;
                 break;
             case ONE:
                 robot.indexer.setTwo();
-                indexerPos = indexerState.TWO;
+                indexerPos = indexerState.INIT;
                 break;
             case TWO:
                 robot.indexer.setThree();
                 indexerPos = indexerState.THREE;
                 break;
             case THREE:
-                robot.indexer.setTwo();
-                indexerPos = indexerState.INIT;
+                robot.indexer.setOne();
+                indexerPos = indexerState.ONE;
                 break;
         }
         indMove = false;

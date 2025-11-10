@@ -365,7 +365,7 @@ public class thinkTele1 extends OpMode{
             hoodStick = ((float) gamepad2.left_stick_y)*1f;
             if(Math.abs(hoodStick) >= 0.07) {
                 tempHood = robot.hood.getCurrentPos() + hoodStick;
-                tempHood = Math.max(robot.hood.MAX, Math.min(tempHood, robot.hood.INIT-4));
+                tempHood = Math.max(robot.hood.MAX, Math.min(tempHood, robot.hood.INIT-1));
                 robot.hood.setPosition(tempHood);
             }
         }

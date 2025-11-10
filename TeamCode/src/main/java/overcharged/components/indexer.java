@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 public class indexer {
     public OcServo indexer;
 
-    public static final float ONE = 211f;//17f;
-    public static final float TWO = 115f;
-    public static final float THREE = 20f;//206f;
+    public static final float ONE = 16f;//211f old
+    public static final float TWO = 205f; //115f old
+    public static final float THREE = 111f;//20f old
 
     public indexer(HardwareMap hardwareMap) {
         indexer = new OcServo(hardwareMap, "indexer", TWO);

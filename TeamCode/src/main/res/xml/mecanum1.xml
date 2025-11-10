@@ -11,6 +11,7 @@
 
             <goBILDAPinpoint name="pinpoint" port="0" bus="2" />
 
+
         </LynxModule>
 
 
