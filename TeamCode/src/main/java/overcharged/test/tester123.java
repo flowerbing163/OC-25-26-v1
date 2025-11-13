@@ -198,10 +198,10 @@ tester123
     private void motorTest () {
         float[] powers = new float[]{0.25f, -0.25f};
 
-        MotorTestInfo[] motorTestInfos = new MotorTestInfo[]{new MotorTestInfo(robot.driveLeftFront, "driveLF"),
-                new MotorTestInfo(robot.driveLeftBack,"driveLB"),
-                new MotorTestInfo(robot.driveRightFront,"driveRF"),
-                new MotorTestInfo(robot.driveRightBack, "driveRB")
+        MotorTestInfo[] motorTestInfos = new MotorTestInfo[]{
+                new MotorTestInfo(robot.shooter.topShooter, "topShooter"),
+                new MotorTestInfo(robot.shooter.botShooter, "botShooter"),
+                new MotorTestInfo(robot.turret.turret, "turret"),
         };
 
         back:

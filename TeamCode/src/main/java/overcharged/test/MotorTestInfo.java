@@ -3,15 +3,16 @@ package overcharged.test;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import overcharged.components.OcMotor;
+import overcharged.components.OcMotorEx;
 
 /**
  * Created by Parthiv on 9/15/2019.
  */
 public class MotorTestInfo {
-    public OcMotor motor;
+    public OcMotorEx motor;
     public String motorName = "Unknown";
 
-    public MotorTestInfo(OcMotor motor, String name) {
+    public MotorTestInfo(OcMotorEx motor, String name) {
         this.motor = motor;
         this.motorName = name;
     }

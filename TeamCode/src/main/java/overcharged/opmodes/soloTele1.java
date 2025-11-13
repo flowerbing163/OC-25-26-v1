@@ -1,9 +1,8 @@
-package overcharged.testModes;
+package overcharged.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -19,16 +18,14 @@ import overcharged.components.turrets;
 
 
 @Config
-@TeleOp(name = "imagine tele", group = "0tele")
-public class thinkTele1 extends OpMode{
+@TeleOp(name = "solo tele", group = "0tele")
+public class soloTele1 extends OpMode{
 
     RobotMecanum robot;
 
     actions actionHandler = new actions();
 
     Limelight3A limelight;
-
-    BHI260IMU imu;
 
     double slowPower = 1;
     int calcPosition;
@@ -47,9 +44,6 @@ public class thinkTele1 extends OpMode{
     boolean hoodPIDupdate = false;
 
     boolean checker = false;
-
-    boolean turretReset = false;
-    long turretResetTimer;
 
     float hoodStick;
     float tempHood;
@@ -101,7 +95,7 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("lag: ", temp);
         //telemetry.addData("hoodstick: ", hoodStick);
         //telemetry.addData("temphood: ", tempHood);
-        //telemetry.addData("hood pos: ", robot.hood.getCurrentPos());
+        telemetry.addData("hood pos: ", robot.hood.getCurrentPos());
         //telemetry.addData("turretTurn: ", turretTurn);
         telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
         //telemetry.addData("test: ", checker);
@@ -110,7 +104,7 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("shoot PID: ", robot.shooter.getPID());
         //telemetry.addData("shoot pid on: ", shootPID);
         telemetry.addData("distance to goal: ", distance);
-        //telemetry.addData("Hood Angle", robot.hood.getCurrentAngle());
+        telemetry.addData("Hood Angle", robot.hood.getCurrentAngle());
         telemetry.addData("Hood Position", robot.hood.getCurrentPos());
         telemetry.addData("SIDE: ", sideID);
 
@@ -159,10 +153,6 @@ public class thinkTele1 extends OpMode{
         catch (IndexOutOfBoundsException e1) {
             telemetry.addLine("Cannot see, manually adjust");
         }
-
-        if (gamepad2.touchpad && Button.BTN_LIMELIGHT.canPress(timestamp)) {
-            autoAiming = !autoAiming;
-        }
         if (autoAiming) {
             robot.turret.setUseSquID(true);
             try {
@@ -178,31 +168,6 @@ public class thinkTele1 extends OpMode{
             catch (IndexOutOfBoundsException e1){
                 telemetry.addLine("cant see vro :skull:");
             }
-        }
-        else {
-            robot.turret.setUseSquID(false,turretSquid.center);
-            robot.turret.moveEncoderTo(turretSquid.center, 0.7f);
-            turretTurn = -(gamepad2.right_stick_x)*0.35;
-            if(Math.abs(turretTurn) >= 0.03) {
-                robot.turrets.setPower((float)turretTurn);
-                checker = true;
-            } else if (Math.abs(turretTurn) < 0.05){
-                robot.turrets.setPower(0);
-                checker = false;
-            }
-        }
-
-        if(gamepad1.touchpad && Button.BTN_MIN.canPress(timestamp)) {
-            turretReset = true;
-            turretResetTimer = System.currentTimeMillis();
-            autoAiming = false;
-            robot.turret.setUseSquID(false,turretSquid.center);
-            robot.turret.moveEncoderTo(turretSquid.center, 0.7f);
-        }
-        if(turretReset && System.currentTimeMillis()-turretResetTimer>400) {
-            turretReset = false;
-            turretResetTimer = 0;
-            autoAiming = true;
         }
 
         if(gamepad1.dpad_up && Button.BTN_PLUS.canPress(timestamp)) {
@@ -235,18 +200,8 @@ public class thinkTele1 extends OpMode{
             }
         }
 
-        //indexer manual move
-        if(gamepad2.a && Button.BTN_TTABLE.canPress(timestamp) && canTurn) {
-            actionHandler.startIndMove();
-        }
-
-        //indexer hard reset
-        if(gamepad1.y && Button.INTAKE.canPress(timestamp) && canTurn) {
-            robot.indexer.setTwo();
-        }
-
         //auto kicker
-        if (gamepad2.y && Button.BTN_KICKER.canPress(timestamp)) {
+        if (gamepad1.y && Button.BTN_KICKER.canPress(timestamp)) {
             kicker = true;
             canTurn = false;
             kickTimer = System.currentTimeMillis();
@@ -259,20 +214,9 @@ public class thinkTele1 extends OpMode{
             kickTimer = 0;
         }
 
-        //manual kicker
-        if (gamepad2.x && Button.BTN_KICKER.canPress(timestamp)) {
-            if(!kicker){
-                kicker = true;
-                robot.kicker.setKick();
-            } else if (kicker) {
-                kicker = false;
-                robot.kicker.setInit();
-            }
-        }
-
 
         //shoot
-        if((gamepad2.right_trigger > 0.8 || gamepad1.right_bumper) && Button.BTN_FLYWHEEL.canPress(timestamp)) {
+        if(gamepad1.right_bumper && Button.BTN_FLYWHEEL.canPress(timestamp)) {
             if (!shootPID && !hoodPID) {
                 if (!shooting) {
                     gamepad1.rumble(100);
@@ -322,22 +266,22 @@ public class thinkTele1 extends OpMode{
             }
         }
 
-        if((gamepad1.dpad_left || gamepad2.right_bumper) && Button.INTAKE.canPress(timestamp)) {
+        if((gamepad1.dpad_left) && Button.INTAKE.canPress(timestamp)) {
             if(shootPID) {
                 shootPID = false;
                 hoodPID = false;
             } else if (!shootPID) {
-                gamepad2.rumble(100);
+                gamepad1.rumble(100);
                 shootPID = true;
                 hoodPID = false;
             }
         }
-        if((gamepad1.dpad_right || gamepad2.left_bumper) && Button.INTAKE.canPress(timestamp)) {
+        if((gamepad1.dpad_right) && Button.INTAKE.canPress(timestamp)) {
             if(hoodPID) {
                 shootPID = false;
                 hoodPID = false;
             } else if (!hoodPID) {
-                gamepad2.rumble(100);
+                gamepad1.rumble(100);
                 shootPID = false;
                 hoodPID = true;
             }
@@ -360,43 +304,11 @@ public class thinkTele1 extends OpMode{
             telemetry.addLine("pid off");
         }
 
-
-
-        //shooter intake
-        if(gamepad2.left_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp) && !shootPID) {
-            if(!shooterTaking) {
-                robot.shooter.intake();
-                shootPIDupdate = false;
-                shooting = false;
-                shooterTaking = true;
-            } else if(shooterTaking) {
-                robot.shooter.off();
-                shootPIDupdate = false;
-                shooting = false;
-                shooterTaking = false;
-            }
-        }
-
-
-        //manual hood
-        if(!hoodPIDupdate){
-            hoodStick = ((float) gamepad2.left_stick_y)*1f;
-            if(Math.abs(hoodStick) >= 0.07) {
-                tempHood = robot.hood.getCurrentPos() + hoodStick;
-                tempHood = Math.max(robot.hood.MAX, Math.min(tempHood, robot.hood.INIT-1));
-                robot.hood.setPosition(tempHood);
-            }
-        }
-
         //fast shoot
         if(gamepad1.left_bumper && Button.BTN_TTABLE.canPress(timestamp) && shooting){
             actionHandler.startFastShoot();
         } else if (gamepad1.left_bumper && Button.BTN_TTABLE.canPress(timestamp) && !shooting) {
             gamepad1.rumble(100);
-        }
-
-        if(gamepad2.guide && Button.BTN_MINUS.canPress(timestamp)) {
-            robot.turret.setCenter((int)robot.turret.getCurrentPosition());
         }
 
     }

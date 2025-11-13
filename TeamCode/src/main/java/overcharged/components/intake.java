@@ -10,13 +10,13 @@ public class intake {
     public intake(HardwareMap hardwareMap){
         intake = hardwareMap.dcMotor.get("intake");
 
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void in(){
-        intake.setPower(-1f);
+        intake.setPower(1f);
     }
 
     public void slowIn(){
@@ -29,8 +29,8 @@ public class intake {
     }
 
     public void out(){
-        intake.setPower(0.8f);
+        intake.setPower(-0.8f);
     }
 
-    public void slowOut() {intake.setPower(0.515f);}
+    public void slowOut() {intake.setPower(-0.515f);}
 }

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 public class turretSquid {
     public final OcMotorEx turret;
 
-    public static final int center = -318;
+    public static int center = -448;
     public static final int START = -197;
     public static final int NORMAL = 0;
     public static final int blueCloseAutoStart = center-194;
@@ -110,6 +110,10 @@ public class turretSquid {
         if (useSquID) {
             setPower(getSquid());
         }
+    }
+
+    public void setCenter(int mid) {
+        center = mid;
     }
 
     public void setKp(float kp) {
