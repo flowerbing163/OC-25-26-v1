@@ -152,7 +152,7 @@ public class thinkTele1 extends OpMode{
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 float ty = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetYDegrees();
                 telemetry.addData("RED GOAL TX: ", tx);
-                distance = (int) ((646.1125 - 406.15381) / Math.tan(Math.toRadians(ty)));
+                distance = (int) ((646.1125 - 410.15381) / Math.tan(Math.toRadians(ty)));
                 telemetry.addData("ty: ", ty);
             }
         }
@@ -167,11 +167,11 @@ public class thinkTele1 extends OpMode{
             robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                if (Math.abs(tx) >= 1.2f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
+                if (Math.abs(tx) >= 1.5f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
                     calcPosition = (int) (-2.8081 * tx - 0.7685);
                     telemetry.addData("calc pos", calcPosition);
                     if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.68f);
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.62f);
                     }
                 }
             }
@@ -397,6 +397,10 @@ public class thinkTele1 extends OpMode{
 
         if(gamepad2.guide && Button.BTN_MINUS.canPress(timestamp)) {
             robot.turret.setCenter((int)robot.turret.getCurrentPosition());
+        }
+
+        if(gamepad2.dpad_up && Button.BTN_128.canPress(timestamp) && !hoodPID) {
+            robot.hood.setPosition(128)     ;
         }
 
     }

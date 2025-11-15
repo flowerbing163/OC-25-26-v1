@@ -24,6 +24,7 @@ public class Button
     public static final Button BTN_TTABLE = new Button();
     public static final Button BTN_KICKER = new Button();
     public static final Button BTN_HOOD = new Button();
+    public static final Button BTN_128 = new Button();
 
     public static final Button BTN_COLLECT = new Button(); //RT2
     public static final Button BTN_REJECT = new Button(); //LT2
