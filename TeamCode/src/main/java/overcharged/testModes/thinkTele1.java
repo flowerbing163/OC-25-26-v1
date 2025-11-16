@@ -167,11 +167,11 @@ public class thinkTele1 extends OpMode{
             robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                if (Math.abs(tx) >= 1.5f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
+                if (Math.abs(tx) >= 1f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
                     calcPosition = (int) (-2.8081 * tx - 0.7685);
                     telemetry.addData("calc pos", calcPosition);
                     if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.62f);
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.61f);
                     }
                 }
             }
@@ -181,7 +181,7 @@ public class thinkTele1 extends OpMode{
         }
         else {
             robot.turret.setUseSquID(false,turretSquid.center);
-            robot.turret.moveEncoderTo(turretSquid.center, 0.7f);
+//            robot.turret.moveEncoderTo(turretSquid.center, 0.7f);
             turretTurn = -(gamepad2.right_stick_x)*0.35;
             if(Math.abs(turretTurn) >= 0.03) {
                 robot.turrets.setPower((float)turretTurn);
@@ -400,7 +400,11 @@ public class thinkTele1 extends OpMode{
         }
 
         if(gamepad2.dpad_up && Button.BTN_128.canPress(timestamp) && !hoodPID) {
-            robot.hood.setPosition(128)     ;
+            robot.hood.setPosition(128);
+        }
+
+        if(gamepad2.dpad_right && Button.BTN_95.canPress(timestamp) && !hoodPID) {
+            robot.hood.setPosition(95);
         }
 
     }
