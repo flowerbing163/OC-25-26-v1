@@ -199,13 +199,13 @@ public class thinkTele1 extends OpMode{
             robot.turret.setUseSquID(false,turretSquid.center);
             robot.turret.moveEncoderTo(turretSquid.center, 0.7f);
         }
-        if(turretReset && System.currentTimeMillis()-turretResetTimer>400) {
+        if(turretReset && System.currentTimeMillis()-turretResetTimer>1000) {
             turretReset = false;
             turretResetTimer = 0;
             autoAiming = true;
         }
 
-        if(gamepad1.dpad_up && Button.BTN_PLUS.canPress(timestamp)) {
+        if(gamepad1.dpad_down && Button.BTN_PLUS.canPress(timestamp)) {
             if(sideID == 20) {
                 sideID = 24;
             } else if(sideID == 24) {
@@ -406,6 +406,5 @@ public class thinkTele1 extends OpMode{
         if(gamepad2.dpad_right && Button.BTN_95.canPress(timestamp) && !hoodPID) {
             robot.hood.setPosition(95);
         }
-
     }
 }

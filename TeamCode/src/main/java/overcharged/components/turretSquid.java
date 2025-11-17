@@ -6,20 +6,22 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class turretSquid {
     public final OcMotorEx turret;
 
-    public static int center = -448;
-    public static final int START = -197;
+    public static int center = -215;
+    public static final int START = 0;
     public static final int NORMAL = 0;
-    public static final int blueCloseAutoStart = center-194;
-    public static final int blueCloseShootReset = center-116;
-    public static final int blueCloseFirstView = center-116;
+    public static final int blueCloseAutoStart = 82;
+    public static final int blueCloseShootReset = 99;
+    public static final int blueCloseFirstView = 99;
     public static final int redCloseAutoStart = center+194;
     public static final int redCloseShootReset = center+116;
     public static final int redCloseFirstView = center+116;
-    public static final int minimum = center-117;
-    public static final int maximum = center+509;
+    public static final int minimum = -508;
+    public static final int maximum = 103;
 
     public float kp = 0.075f;
     public double start;

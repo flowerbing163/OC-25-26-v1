@@ -113,7 +113,7 @@ public class autoBlueCloseV2 extends OpMode {
         switch(initState){
             case 10:
                 robot.turret.setUseSquID(false);
-                robot.turret.moveEncoderTo(turretSquid.blueCloseAutoStart, 0.7f);
+                robot.turret.moveEncoderTo(turretSquid.blueCloseAutoStart, 0.8f);
                 setInitState(11);
                 break;
             case 11:
@@ -154,14 +154,18 @@ public class autoBlueCloseV2 extends OpMode {
         switch(pathState){
             case 10:
                 follower.followPath(firstScore);
-                robot.turret.setUseSquID(false, turretSquid.blueCloseFirstView);
-                robot.turrets.moveEncoderTo(turretSquid.blueCloseFirstView, 0.7f);
                 colorMode = colorState.GPP;
+                setPathState(101);
+                break;
+            case 101:
+                robot.turret.setUseSquID(true, turretSquid.blueCloseFirstView);
+                //robot.turrets.moveEncoderTo(turretSquid.blueCloseFirstView, 0.8f);
                 setPathState(11);
                 break;
             case 11:
-                if(follower.getCurrentTValue() >0.08) {
+                if(follower.getCurrentTValue() > 0.2 || pathTimer.milliseconds()>400) {
                     autoTurret = true;
+                    robot.turret.setUseSquID(true);
                     robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());
                     shootPIDupdate = true;
                     setPathState(12);
@@ -169,7 +173,7 @@ public class autoBlueCloseV2 extends OpMode {
                 break;
             case 12:
                 if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(50)));
                     setPathState(121);
                 }
                 break;
@@ -197,7 +201,7 @@ public class autoBlueCloseV2 extends OpMode {
                 if(!follower.isBusy()){
                     follower.setMaxPower(1);
                     //robot.turrets.moveEncoderTo(turretSquid.blueCloseShootReset, 0.7f);
-                    robot.turret.setUseSquID(false, turretSquid.blueCloseShootReset);
+                    //robot.turret.setUseSquID(false, turretSquid.blueCloseShootReset);
                     colorMode = colorState.GPP;
                     follower.followPath(secondScore);
                     setPathState(15);
@@ -206,7 +210,7 @@ public class autoBlueCloseV2 extends OpMode {
             case 15:
                 if(!follower.isBusy()) {
                     //robot.intake.off();
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(40.)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39)));
                     setPathState(151);
                 }
                 break;
@@ -239,7 +243,7 @@ public class autoBlueCloseV2 extends OpMode {
                 break;
             case 18:
                 if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(40.5)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39)));
                     setPathState(19);
                 }
                 break;
@@ -296,6 +300,7 @@ public class autoBlueCloseV2 extends OpMode {
         telemetry.addLine("position: " + follower.getPose());
         telemetry.addLine("heading: " + follower.getTotalHeading());
         telemetry.addLine("case: " + pathState);
+        telemetry.addLine("turret pos: " + robot.turret.getCurrentPosition());
         telemetry.addLine("SHOOTER PID: " + robot.shooter.getPID());
 
         try {
@@ -315,11 +320,11 @@ public class autoBlueCloseV2 extends OpMode {
             robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                if (Math.abs(tx) >= 1.2f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) { //20 blue, 24 red
+                if (Math.abs(tx) >= 1f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) { //20 blue, 24 red
                     calcPosition = (int) (-2.8081 * tx - 0.7685);
                     telemetry.addData("calc pos", calcPosition);
                     if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.68f);
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
                     }
                 }
             }
