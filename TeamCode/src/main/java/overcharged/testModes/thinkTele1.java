@@ -151,9 +151,9 @@ public class thinkTele1 extends OpMode{
             if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue 24 red
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 float ty = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetYDegrees();
-                telemetry.addData("RED GOAL TX: ", tx);
+                telemetry.addData("GOAL TX: ", tx);
                 distance = (int) ((646.1125 - 410.15381) / Math.tan(Math.toRadians(ty)));
-                telemetry.addData("ty: ", ty);
+//                telemetry.addData("ty: ", ty);
             }
         }
         catch (IndexOutOfBoundsException e1) {
@@ -171,7 +171,7 @@ public class thinkTele1 extends OpMode{
                     calcPosition = (int) (-2.8081 * tx - 0.7685);
                     telemetry.addData("calc pos", calcPosition);
                     if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.61f);
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.6f);
                     }
                 }
             }
@@ -197,18 +197,21 @@ public class thinkTele1 extends OpMode{
             turretResetTimer = System.currentTimeMillis();
             autoAiming = false;
             robot.turret.setUseSquID(false,turretSquid.center);
-            robot.turret.moveEncoderTo(turretSquid.center, 0.7f);
+            //robot.turret.moveEncoderTo(turretSquid.center, 0.7f);
         }
-        if(turretReset && System.currentTimeMillis()-turretResetTimer>1000) {
+        if(turretReset && System.currentTimeMillis()-turretResetTimer>400) {
             turretReset = false;
             turretResetTimer = 0;
             autoAiming = true;
         }
 
-        if(gamepad1.dpad_down && Button.BTN_PLUS.canPress(timestamp)) {
+        if(gamepad1.dpad_up && Button.BTN_PLUS.canPress(timestamp)) {
             if(sideID == 20) {
                 sideID = 24;
             } else if(sideID == 24) {
+                sideID = 20;
+            }
+            else {
                 sideID = 20;
             }
         }
@@ -406,5 +409,6 @@ public class thinkTele1 extends OpMode{
         if(gamepad2.dpad_right && Button.BTN_95.canPress(timestamp) && !hoodPID) {
             robot.hood.setPosition(95);
         }
+
     }
 }

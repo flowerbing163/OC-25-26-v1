@@ -10,9 +10,9 @@ import overcharged.components.RobotMecanum;
 public class turretTuner extends OpMode {
     private RobotMecanum robot;
 
-    public static float kP = 0.075f;
-    public static float kI = 0.00025f;
-    public static float f = 0.004f;
+    public static float kP = 0.06f;
+    public static float kI = 0.0003f;
+    public static float f = 0.003f;
     public static int target = 0;
 
     public void loop(){

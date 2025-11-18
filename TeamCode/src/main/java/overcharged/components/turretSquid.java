@@ -23,12 +23,12 @@ public class turretSquid {
     public static final int minimum = -508;
     public static final int maximum = 103;
 
-    public float kp = 0.075f;
+    public float kp = 0.06f;
     public double start;
     public static double p = 18;
-    public static double i = 0.00025f;
+    public static double i = 0.0003f;
     public static double d = 0.0005;
-    public static double f = 0.004f;
+    public static double f = 0.003f;
 
     private boolean useSquID = false;
     private double target = 0;
@@ -134,5 +134,13 @@ public class turretSquid {
 
     public int getMax() { return maximum;}
     public int getMin() {return minimum;}
+
+    public float getKp() {
+        return kp;
+    }
+
+    public double getI() {return i;}
+
+    public double getF() {return f;}
 
 }
