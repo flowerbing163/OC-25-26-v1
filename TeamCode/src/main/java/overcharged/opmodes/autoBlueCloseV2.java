@@ -45,7 +45,7 @@ public class autoBlueCloseV2 extends OpMode {
     ElapsedTime total; // total amt of time, end if too close to 30s
     private int pathState;
     private int initState;
-    public int motifID = 21;
+    public int motifID = 67;
     int obbyID;
     private Follower follower;
 
@@ -70,10 +70,10 @@ public class autoBlueCloseV2 extends OpMode {
 
     public void buildPoses() {
         firstShoot = new Pose(45, 98, Math.toRadians(180));
-        firstBall = new Pose(17, 81, Math.toRadians(180));
+        firstBall = new Pose(17.5, 81, Math.toRadians(180));
         secondShoot = new Pose(58, 78, Math.toRadians(180));
         secondBall = new Pose(12, 56.5, Math.toRadians(180));
-        endPose = new Pose(20, 72, Math.toRadians(180));
+        endPose = new Pose(27, 72, Math.toRadians(180));
     }
 
     public void buildPaths() {
@@ -121,12 +121,6 @@ public class autoBlueCloseV2 extends OpMode {
                 setInitState(12);
                 break;
             case 12:
-                try {
-                    LLResult result = limelight.getLatestResult();
-                    motifID = result.getFiducialResults().get(0).getFiducialId();
-                } catch (IndexOutOfBoundsException e1) {
-                    telemetry.addLine("Cannot see");
-                }
                 if(motifID == 21){
                     obbyID = motifID;
                     setInitState(13);
@@ -144,6 +138,7 @@ public class autoBlueCloseV2 extends OpMode {
                 }
                 break;
             case 13:
+                obbyID = motifID;
                 telemetry.addLine("INIT FINISHED");
                 telemetry.addData("motif ID: ", obbyID);
                 break;
@@ -158,22 +153,24 @@ public class autoBlueCloseV2 extends OpMode {
                 setPathState(101);
                 break;
             case 101:
-                robot.turret.setUseSquID(true, turretSquid.blueCloseFirstView);
                 //robot.turrets.moveEncoderTo(turretSquid.blueCloseFirstView, 0.8f);
+                robot.turret.setUseSquID(true, 99, 0.8f);
+                autoTurret = true;
                 setPathState(11);
                 break;
             case 11:
                 if(follower.getCurrentTValue() > 0.2 || pathTimer.milliseconds()>400) {
-                    autoTurret = true;
-                    robot.turret.setUseSquID(true);
-                    robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());
+//                    robot.turret.setUseSquID(true);
+//                    autoTurret = true;
+//                    robot.turret.setUseSquID(true, robot.turret.getMax(), 1f);
+                    robot.shooter.setUsePID(true, distance+230, robot.hood.getCurrentAngle());
                     shootPIDupdate = true;
                     setPathState(12);
                 }
                 break;
             case 12:
                 if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(50)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(45)));
                     setPathState(121);
                 }
                 break;
@@ -185,7 +182,8 @@ public class autoBlueCloseV2 extends OpMode {
                 }
                 break;
             case 13:
-                if(pathTimer.milliseconds() > 2600) {
+                if(pathTimer.milliseconds() > 2850) {
+                    //autoTurret = true;
                     follower.followPath(firstTake);
                     //autoTurret = false;
                     setPathState(130);
@@ -221,7 +219,7 @@ public class autoBlueCloseV2 extends OpMode {
                 }
                 break;
             case 16:
-                if(pathTimer.milliseconds() > 2600) {
+                if(pathTimer.milliseconds() > 2850) {
                     follower.followPath(secondTake);
                     setPathState(160);
                 }
@@ -272,10 +270,6 @@ public class autoBlueCloseV2 extends OpMode {
                     setPathState(100);
                 }
                 break;
-
-
-
-
             case 100:
                 telemetry.addLine("TEST CASE TIME");
                 break;
@@ -323,7 +317,7 @@ public class autoBlueCloseV2 extends OpMode {
                 if (Math.abs(tx) >= 1f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) { //20 blue, 24 red
                     calcPosition = (int) (-2.8081 * tx - 0.7685);
                     telemetry.addData("calc pos", calcPosition);
-                    if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
+                    if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() + 3 && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
                         robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
                     }
                 }
@@ -332,11 +326,11 @@ public class autoBlueCloseV2 extends OpMode {
                 telemetry.addLine("cant see vro :skull:");
             }
         } else if (!autoTurret){
-            robot.turret.setUseSquID(false, calcPosition );
+            robot.turret.setUseSquID(false);
         }
 
         if(shootPIDupdate) {
-            robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());
+            robot.shooter.setUsePID(true, distance+250, robot.hood.getCurrentAngle());
             telemetry.addLine("shooter PID ON!!!");
         } else if(!shootPIDupdate){
             robot.shooter.setUsePID(false);
@@ -376,6 +370,13 @@ public class autoBlueCloseV2 extends OpMode {
     @Override
     public void init_loop() {
         initBody();
+        try {
+            LLResult result = limelight.getLatestResult();
+            motifID = result.getFiducialResults().get(0).getFiducialId();
+        } catch (IndexOutOfBoundsException e1) {
+            telemetry.addLine("Cannot see");
+            motifID = 21;
+        }
         telemetry.addLine("Init looping");
         telemetry.addLine("case: "+initState);
     }
