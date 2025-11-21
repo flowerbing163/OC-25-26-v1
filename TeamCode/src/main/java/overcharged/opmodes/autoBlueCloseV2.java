@@ -154,7 +154,7 @@ public class autoBlueCloseV2 extends OpMode {
                 break;
             case 101:
                 //robot.turrets.moveEncoderTo(turretSquid.blueCloseFirstView, 0.8f);
-                robot.turret.setUseSquID(true, 99, 0.8f);
+                robot.turret.setUseSquID(true, 101, 0.8f);
                 autoTurret = true;
                 setPathState(11);
                 break;
@@ -163,7 +163,7 @@ public class autoBlueCloseV2 extends OpMode {
 //                    robot.turret.setUseSquID(true);
 //                    autoTurret = true;
 //                    robot.turret.setUseSquID(true, robot.turret.getMax(), 1f);
-                    robot.shooter.setUsePID(true, distance+230, robot.hood.getCurrentAngle());
+                    robot.shooter.setUsePID(true, distance+260, robot.hood.getCurrentAngle());
                     shootPIDupdate = true;
                     setPathState(12);
                 }
@@ -182,7 +182,7 @@ public class autoBlueCloseV2 extends OpMode {
                 }
                 break;
             case 13:
-                if(pathTimer.milliseconds() > 2850) {
+                if(pathTimer.milliseconds() > 3000) {
                     //autoTurret = true;
                     follower.followPath(firstTake);
                     //autoTurret = false;
@@ -208,7 +208,7 @@ public class autoBlueCloseV2 extends OpMode {
             case 15:
                 if(!follower.isBusy()) {
                     //robot.intake.off();
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(41)));
                     setPathState(151);
                 }
                 break;
@@ -219,7 +219,7 @@ public class autoBlueCloseV2 extends OpMode {
                 }
                 break;
             case 16:
-                if(pathTimer.milliseconds() > 2850) {
+                if(pathTimer.milliseconds() > 3000) {
                     follower.followPath(secondTake);
                     setPathState(160);
                 }
@@ -241,7 +241,7 @@ public class autoBlueCloseV2 extends OpMode {
                 break;
             case 18:
                 if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(39)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(41)));
                     setPathState(19);
                 }
                 break;
@@ -252,9 +252,9 @@ public class autoBlueCloseV2 extends OpMode {
                 }
                 break;
             case 20:
-                if(pathTimer.milliseconds() > 2600) {
+                if(pathTimer.milliseconds() > 3000) {
                     shootPIDupdate = false;
-                    autoTurret = false;
+//                    autoTurret = false;
                     robot.intake.off();
                     setPathState(21);
                 }
@@ -330,7 +330,7 @@ public class autoBlueCloseV2 extends OpMode {
         }
 
         if(shootPIDupdate) {
-            robot.shooter.setUsePID(true, distance+250, robot.hood.getCurrentAngle());
+            robot.shooter.setUsePID(true, distance+260, robot.hood.getCurrentAngle());
             telemetry.addLine("shooter PID ON!!!");
         } else if(!shootPIDupdate){
             robot.shooter.setUsePID(false);

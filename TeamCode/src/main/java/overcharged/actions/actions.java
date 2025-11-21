@@ -84,6 +84,12 @@ public class actions {
         }
         if (shootStep == 4 && System.currentTimeMillis() - shootTimer > setIndPause && shootRepStep == 1) {
             robot.indexer.setTwo();
+            shootStep = 2;
+            shootRepStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 280 && shootRepStep == 2) {
+            robot.indexer.setTwo();
             shootStep = 0;
             shootRepStep = 0;
             shootTimer = 0;
