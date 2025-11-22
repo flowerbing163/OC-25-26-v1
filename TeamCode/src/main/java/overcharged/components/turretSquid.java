@@ -17,10 +17,10 @@ public class turretSquid {
     public static final int blueCloseAutoStart = 82;
     public static final int blueCloseShootReset = 99;
     public static final int blueCloseFirstView = 99;
-    public static final int redCloseAutoStart = center+194;
+    public static final int redCloseAutoStart = -500;
     public static final int redCloseShootReset = center+116;
     public static final int redCloseFirstView = center+116;
-    public static final int minimum = -508;
+    public static final int minimum = -555;
     public static final int maximum = 103;
 
     public float kp = 0.06f;

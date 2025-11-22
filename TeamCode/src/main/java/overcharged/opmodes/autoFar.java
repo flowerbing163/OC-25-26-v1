@@ -21,7 +21,7 @@ import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
 
-@Autonomous(name = "auto far", group = "0Autonomous")
+@Autonomous(name = "auto far RP", group = "0Autonomous")
 public class autoFar extends OpMode {
     private RobotMecanum robot;
     private ElapsedTime pathTimer;

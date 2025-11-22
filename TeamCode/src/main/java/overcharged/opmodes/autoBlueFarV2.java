@@ -33,7 +33,7 @@ import com.bylazar.field.Style;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 
-@Autonomous(name = "blue FAR", group = "0Autonomous")
+@Autonomous(name = "not blue FAR", group = "0Autonomous")
 public class autoBlueFarV2 extends OpMode {
     private RobotMecanum robot;
     private ElapsedTime pathTimer;

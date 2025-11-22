@@ -21,7 +21,7 @@ import java.util.List;
 import overcharged.components.RobotMecanum;
 import overcharged.pedroPathing.Constants;
 
-@Autonomous(name = "blue goal far", group = "Autonomous")
+@Autonomous(name = "no (old blue far)", group = "Autonomous")
 public class autoBlueFar extends OpMode {
     private RobotMecanum robot;
     private ElapsedTime pathTimer;

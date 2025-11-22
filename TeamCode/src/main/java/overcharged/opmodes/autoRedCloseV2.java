@@ -6,7 +6,6 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -14,26 +13,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import overcharged.actions.actions;
 import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
-import overcharged.testModes.thinkTele1;
 
-import com.bylazar.configurables.PanelsConfigurables;
-import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.field.FieldManager;
-import com.bylazar.field.PanelsField;
-import com.bylazar.field.Style;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
-
-@Autonomous(name = "blue goal close NEW", group = "0Autonomous")
-public class autoBlueCloseV2 extends OpMode {
+@Autonomous(name = "red goal close NEW", group = "0Autonomous")
+public class autoRedCloseV2 extends OpMode {
     private RobotMecanum robot;
     private ElapsedTime pathTimer;
     MultipleTelemetry telems;
@@ -45,7 +31,7 @@ public class autoBlueCloseV2 extends OpMode {
     ElapsedTime total; // total amt of time, end if too close to 30s
     private int pathState;
     private int initState;
-    public int motifID = 67;
+    public int motifID = 21;
     int obbyID;
     private Follower follower;
 
@@ -63,52 +49,52 @@ public class autoBlueCloseV2 extends OpMode {
         NONE
     }
 
-    public static Pose startPose = new Pose(15, 114, Math.toRadians(90)); // heading: 90
+    public static Pose startPose = new Pose(129, 114, Math.toRadians(90)); // heading: 90
     private static Pose firstShoot, firstBall, secondShoot, secondBall, thirdBall, endPose;
 
     public static PathChain firstScore, firstTake, secondScore, secondTake, thirdScore, thirdTake, fourthScore, goEnd;
 
     public void buildPoses() {
-        firstShoot = new Pose(45, 98, Math.toRadians(180));
-        firstBall = new Pose(17.5, 81, Math.toRadians(180));
-        secondShoot = new Pose(58, 78, Math.toRadians(180));
-        secondBall = new Pose(12, 56.5, Math.toRadians(180));
-        thirdBall = new Pose(15, 31, Math.toRadians(180));
-        endPose = new Pose(27, 72, Math.toRadians(180));
+        firstShoot = new Pose(99, 98, Math.toRadians(0));
+        firstBall = new Pose(127, 81, Math.toRadians(0));
+        secondShoot = new Pose(86, 78, Math.toRadians(0));
+        secondBall = new Pose(132, 56.5, Math.toRadians(0));
+        thirdBall = new Pose(124, 31, Math.toRadians(0));
+        endPose = new Pose(117, 72, Math.toRadians(0));
     }
 
     public void buildPaths() {
         firstScore = follower.pathBuilder()
-                .addPath(new BezierCurve(startPose,new Pose(29, 113), firstShoot))
+                .addPath(new BezierCurve(startPose,new Pose(115, 113), firstShoot))
                 .setLinearHeadingInterpolation(startPose.getHeading(), firstShoot.getHeading())
                 .build();
         firstTake = follower.pathBuilder()
-                .addPath(new BezierCurve(firstShoot,new Pose(63, 85), firstBall))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .addPath(new BezierCurve(firstShoot,new Pose(81, 85), firstBall))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         secondScore = follower.pathBuilder()
                 .addPath(new BezierLine(firstBall, secondShoot))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         secondTake = follower.pathBuilder()
-                .addPath(new BezierCurve(secondShoot, new Pose(51, 57) ,secondBall))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .addPath(new BezierCurve(secondShoot, new Pose(93, 57) ,secondBall))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         thirdScore = follower.pathBuilder()
                 .addPath(new BezierLine(secondBall, secondShoot))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         thirdTake = follower.pathBuilder()
-                .addPath(new BezierCurve(secondShoot, new Pose(51, 31), thirdBall))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .addPath(new BezierCurve(secondShoot, new Pose(93, 31), thirdBall))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         fourthScore = follower.pathBuilder()
                 .addPath(new BezierLine(thirdBall, secondShoot))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         goEnd = follower.pathBuilder()
                 .addPath(new BezierLine(secondShoot, endPose))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
     }
 
@@ -122,7 +108,7 @@ public class autoBlueCloseV2 extends OpMode {
         switch(initState){
             case 10:
                 robot.turret.setUseSquID(false);
-                robot.turret.moveEncoderTo(turretSquid.blueCloseAutoStart, 0.8f);
+                robot.turret.moveEncoderTo(turretSquid.redCloseAutoStart, 0.8f);
                 setInitState(11);
                 break;
             case 11:
@@ -159,11 +145,12 @@ public class autoBlueCloseV2 extends OpMode {
             case 10:
                 follower.followPath(firstScore);
                 colorMode = colorState.GPP;
+//                limelight.pipelineSwitch(1);
                 setPathState(101);
                 break;
             case 101:
                 //robot.turrets.moveEncoderTo(turretSquid.blueCloseFirstView, 0.8f);
-                robot.turret.setUseSquID(true, 101, 0.8f);
+                robot.turret.setUseSquID(true, -520, 0.8f);
                 autoTurret = true;
                 setPathState(11);
                 break;
@@ -341,10 +328,10 @@ public class autoBlueCloseV2 extends OpMode {
         telemetry.addLine("SHOOTER PID: " + robot.shooter.getPID());
 
         try {
-            if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) { //TODO: 20 blue 24 red
+            if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //TODO: 20 blue 24 red
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 float ty = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetYDegrees();
-                telemetry.addData("BLUE GOAL TX: ", tx);
+                telemetry.addData("RED GOAL TX: ", tx);
                 distance = (int) ((646.1125 - 406.15381) / Math.tan(Math.toRadians(ty)));
                 telemetry.addData("ty: ", ty);
             }
@@ -357,12 +344,14 @@ public class autoBlueCloseV2 extends OpMode {
             robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                if (Math.abs(tx) >= 1f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) { //TODO: 20 blue, 24 red
+                if (Math.abs(tx) >= 1f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //TODO: 20 blue, 24 red
                     calcPosition = (int) (-2.351157407 * tx);
                     telemetry.addData("calc pos", calcPosition);
-                    if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() + 3 && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
-                    }
+//                    if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() + 3 && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
+//                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
+//                    }
+                    robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
+
                 }
             }
             catch (IndexOutOfBoundsException e1){

@@ -21,7 +21,7 @@ import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
 
-@Autonomous(name = "red goal close", group = "0Autonomous")
+@Autonomous(name = "do not press (old red close)", group = "0Autonomous")
 public class autoRedClose extends OpMode {
     private RobotMecanum robot;
     private ElapsedTime pathTimer;
