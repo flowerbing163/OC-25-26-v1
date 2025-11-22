@@ -19,7 +19,7 @@ import overcharged.components.turrets;
 
 
 @Config
-@TeleOp(name = "imagine tele", group = "0tele")
+@TeleOp(name = "imagine tele", group = "(0tele")
 public class thinkTele1 extends OpMode{
 
     RobotMecanum robot;
@@ -110,7 +110,7 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("shoot PID: ", robot.shooter.getPID());
         //telemetry.addData("shoot pid on: ", shootPID);
         telemetry.addData("distance to goal: ", distance);
-        //telemetry.addData("Hood Angle", robot.hood.getCurrentAngle());
+        telemetry.addData("Hood Angle", robot.hood.getCurrentAngle());
         telemetry.addData("Hood Position", robot.hood.getCurrentPos());
         telemetry.addData("SIDE: ", sideID);
 
@@ -160,7 +160,7 @@ public class thinkTele1 extends OpMode{
             telemetry.addLine("Cannot see, manually adjust");
         }
 
-        if (gamepad2.touchpad && Button.BTN_LIMELIGHT.canPress(timestamp)) {
+        if ((gamepad2.touchpad || gamepad1.touchpad) && Button.BTN_LIMELIGHT.canPress(timestamp)) {
             autoAiming = !autoAiming;
         }
         if (autoAiming) {
@@ -208,11 +208,13 @@ public class thinkTele1 extends OpMode{
         if(gamepad1.dpad_up && Button.BTN_PLUS.canPress(timestamp)) {
             if(sideID == 20) {
                 sideID = 24;
+                gamepad1.setLedColor(255,0,0,10000);
             } else if(sideID == 24) {
                 sideID = 20;
             }
             else {
                 sideID = 20;
+                gamepad1.setLedColor(0,0,255,10000);
             }
         }
 
@@ -266,16 +268,18 @@ public class thinkTele1 extends OpMode{
         if (gamepad2.x && Button.BTN_KICKER.canPress(timestamp)) {
             if(!kicker){
                 kicker = true;
+                canTurn = false;
                 robot.kicker.setKick();
             } else if (kicker) {
                 kicker = false;
+                canTurn = true;
                 robot.kicker.setInit();
             }
         }
 
 
         //shoot
-        if((gamepad2.right_trigger > 0.8 || gamepad1.right_bumper) && Button.BTN_FLYWHEEL.canPress(timestamp)) {
+        if((gamepad1.right_bumper) && Button.BTN_FLYWHEEL.canPress(timestamp)) {
             if (!shootPID && !hoodPID) {
                 if (!shooting) {
                     gamepad1.rumble(100);
@@ -395,7 +399,7 @@ public class thinkTele1 extends OpMode{
         if(gamepad1.left_bumper && Button.BTN_TTABLE.canPress(timestamp) && shooting){
             actionHandler.startFastShoot();
         } else if (gamepad1.left_bumper && Button.BTN_TTABLE.canPress(timestamp) && !shooting) {
-            gamepad1.rumble(100);
+            gamepad1.rumble(200);
         }
 
         if(gamepad2.guide && Button.BTN_MINUS.canPress(timestamp)) {
@@ -409,6 +413,11 @@ public class thinkTele1 extends OpMode{
         if(gamepad2.dpad_right && Button.BTN_95.canPress(timestamp) && !hoodPID) {
             robot.hood.setPosition(95);
         }
+
+        if(gamepad2.dpad_down && Button.BTN_95.canPress(timestamp) && !hoodPID) {
+            robot.hood.setPosition(250);
+        }
+
 
     }
 }
