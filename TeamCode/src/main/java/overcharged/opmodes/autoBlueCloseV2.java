@@ -74,7 +74,7 @@ public class autoBlueCloseV2 extends OpMode {
         secondShoot = new Pose(58, 78, Math.toRadians(180));
         secondBall = new Pose(12, 56.5, Math.toRadians(180));
         thirdBall = new Pose(15, 31, Math.toRadians(180));
-        endPose = new Pose(27, 72, Math.toRadians(180));
+        endPose = new Pose(33, 85, Math.toRadians(180));
     }
 
     public void buildPaths() {
@@ -163,7 +163,7 @@ public class autoBlueCloseV2 extends OpMode {
                 break;
             case 101:
                 //robot.turrets.moveEncoderTo(turretSquid.blueCloseFirstView, 0.8f);
-                robot.turret.setUseSquID(true, 101, 0.8f);
+                robot.turret.setUseSquID(true, 115, 0.82f);
                 autoTurret = true;
                 setPathState(11);
                 break;
@@ -173,14 +173,14 @@ public class autoBlueCloseV2 extends OpMode {
 //                    robot.turret.setUseSquID(true);
 //                    autoTurret = true;
 //                    robot.turret.setUseSquID(true, robot.turret.getMax(), 1f);
-                    robot.shooter.setUsePID(true, distance+260, robot.hood.getCurrentAngle());
+                    robot.shooter.setUsePID(true, distance+272, robot.hood.getCurrentAngle());
                     shootPIDupdate = true;
                     setPathState(12);
                 }
                 break;
             case 12:
                 if(!follower.isBusy()) {
-                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(45)));
+                    robot.hood.setPosition(robot.hood.angToPos(Math.toRadians(46)));
                     setPathState(121);
                 }
                 break;
@@ -360,9 +360,10 @@ public class autoBlueCloseV2 extends OpMode {
                 if (Math.abs(tx) >= 1f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 20) { //TODO: 20 blue, 24 red
                     calcPosition = (int) (-2.351157407 * tx);
                     telemetry.addData("calc pos", calcPosition);
-                    if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() + 3 && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
-                    }
+//                    if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() + 3 && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
+//                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
+//                    }
+                    robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
                 }
             }
             catch (IndexOutOfBoundsException e1){
@@ -373,7 +374,7 @@ public class autoBlueCloseV2 extends OpMode {
         }
 
         if(shootPIDupdate) {
-            robot.shooter.setUsePID(true, distance+267, robot.hood.getCurrentAngle());
+            robot.shooter.setUsePID(true, distance+282, robot.hood.getCurrentAngle());
             telemetry.addLine("shooter PID ON!!!");
         } else if(!shootPIDupdate){
             robot.shooter.setUsePID(false);

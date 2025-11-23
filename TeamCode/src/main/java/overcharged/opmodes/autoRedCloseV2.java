@@ -59,8 +59,8 @@ public class autoRedCloseV2 extends OpMode {
         firstBall = new Pose(127, 81, Math.toRadians(0));
         secondShoot = new Pose(86, 78, Math.toRadians(0));
         secondBall = new Pose(132, 56.5, Math.toRadians(0));
-        thirdBall = new Pose(124, 31, Math.toRadians(0));
-        endPose = new Pose(117, 72, Math.toRadians(0));
+        thirdBall = new Pose(124, 33, Math.toRadians(0));
+        endPose = new Pose(110, 85, Math.toRadians(0));
     }
 
     public void buildPaths() {
