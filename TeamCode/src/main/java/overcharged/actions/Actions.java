@@ -1,11 +1,8 @@
 package overcharged.actions;
 
-import com.qualcomm.robotcore.robot.Robot;
-
 import overcharged.components.RobotMecanum;
-import overcharged.testModes.thinkTele1;
 
-public class actions {
+public class Actions {
     private RobotMecanum robot;
 
 
@@ -236,6 +233,57 @@ public class actions {
             shootTimer = 0;
         }
     }
+
+
+    // @param int[3]
+    public void fastShootSeqByOrder(int[] currentOrder) { //321
+        if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
+            rollIndexer(currentOrder[0]);
+            shootStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 2 && System.currentTimeMillis() - shootTimer > kickPause) {
+            robot.kicker.setKick();
+            shootStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 3 && System.currentTimeMillis() - shootTimer > retractPause) {
+            robot.kicker.setInit();
+            shootStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 4 && System.currentTimeMillis() - shootTimer > setIndPause && shootRepStep == 0) {
+            rollIndexer(currentOrder[1]);
+            shootStep = 2;
+            shootRepStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 4 && System.currentTimeMillis() - shootTimer > setIndPause && shootRepStep == 1) {
+            rollIndexer(currentOrder[2]);
+            shootStep = 2;
+            shootRepStep += 1;
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 280 && shootRepStep == 2) {
+            robot.indexer.setTwo();
+            shootStep = 0;
+            shootRepStep = 0;
+            shootTimer = 0;
+        }
+    }
+
+    private void rollIndexer(int first) {
+        if(1 == first){
+            robot.indexer.setOne();
+        } else if (2 == first) {
+            robot.indexer.setTwo();
+        } else if (3 == first) {
+            robot.indexer.setThree();
+        }else{
+            robot.indexer.setOne();
+        }
+    }
+
     public void startFastShoot() {
         shootStep += 1;
         shootTimer = System.currentTimeMillis();

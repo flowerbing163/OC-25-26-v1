@@ -11,12 +11,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import overcharged.actions.actions;
+import overcharged.actions.Actions;
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
-import overcharged.components.hood;
 import overcharged.components.turretSquid;
-import overcharged.components.turrets;
 
 
 @Config
@@ -25,7 +23,7 @@ public class thinkTele1 extends OpMode{
 
     RobotMecanum robot;
 
-    actions actionHandler = new actions();
+    Actions actionHandler = new Actions();
 
     Limelight3A limelight;
 

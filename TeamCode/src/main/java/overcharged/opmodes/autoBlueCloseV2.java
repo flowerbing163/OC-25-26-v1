@@ -6,7 +6,6 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -14,23 +13,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import overcharged.actions.actions;
+import overcharged.actions.Actions;
 import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
-import overcharged.testModes.thinkTele1;
-
-import com.bylazar.configurables.PanelsConfigurables;
-import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.field.FieldManager;
-import com.bylazar.field.PanelsField;
-import com.bylazar.field.Style;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
 
 @Autonomous(name = "blue goal close NEW", group = "0Autonomous")
 public class autoBlueCloseV2 extends OpMode {
@@ -40,7 +26,7 @@ public class autoBlueCloseV2 extends OpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     private Limelight3A limelight;
     ElapsedTime temp; // lag time
-    actions actionHandler = new actions(); //actions
+    Actions actionHandler = new Actions(); //actions
 
     ElapsedTime total; // total amt of time, end if too close to 30s
     private int pathState;
@@ -51,6 +37,13 @@ public class autoBlueCloseV2 extends OpMode {
 
     boolean autoTurret = false;
     int distance = 0;
+
+    static{
+
+    }
+    public autoBlueCloseV2() {
+    }
+
     int calcPosition;
 
     boolean shootPIDupdate = false;
@@ -63,6 +56,8 @@ public class autoBlueCloseV2 extends OpMode {
         NONE
     }
 
+
+
     public static Pose startPose = new Pose(15, 114, Math.toRadians(90)); // heading: 90
     private static Pose firstShoot, firstBall, secondShoot, secondBall, thirdBall, endPose;
 
@@ -70,9 +65,9 @@ public class autoBlueCloseV2 extends OpMode {
 
     public void buildPoses() {
         firstShoot = new Pose(45, 98, Math.toRadians(180));
-        firstBall = new Pose(17.5, 81, Math.toRadians(180));
+        firstBall = new Pose(17.5, 80, Math.toRadians(180));
         secondShoot = new Pose(58, 78, Math.toRadians(180));
-        secondBall = new Pose(12, 56.5, Math.toRadians(180));
+        secondBall = new Pose(12, 55.5, Math.toRadians(180));
         thirdBall = new Pose(15, 31, Math.toRadians(180));
         endPose = new Pose(33, 85, Math.toRadians(180));
     }
@@ -83,7 +78,7 @@ public class autoBlueCloseV2 extends OpMode {
                 .setLinearHeadingInterpolation(startPose.getHeading(), firstShoot.getHeading())
                 .build();
         firstTake = follower.pathBuilder()
-                .addPath(new BezierCurve(firstShoot,new Pose(63, 85), firstBall))
+                .addPath(new BezierCurve(firstShoot,new Pose(50, 76), firstBall))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         secondScore = follower.pathBuilder()
@@ -91,7 +86,7 @@ public class autoBlueCloseV2 extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         secondTake = follower.pathBuilder()
-                .addPath(new BezierCurve(secondShoot, new Pose(51, 57) ,secondBall))
+                .addPath(new BezierCurve(secondShoot, new Pose(52, 50) ,secondBall))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         thirdScore = follower.pathBuilder()
@@ -159,6 +154,7 @@ public class autoBlueCloseV2 extends OpMode {
             case 10:
                 follower.followPath(firstScore);
                 colorMode = colorState.GPP;
+               //orderMode= EnumOrderMode.213;
                 setPathState(101);
                 break;
             case 101:
@@ -380,35 +376,47 @@ public class autoBlueCloseV2 extends OpMode {
             robot.shooter.setUsePID(false);
         }
 
+        
+        int[] currentOrder = this.getFastShootOrder(obbyID, colorMode);
+        actionHandler.fastShootSeqByOrder(currentOrder);
 
+    }
+
+    public int[] getFastShootOrder(int obbyID , colorState currentColorState){
         if(obbyID == 21) { //gpp
-            if(colorMode == colorState.GPP){ // yyy
-                actionHandler.fastShootSeq();
+            if(currentColorState == colorState.GPP){ // yyy
+                //231
+                return new int[]{1,3,2};
             } else if (colorMode == colorState.PGP) { // nny
-                actionHandler.fastShootSeq213();
+                //213
+                return new int[]{2,1,3};
             } else if (colorMode == colorState.PPG) { // nyn
-                actionHandler.fastShootSeq321();
+                //321
+                return new int[]{3,1,2};
             }
         }
+
         else if (obbyID == 22) { //pgp
             if(colorMode == colorState.GPP){
-                actionHandler.fastShootSeq213();
+                return new int[]{2,1,3};
             } else if (colorMode == colorState.PGP) {
-                actionHandler.fastShootSeq();
+                return new int[]{1,2,3};
             } else if (colorMode == colorState.PPG) {
-                actionHandler.fastShootSeq132();
+                return new int[]{2,3,1};
             }
         }
         else if (obbyID == 23){ //ppg
             if(colorMode == colorState.GPP){
                 actionHandler.fastShootSeq321();
+                return new int[]{2,3,1};
             } else if (colorMode == colorState.PGP) {
-                actionHandler.fastShootSeq132();
+                return new int[]{1,3,2};
             } else if (colorMode == colorState.PPG) {
-                actionHandler.fastShootSeq();
+                return new int[]{1,2,3};
             }
         }
 
+        return new int[]{2,3,1};
     }
 
     @Override
@@ -437,6 +445,7 @@ public class autoBlueCloseV2 extends OpMode {
         limelight.start();
 
         follower = Constants.createFollower(hardwareMap);
+        //
         buildPoses();
         buildPaths();
         follower.setStartingPose(startPose);

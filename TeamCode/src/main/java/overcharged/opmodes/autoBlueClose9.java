@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import overcharged.actions.actions;
+import overcharged.actions.Actions;
 import overcharged.components.RobotMecanum;
 import overcharged.pedroPathing.Constants;
 
@@ -33,7 +33,7 @@ public class autoBlueClose9 extends OpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     private Limelight3A limelight;
     ElapsedTime temp; // lag time
-    actions actionHandler = new actions();
+    Actions actionHandler = new Actions();
 
     ElapsedTime total; // total amt of time, end if too close to 30s
     private int pathState;
@@ -369,10 +369,14 @@ public class autoBlueClose9 extends OpMode {
         limelight.start();
 
         follower = Constants.createFollower(hardwareMap);
+        //
         initBody();
         buildPaths();
+
+
         follower.setStartingPose(startPose);
 
+        //
         actionHandler.fastShootSys(robot);
     }
 

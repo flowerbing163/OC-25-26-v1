@@ -3,7 +3,6 @@ package overcharged.opmodes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -16,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import overcharged.actions.actions;
+import overcharged.actions.Actions;
 import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
@@ -29,7 +28,7 @@ public class autoFar extends OpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     private Limelight3A limelight;
     ElapsedTime temp; // lag time
-    actions actionHandler = new actions(); //actions
+    Actions actionHandler = new Actions(); //actions
 
     ElapsedTime total; // total amt of time, end if too close to 30s
     private int pathState;
