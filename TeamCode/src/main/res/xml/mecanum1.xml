@@ -11,6 +11,7 @@
 
             <goBILDAPinpoint name="pinpoint" port="0" bus="2" />
 
+            <ControlHubImuBHI260AP name="imu" port="0" bus="0" />
 
         </LynxModule>
 

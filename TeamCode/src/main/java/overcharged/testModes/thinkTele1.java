@@ -8,6 +8,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import overcharged.actions.actions;
@@ -27,8 +28,6 @@ public class thinkTele1 extends OpMode{
     actions actionHandler = new actions();
 
     Limelight3A limelight;
-
-    BHI260IMU imu;
 
     double slowPower = 1;
     int calcPosition;
@@ -93,6 +92,7 @@ public class thinkTele1 extends OpMode{
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
         limelight.pipelineSwitch(1);
         limelight.start();
+
         robot.turret.setUseSquID(true, turretSquid.center, 1f);
     }
 
@@ -103,6 +103,7 @@ public class thinkTele1 extends OpMode{
         //telemetry.addData("temphood: ", tempHood);
         //telemetry.addData("hood pos: ", robot.hood.getCurrentPos());
         //telemetry.addData("turretTurn: ", turretTurn);
+        telemetry.addData("imu yaw: ", robot.imu.getYaw());
         telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
         //telemetry.addData("test: ", checker);
         //telemetry.addData("shoot power: ", tempShootPower);
@@ -146,29 +147,33 @@ public class thinkTele1 extends OpMode{
         robot.driveRightFront.setPower(frontRightPower);
         robot.driveRightBack.setPower(backRightPower);
 
-
+        // limelight readings, ll distance calculations
         try {
             if (limelight.isRunning() && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue 24 red
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 float ty = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetYDegrees();
-                telemetry.addData("GOAL TX: ", tx);
-                distance = (int) ((646.1125 - 410.15381) / Math.tan(Math.toRadians(ty)));
+                telemetry.addData("goal tx: ", tx);
+                distance = (int) ((646.1125 - 410.15381) / Math.tan(Math.toRadians(ty))) + 300;
 //                telemetry.addData("ty: ", ty);
             }
         }
-        catch (IndexOutOfBoundsException e1) {
-            telemetry.addLine("Cannot see, manually adjust");
+        catch (IndexOutOfBoundsException e1) { // imu stuff as backup/alternative
+            telemetry.addLine("No LL vision, using IMU");
+//            float yaw = (float) robot.imu.getYaw();
+//            telemetry.addData("imu yaw: ", yaw);
+
         }
 
         if ((gamepad2.touchpad || gamepad1.touchpad) && Button.BTN_LIMELIGHT.canPress(timestamp)) {
             autoAiming = !autoAiming;
         }
+
         if (autoAiming) {
             robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                if (Math.abs(tx) >= 1f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
-                    calcPosition = (int) (-2.8081 * tx - 0.7685);
+                if (Math.abs(tx) >= 1.2f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
+                    calcPosition = (int) (-2.351157407 * tx);
                     telemetry.addData("calc pos", calcPosition);
                     if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
                         robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.6f);
@@ -387,7 +392,7 @@ public class thinkTele1 extends OpMode{
 
         //manual hood
         if(!hoodPIDupdate){
-            hoodStick = ((float) gamepad2.left_stick_y)*1f;
+            hoodStick = (gamepad2.left_stick_y)*1f;
             if(Math.abs(hoodStick) >= 0.07) {
                 tempHood = robot.hood.getCurrentPos() + hoodStick;
                 tempHood = Math.max(robot.hood.MAX, Math.min(tempHood, robot.hood.INIT-1));
@@ -414,7 +419,7 @@ public class thinkTele1 extends OpMode{
             robot.hood.setPosition(95);
         }
 
-        if(gamepad2.dpad_down && Button.BTN_95.canPress(timestamp) && !hoodPID) {
+        if(gamepad2.dpad_down && Button.BTN_HOODDOWN.canPress(timestamp) && !hoodPID) {
             robot.hood.setPosition(250);
         }
 

@@ -1,18 +1,16 @@
 package overcharged.components;
 
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 public class imu {
-    public final BHI260IMU imu;
+    public final IMU imu;
     public imu(HardwareMap hardwareMap) {
-        imu = hardwareMap.get(BHI260IMU.class, "imu");
+        imu = hardwareMap.get(IMU.class, "imu");
 
         RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
         RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;

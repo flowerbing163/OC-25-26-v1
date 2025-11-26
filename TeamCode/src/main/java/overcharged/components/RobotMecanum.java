@@ -1,5 +1,6 @@
 package overcharged.components;
 
+import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -33,6 +34,7 @@ public class RobotMecanum {
     public indexer indexer;
     public kicker kicker;
     public hood hood;
+    public imu imu;
 
     public MecanumDrive drive;
 
@@ -161,6 +163,13 @@ public class RobotMecanum {
         } catch (Exception e) {
             RobotLog.ee(RobotConstants.TAG_R, "missing: hood " + e.getMessage());
             missing = missing + ", hood";
+            numberMissing++;
+        }
+        try {
+            imu = new imu(hardwareMap);
+        } catch (Exception e) {
+            RobotLog.ee(RobotConstants.TAG_R, "missing: imu", e.getMessage());
+            missing = missing + ", imu";
             numberMissing++;
         }
     }
