@@ -75,7 +75,7 @@ public class hood {
     public void update() {
         if (autoAdjust && shooterRef != null) {
             double motorPower = shooterRef.getPowerT();
-            double velocity = motorPower * shooterRef.powerCoeff;
+            double velocity = shooterRef.getPID() * shooterRef.powerCoeff;
 
             double reqAng = calcReqAng(velocity, targetDist);
 
