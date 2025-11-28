@@ -75,10 +75,13 @@ public class hood {
     public void update() {
         if (autoAdjust && shooterRef != null) {
             double motorPower = shooterRef.getPowerT();
-            double velocity = shooterRef.getPID() * shooterRef.powerCoeff;
+            double velocity = motorPower * shooterRef.powerCoeff;
+
+            if (velocity < 0.5) {
+                return;
+            }
 
             double reqAng = calcReqAng(velocity, targetDist);
-
             float position = angToPos(reqAng) + 5;
             hood.setPosition(position);
         }

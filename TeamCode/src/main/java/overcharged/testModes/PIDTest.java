@@ -12,7 +12,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import overcharged.actions.Actions;
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
+import overcharged.components.ShooterSystem;
 import overcharged.components.turretSquid;
+import overcharged.opmodes.thinkTele1;
 
 
 @Config
@@ -23,6 +25,8 @@ public class PIDTest extends OpMode{
     Actions actionHandler = new Actions();
 
     Limelight3A limelight;
+
+    ShooterSystem shooterSystem;
 
     double slowPower = 1;
     int calcPosition;
@@ -65,6 +69,13 @@ public class PIDTest extends OpMode{
 
     ElapsedTime temp;
 
+    intakeState intakeMode = intakeState.OFF;
+    public enum intakeState {
+        OFF,
+        IN,
+        OUT,
+    }
+
 
     public void init() {
         try {
@@ -84,26 +95,34 @@ public class PIDTest extends OpMode{
         limelight.pipelineSwitch(1);
         limelight.start();
 
+        shooterSystem = new ShooterSystem(hardwareMap);
+
         robot.turret.setUseSquID(true, turretSquid.center, 1f);
     }
 
     public void loop() {
         telemetry.addData("lag: ", temp);
-        telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
-        //telemetry.addData("shoot power: ", tempShootPower);
-        //telemetry.addData("shooter power: ", robot.shooter.getCurrentSpeed());
-        telemetry.addData("shoot PID: ", robot.shooter.getPID());
-        telemetry.addData("shoot pid on: ", shootPID);
-        telemetry.addData("distance to goal: ", distance);
-        telemetry.addData("Hood Angle", robot.hood.getCurrentAngle());
-        telemetry.addData("Hood Position", robot.hood.getCurrentPos());
-        //telemetry.addData("SIDE: ", sideID);
+//        telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
+//        //telemetry.addData("shoot power: ", tempShootPower);
+//        //telemetry.addData("shooter power: ", robot.shooter.getCurrentSpeed());
+//        telemetry.addData("shoot PID: ", robot.shooter.getPID());
+//        telemetry.addData("shoot pid on: ", shootPID);
+//        telemetry.addData("distance to goal: ", distance);
+//        telemetry.addData("Hood Angle", robot.hood.getCurrentAngle());
+//        telemetry.addData("Hood Position", robot.hood.getCurrentPos());
+//        //telemetry.addData("SIDE: ", sideID);
+        telemetry.addData("Target Distance", distance);
+        telemetry.addData("Optimal Angle", shooterSystem.getOptimalAngleDegrees());
+        telemetry.addData("Optimal Velocity", shooterSystem.getOptimalVelocity());
+        telemetry.addData("Hood Position", shooterSystem.getCurrentHoodPosition());
+        telemetry.addData("Shooter Power", shooterSystem.getCurrentShooterPower());
 
         //per loop things
         robot.clearBulkCache();
         robot.turret.update();
         robot.shooter.update();
         robot.hood.update();
+        shooterSystem.update();
 
         actionHandler.fastShootSeq();
         actionHandler.indMoveSeq();
@@ -177,6 +196,19 @@ public class PIDTest extends OpMode{
                 robot.turrets.setPower(0);
                 checker = false;
             }
+        }
+
+        // Toggle auto-adjust mode
+        if (gamepad1.a) {
+            shooterSystem.setAutoAdjust(true, distance);
+        } else if (gamepad1.b) {
+            shooterSystem.setAutoAdjust(false, 0);
+            shooterSystem.stop();
+        }
+
+        // Update distance if it changes
+        if (shooterSystem.getTargetDistance() != distance) {
+            shooterSystem.setTargetDistance(distance);
         }
 
 
@@ -297,6 +329,23 @@ public class PIDTest extends OpMode{
             robot.hood.setTargetDistance(10);
             telemetry.addLine("hood pid off");
         }
+
+        //intake
+        if(gamepad1.right_trigger > 0.8 && Button.INTAKE.canPress(timestamp)) {
+            if(intakeMode == intakeState.OFF || intakeMode == intakeState.OUT) {
+                robot.intake.in();
+                intakeMode = intakeState.IN;
+            } else if(intakeMode == intakeState.IN) {
+                robot.intake.off();
+                intakeMode = intakeState.OFF;
+            }
+        }
+
+        if(gamepad1.left_bumper && Button.BTN_TTABLE.canPress(timestamp)){
+            actionHandler.startFastShoot();
+        }
+
+
 
     }
 

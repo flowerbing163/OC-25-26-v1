@@ -75,6 +75,8 @@ public class AutoBlueCloseV3 extends OpMode {
         S11_START_AUTOTURRET(11),
         S12_SET_HOOD(12),
         S121_SHOOT(121),
+
+        S100_TEST(100),
         ;
 
         private final int code;
@@ -509,9 +511,14 @@ public class AutoBlueCloseV3 extends OpMode {
             if(pathTimer.milliseconds()>200) {
                 robot.intake.in();
                 actionHandler.startFastShoot();
-                setPathState(PathState.S121_SHOOT);
+                setPathState(PathState.S100_TEST);
             }
         });
+
+        pathHandlers.put(PathState.S100_TEST, () -> {
+            telemetry.addLine("TEST CASE TIME");
+        });
+
 
     }
 
@@ -528,6 +535,7 @@ public class AutoBlueCloseV3 extends OpMode {
         limelight.pipelineSwitch(0);
         limelight.start();
 
+        this.initPathHandlers();
         follower = Constants.createFollower(hardwareMap);
 
         //

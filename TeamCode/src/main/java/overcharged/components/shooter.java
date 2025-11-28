@@ -14,7 +14,7 @@ public class shooter {
 
     public double targetSpeed;
     public double targetDist = 1000;
-    public double hood = 50;
+    public double hood = Math.toRadians(50);
     public double lastError;
     public double integral;
     public double lastTime;
