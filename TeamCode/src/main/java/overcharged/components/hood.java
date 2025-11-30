@@ -77,8 +77,11 @@ public class hood {
             double motorPower = shooterRef.getPowerT();
             double velocity = motorPower * shooterRef.powerCoeff;
 
-            double reqAng = calcReqAng(velocity, targetDist);
+            if (velocity < 0.5) {
+                return;
+            }
 
+            double reqAng = calcReqAng(velocity, targetDist);
             float position = angToPos(reqAng) + 5;
             hood.setPosition(position);
         }
