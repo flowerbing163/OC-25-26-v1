@@ -1,4 +1,4 @@
-package overcharged.testModes;
+package overcharged.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -187,28 +187,6 @@ public class thinkTele1 extends OpMode{
             telemetry.addLine("No LL vision, using IMU");
 //            float robotYaw = (float) robot.imu.getYaw();
 //            telemetry.addData("imu robotYaw: ", robotYaw);
-
-            if (sideID == 20) { // blue
-                startPose = new Pose(autoBlueCloseV2.getPoseX(), autoBlueCloseV2.getPoseY(), Math.toRadians(180));
-                goalAngle = (float) Math.toDegrees(Math.atan((Math.abs(follower.getPose().getX() + autoBlueCloseV2.getPoseX() - 7))/(Math.abs(follower.getPose().getY() + autoBlueCloseV2.getPoseY() - 137))));
-                if (0 <= robotYaw && robotYaw <= 360) {
-                    imuAdjust = (int) (-215 + 2.35115740740740 * (180 - robotYaw + goalAngle));
-                    robot.turret.setUseSquID(true, imuAdjust, .75f);
-                }
-//                else if (270 < robotYaw && robotYaw <= 360) {
-//                    imuAdjust = (int) (-215 + 2.35115740740740 * (robotYaw % 180 - goalAngle));
-//                    robot.turret.setUseSquID(true, imuAdjust, .75f);
-//                }
-
-            }
-            else if (sideID == 24) { // red
-                startPose = new Pose(autoRedCloseV2.getPoseX(), autoRedCloseV2.getPoseY(), Math.toRadians(0));
-                goalAngle = (float) Math.atan((Math.abs(follower.getPose().getX() - 137))/(Math.abs(follower.getPose().getY() - 137)));
-                if (-215 - 2.35115740740740 * (goalAngle + robotYaw) <= 122 && -215 - 2.35115740740740 * (goalAngle + robotYaw) >= -555) {
-                    robot.turret.setUseSquID(true, (int) (-215 - 2.35115740740740 * (goalAngle + robotYaw)), .75f);
-                }
-            }
-
         }
 
         if (gamepad1.touchpad && Button.BTN_TRACKING.canPress(timestamp)) {
@@ -233,6 +211,23 @@ public class thinkTele1 extends OpMode{
             }
             catch (IndexOutOfBoundsException e1){
                 telemetry.addLine("cant see vro :skull:");
+            }
+        }
+        else if (autoAiming && !ll) {
+            if (sideID == 20) { // blue
+                startPose = new Pose(autoBlueCloseV2.getPoseX(), autoBlueCloseV2.getPoseY(), Math.toRadians(180));
+                goalAngle = (float) Math.toDegrees(Math.atan((Math.abs(follower.getPose().getX() + autoBlueCloseV2.getPoseX() - 7))/(Math.abs(follower.getPose().getY() + autoBlueCloseV2.getPoseY() - 137))));
+                if (0 <= robotYaw && robotYaw <= 360) {
+                    imuAdjust = (int) (-215 + 2.35115740740740 * (180 - robotYaw + goalAngle));
+                    robot.turret.setUseSquID(true, imuAdjust, .75f);
+                }
+            }
+            else if (sideID == 24) { // red
+                startPose = new Pose(autoRedCloseV2.getPoseX(), autoRedCloseV2.getPoseY(), Math.toRadians(0));
+                goalAngle = (float) Math.atan((Math.abs(follower.getPose().getX() - 137))/(Math.abs(follower.getPose().getY() - 137)));
+                if (-215 - 2.35115740740740 * (goalAngle + robotYaw) <= 122 && -215 - 2.35115740740740 * (goalAngle + robotYaw) >= -555) {
+                    robot.turret.setUseSquID(true, (int) (-215 - 2.35115740740740 * (goalAngle + robotYaw)), .75f);
+                }
             }
         }
         else {
