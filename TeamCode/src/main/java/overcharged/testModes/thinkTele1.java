@@ -3,18 +3,23 @@ package overcharged.testModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.bosch.BHI260IMU;
+
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
+
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import overcharged.actions.Actions;
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
+import overcharged.opmodes.autoBlueCloseV2;
+import overcharged.opmodes.autoRedCloseV2;
+import overcharged.pedroPathing.Constants;
 
 
 @Config
@@ -26,6 +31,8 @@ public class thinkTele1 extends OpMode{
     Actions actionHandler = new Actions();
 
     Limelight3A limelight;
+    private Follower follower;
+    public static Pose startPose;
 
     double slowPower = 1;
     int calcPosition;
@@ -35,6 +42,7 @@ public class thinkTele1 extends OpMode{
     boolean shooting = false;
     boolean shooterTaking = false;
     boolean autoAiming = true;
+    boolean ll = true;
     boolean canTurn = true;
 
     boolean shootPID = false;
@@ -63,6 +71,9 @@ public class thinkTele1 extends OpMode{
     int distance = 0;
 
     int sideID = 20;
+    float robotYaw;
+    float goalAngle;
+    int imuAdjust;
 
     ElapsedTime temp;
 
@@ -91,6 +102,12 @@ public class thinkTele1 extends OpMode{
         limelight.pipelineSwitch(1);
         limelight.start();
 
+        startPose = new Pose(0,0, Math.toRadians(180));
+        follower = Constants.createFollower(hardwareMap);
+        follower.setStartingPose(startPose == null ? new Pose() : startPose);
+        follower.update();
+        robot.imu.resetYaw();
+
         robot.turret.setUseSquID(true, turretSquid.center, 1f);
     }
 
@@ -101,7 +118,8 @@ public class thinkTele1 extends OpMode{
         //telemetry.addData("temphood: ", tempHood);
         //telemetry.addData("hood pos: ", robot.hood.getCurrentPos());
         //telemetry.addData("turretTurn: ", turretTurn);
-        telemetry.addData("imu yaw: ", robot.imu.getYaw());
+        telemetry.addData("imu robotYaw: ", robotYaw);
+        telemetry.addData("unchanged robotYaw: ", robot.imu.getYaw());
         telemetry.addData("turret pos: ", robot.turrets.getCurrentPosition());
         //telemetry.addData("test: ", checker);
         //telemetry.addData("shoot power: ", tempShootPower);
@@ -112,6 +130,8 @@ public class thinkTele1 extends OpMode{
         telemetry.addData("Hood Angle", robot.hood.getCurrentAngle());
         telemetry.addData("Hood Position", robot.hood.getCurrentPos());
         telemetry.addData("SIDE: ", sideID);
+        telemetry.addData("start x: ", autoBlueCloseV2.getPoseX());
+        telemetry.addData("start heading: ", autoBlueCloseV2.getPoseHeading());
 
 
 
@@ -120,6 +140,14 @@ public class thinkTele1 extends OpMode{
         robot.turret.update();
         robot.shooter.update();
         robot.hood.update();
+        follower.update();
+        if (sideID == 24) {
+            robotYaw = (float) (((robot.imu.getYaw() + Math.toDegrees(autoRedCloseV2.getPoseHeading())) % 360 + 360) % 360);
+        }
+        else {
+            robotYaw = (float) (((robot.imu.getYaw() + Math.toDegrees(autoBlueCloseV2.getPoseHeading())) % 360 + 360) % 360);
+        }
+
 
         actionHandler.fastShootSeq();
         actionHandler.indMoveSeq();
@@ -157,24 +185,49 @@ public class thinkTele1 extends OpMode{
         }
         catch (IndexOutOfBoundsException e1) { // imu stuff as backup/alternative
             telemetry.addLine("No LL vision, using IMU");
-//            float yaw = (float) robot.imu.getYaw();
-//            telemetry.addData("imu yaw: ", yaw);
+//            float robotYaw = (float) robot.imu.getYaw();
+//            telemetry.addData("imu robotYaw: ", robotYaw);
+
+            if (sideID == 20) { // blue
+                startPose = new Pose(autoBlueCloseV2.getPoseX(), autoBlueCloseV2.getPoseY(), Math.toRadians(180));
+                goalAngle = (float) Math.toDegrees(Math.atan((Math.abs(follower.getPose().getX() + autoBlueCloseV2.getPoseX() - 7))/(Math.abs(follower.getPose().getY() + autoBlueCloseV2.getPoseY() - 137))));
+                if (0 <= robotYaw && robotYaw <= 360) {
+                    imuAdjust = (int) (-215 + 2.35115740740740 * (180 - robotYaw + goalAngle));
+                    robot.turret.setUseSquID(true, imuAdjust, .75f);
+                }
+//                else if (270 < robotYaw && robotYaw <= 360) {
+//                    imuAdjust = (int) (-215 + 2.35115740740740 * (robotYaw % 180 - goalAngle));
+//                    robot.turret.setUseSquID(true, imuAdjust, .75f);
+//                }
+
+            }
+            else if (sideID == 24) { // red
+                startPose = new Pose(autoRedCloseV2.getPoseX(), autoRedCloseV2.getPoseY(), Math.toRadians(0));
+                goalAngle = (float) Math.atan((Math.abs(follower.getPose().getX() - 137))/(Math.abs(follower.getPose().getY() - 137)));
+                if (-215 - 2.35115740740740 * (goalAngle + robotYaw) <= 122 && -215 - 2.35115740740740 * (goalAngle + robotYaw) >= -555) {
+                    robot.turret.setUseSquID(true, (int) (-215 - 2.35115740740740 * (goalAngle + robotYaw)), .75f);
+                }
+            }
 
         }
 
-        if ((gamepad2.touchpad || gamepad1.touchpad) && Button.BTN_LIMELIGHT.canPress(timestamp)) {
+        if (gamepad1.touchpad && Button.BTN_TRACKING.canPress(timestamp)) {
             autoAiming = !autoAiming;
         }
 
-        if (autoAiming) {
+        if (gamepad2.touchpad && Button.BTN_LIMELIGHT.canPress(timestamp)) {
+            ll = !ll;
+        }
+
+        if (autoAiming && ll) {
             robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 if (Math.abs(tx) >= 1.2f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
-                    calcPosition = (int) (-2.351157407 * tx);
+                    calcPosition = (int) (-2.35115740740740 * tx);
                     telemetry.addData("calc pos", calcPosition);
                     if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.6f);
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
                     }
                 }
             }
