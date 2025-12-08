@@ -31,6 +31,7 @@ public class RobotMecanum {
     public turrets turrets;
     public intake intake;
     public shooter shooter;
+    public IndexerLift indexerlift;
     public indexer indexer;
     public kicker kicker;
     public hood hood;
@@ -164,6 +165,13 @@ public class RobotMecanum {
             RobotLog.ee(RobotConstants.TAG_R, "missing: hood " + e.getMessage());
             missing = missing + ", hood";
             numberMissing++;
+        }
+        try {
+            indexerlift = new IndexerLift(hardwareMap);
+        } catch (Exception e) {
+            RobotLog.ee(RobotConstants.TAG_R, "missing: hood " + e.getMessage());
+            missing = missing + ", indexerlift";
+            numberMissing++;;
         }
         try {
             imu = new imu(hardwareMap);
