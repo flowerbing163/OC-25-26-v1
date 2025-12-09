@@ -34,9 +34,11 @@ public class Button
 
     public static final Button BTN_POWERSHOT = new Button();
     public static final Button BTN_FLYWHEEL = new Button();
+    public static final Button BTN_SHOOT_PID = new Button();
     public static final Button BTN_WOBBLE_CLAW = new Button();
     public static final Button BTN_WOBBLE_ARM = new Button();
     public static final Button BTN_WOBBLE_UP = new Button();
+    public static final Button BTN_TRACKING = new Button();
     public static final Button BTN_LIMELIGHT = new Button();
 
 

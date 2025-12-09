@@ -1,15 +1,12 @@
 package overcharged.opmodes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -17,16 +14,26 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import overcharged.actions.Actions;
 import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
+import overcharged.testModes.thinkTele1;
+
+import com.bylazar.configurables.PanelsConfigurables;
+import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.configurables.annotations.IgnoreConfigurable;
+import com.bylazar.field.FieldManager;
+import com.bylazar.field.PanelsField;
+import com.bylazar.field.Style;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 
 @Autonomous(name = "blue goal close NEW", group = "0Autonomous")
 public class autoBlueCloseV2 extends OpMode {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(autoBlueCloseV2.class);
-
     private RobotMecanum robot;
     private ElapsedTime pathTimer;
     MultipleTelemetry telems;
@@ -35,26 +42,19 @@ public class autoBlueCloseV2 extends OpMode {
     ElapsedTime temp; // lag time
     Actions actionHandler = new Actions(); //actions
 
+    private static double poseX = 33;
+    private static double poseY = 85;
+    private static double poseHeading = Math.toRadians(180);
+
     ElapsedTime total; // total amt of time, end if too close to 30s
     private int pathState;
     private int initState;
-    public int motifID = 67;
+    public int motifID = 21;
     int obbyID;
     private Follower follower;
 
     boolean autoTurret = false;
     int distance = 0;
-
-    static{
-        firstShoot = new Pose(45, 98, Math.toRadians(180));
-        firstBall = new Pose(17.5, 80, Math.toRadians(180));
-        secondShoot = new Pose(58, 78, Math.toRadians(180));
-        secondBall = new Pose(12, 55.5, Math.toRadians(180));
-        thirdBall = new Pose(15, 31, Math.toRadians(180));
-        endPose = new Pose(33, 85, Math.toRadians(180));
-
-    }
-
     int calcPosition;
 
     boolean shootPIDupdate = false;
@@ -67,62 +67,62 @@ public class autoBlueCloseV2 extends OpMode {
         NONE
     }
 
-
-
     public static Pose startPose = new Pose(15, 114, Math.toRadians(90)); // heading: 90
     private static Pose firstShoot, firstBall, secondShoot, secondBall, thirdBall, endPose;
 
     public static PathChain firstScore, firstTake, secondScore, secondTake, thirdScore, thirdTake, fourthScore, goEnd;
 
-//    public void buildPoses() {
-//
-//    }
+    public void buildPoses() {
+        firstShoot = new Pose(45, 98, Math.toRadians(180));
+        firstBall = new Pose(17.5, 81, Math.toRadians(180));
+        secondShoot = new Pose(58, 78, Math.toRadians(180));
+        secondBall = new Pose(12, 56.5, Math.toRadians(180));
+        thirdBall = new Pose(15, 31, Math.toRadians(180));
+        endPose = new Pose(33, 85, Math.toRadians(180));
+    }
 
-   public void buildPaths() {
-       firstScore = follower.pathBuilder()
-               .addPath(new BezierCurve(startPose,new Pose(29, 113), firstShoot))
-               .setLinearHeadingInterpolation(startPose.getHeading(), firstShoot.getHeading())
-               .build();
-       firstTake = follower.pathBuilder()
-               .addPath(new BezierCurve(firstShoot,new Pose(50, 76), firstBall))
-               .setConstantHeadingInterpolation(Math.toRadians(180))
-               .build();
-       secondScore = follower.pathBuilder()
-               .addPath(new BezierLine(firstBall, secondShoot))
-               .setConstantHeadingInterpolation(Math.toRadians(180))
-               .build();
-       secondTake = follower.pathBuilder()
-               .addPath(new BezierCurve(secondShoot, new Pose(52, 50) ,secondBall))
-               .setConstantHeadingInterpolation(Math.toRadians(180))
-               .build();
-       thirdScore = follower.pathBuilder()
-               .addPath(new BezierLine(secondBall, secondShoot))
-               .setConstantHeadingInterpolation(Math.toRadians(180))
-               .build();
-       thirdTake = follower.pathBuilder()
-               .addPath(new BezierCurve(secondShoot, new Pose(51, 31), thirdBall))
-               .setConstantHeadingInterpolation(Math.toRadians(180))
-               .build();
-       fourthScore = follower.pathBuilder()
-               .addPath(new BezierLine(thirdBall, secondShoot))
-               .setConstantHeadingInterpolation(Math.toRadians(180))
-               .build();
-       goEnd = follower.pathBuilder()
-               .addPath(new BezierLine(secondShoot, endPose))
-               .setConstantHeadingInterpolation(Math.toRadians(180))
-               .build();
-   }
+    public void buildPaths() {
+        firstScore = follower.pathBuilder()
+                .addPath(new BezierCurve(startPose,new Pose(29, 113), firstShoot))
+                .setLinearHeadingInterpolation(startPose.getHeading(), firstShoot.getHeading())
+                .build();
+        firstTake = follower.pathBuilder()
+                .addPath(new BezierCurve(firstShoot,new Pose(63, 85), firstBall))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+        secondScore = follower.pathBuilder()
+                .addPath(new BezierLine(firstBall, secondShoot))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+        secondTake = follower.pathBuilder()
+                .addPath(new BezierCurve(secondShoot, new Pose(51, 57) ,secondBall))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+        thirdScore = follower.pathBuilder()
+                .addPath(new BezierLine(secondBall, secondShoot))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+        thirdTake = follower.pathBuilder()
+                .addPath(new BezierCurve(secondShoot, new Pose(51, 31), thirdBall))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+        fourthScore = follower.pathBuilder()
+                .addPath(new BezierLine(thirdBall, secondShoot))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+        goEnd = follower.pathBuilder()
+                .addPath(new BezierLine(secondShoot, endPose))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+    }
 
     public void setInitState(int state) {
-        LOGGER.info("setInitState start. state:"+state);
         initState = state;
         pathTimer.reset();
         initBody();
-        LOGGER.info("setInitState end. state:"+state);
     }
 
     public void initBody() {
-        LOGGER.info("initBody start. initState:"+initState);
         switch(initState){
             case 10:
                 robot.turret.setUseSquID(false);
@@ -156,17 +156,13 @@ public class autoBlueCloseV2 extends OpMode {
                 telemetry.addData("motif ID: ", obbyID);
                 break;
         }
-        LOGGER.info("initBody end. obbyID:"+obbyID);
-        LOGGER.info("initBody end. initState:"+initState);
     }
 
     public void autoPath() {
-        LOGGER.info("autoPath start. pathState:"+pathState);
         switch(pathState){
             case 10:
                 follower.followPath(firstScore);
                 colorMode = colorState.GPP;
-               //orderMode= EnumOrderMode.213;
                 setPathState(101);
                 break;
             case 101:
@@ -325,29 +321,29 @@ public class autoBlueCloseV2 extends OpMode {
                 telemetry.addLine("TEST CASE TIME");
                 break;
         }
-        LOGGER.info("autoPath end. pathState:"+pathState);
     }
 
     public void setPathState(int state) {
-        LOGGER.info("setPathState start. state:"+state);
         pathState = state;
         pathTimer.reset();
         autoPath();
-        LOGGER.info("setPathState end. state:"+state);
     }
 
     @Override
     public void loop() {
-        LOGGER.info("loop start");
-
         temp.reset();
         follower.update();
         autoPath();
         robot.turret.update();
         robot.shooter.update();
 
+        poseX = follower.getPose().getX();
+        poseY = follower.getPose().getY();
+        poseHeading = follower.getTotalHeading();
+
         telemetry.addLine("lag: " + temp);
         telemetry.addLine("position: " + follower.getPose());
+        telemetry.addLine("posX: " + follower.getPose().getX());
         telemetry.addLine("heading: " + follower.getTotalHeading());
         telemetry.addLine("case: " + pathState);
         telemetry.addLine("turret pos: " + robot.turret.getCurrentPosition());
@@ -393,53 +389,39 @@ public class autoBlueCloseV2 extends OpMode {
             robot.shooter.setUsePID(false);
         }
 
-        
-        int[] currentOrder = this.getFastShootOrder(obbyID, colorMode);
-        actionHandler.fastShootSeqByOrder(currentOrder);
 
-        LOGGER.info("loop end");
-    }
-
-    public int[] getFastShootOrder(int obbyID , colorState currentColorState){
         if(obbyID == 21) { //gpp
-            if(currentColorState == colorState.GPP){ // yyy
-                //231
-                return new int[]{1,3,2};
+            if(colorMode == colorState.GPP){ // yyy
+                actionHandler.fastShootSeq();
             } else if (colorMode == colorState.PGP) { // nny
-                //213
-                return new int[]{2,1,3};
+                actionHandler.fastShootSeq213();
             } else if (colorMode == colorState.PPG) { // nyn
-                //321
-                return new int[]{3,1,2};
+                actionHandler.fastShootSeq321();
             }
         }
-
         else if (obbyID == 22) { //pgp
             if(colorMode == colorState.GPP){
-                return new int[]{2,1,3};
+                actionHandler.fastShootSeq213();
             } else if (colorMode == colorState.PGP) {
-                return new int[]{1,2,3};
+                actionHandler.fastShootSeq();
             } else if (colorMode == colorState.PPG) {
-                return new int[]{2,3,1};
+                actionHandler.fastShootSeq132();
             }
         }
         else if (obbyID == 23){ //ppg
             if(colorMode == colorState.GPP){
                 actionHandler.fastShootSeq321();
-                return new int[]{2,3,1};
             } else if (colorMode == colorState.PGP) {
-                return new int[]{1,3,2};
+                actionHandler.fastShootSeq132();
             } else if (colorMode == colorState.PPG) {
-                return new int[]{1,2,3};
+                actionHandler.fastShootSeq();
             }
         }
 
-        return new int[]{2,3,1};
     }
 
     @Override
     public void init_loop() {
-        LOGGER.info("init_loop start");
         initBody();
         try {
             LLResult result = limelight.getLatestResult();
@@ -450,12 +432,10 @@ public class autoBlueCloseV2 extends OpMode {
         }
         telemetry.addLine("Init looping");
         telemetry.addLine("case: "+initState);
-        LOGGER.info("init_loop end");
     }
 
     @Override
     public void init() {
-        LOGGER.info("init start");
         telems = new MultipleTelemetry(dashboard.getTelemetry(), telemetry);
         robot = new RobotMecanum(this, true, false);
         pathTimer = new ElapsedTime();
@@ -466,23 +446,23 @@ public class autoBlueCloseV2 extends OpMode {
         limelight.start();
 
         follower = Constants.createFollower(hardwareMap);
-
-        //
-        //buildPoses();
+        buildPoses();
         buildPaths();
         follower.setStartingPose(startPose);
 
         actionHandler.fastShootSys(robot);
         setInitState(10);
-        LOGGER.info("init end");
     }
 
     @Override
     public void start() {
-        LOGGER.info("start start");
         total = new ElapsedTime();
         setPathState(10);
         autoPath();
-        LOGGER.info("start end");
     }
+
+    public static double getPoseX() { return poseX; }
+    public static double getPoseY() { return poseY; }
+
+    public static double getPoseHeading() {return poseHeading;}
 }

@@ -28,6 +28,10 @@ public class autoRedCloseV2 extends OpMode {
     ElapsedTime temp; // lag time
     Actions actionHandler = new Actions(); //actions
 
+    private static double poseX = 110;
+    private static double poseY = 85;
+    private static double poseHeading = Math.toRadians(0);
+
     ElapsedTime total; // total amt of time, end if too close to 30s
     private int pathState;
     private int initState;
@@ -320,6 +324,10 @@ public class autoRedCloseV2 extends OpMode {
         robot.turret.update();
         robot.shooter.update();
 
+        poseX = follower.getPose().getX();
+        poseY = follower.getPose().getY();
+        poseHeading = follower.getPose().getHeading();
+
         telemetry.addLine("lag: " + temp);
         telemetry.addLine("position: " + follower.getPose());
         telemetry.addLine("heading: " + follower.getTotalHeading());
@@ -439,4 +447,8 @@ public class autoRedCloseV2 extends OpMode {
         setPathState(10);
         autoPath();
     }
+
+    public static double getPoseX() { return poseX; }
+    public static double getPoseY() { return poseY; }
+    public static double getPoseHeading() { return poseHeading; }
 }

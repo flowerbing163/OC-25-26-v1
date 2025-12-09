@@ -55,7 +55,7 @@ public class alignmentTestZero extends OpMode {
         catch (IndexOutOfBoundsException e1) {
             telemetry.addLine("Cannot see, manually adjust");
         }
-//        if(gamepad1.x && Button.BTN_LIMELIGHT.canPress(timestamp)) {
+//        if(gamepad1.x && Button.BTN_TRACKING.canPress(timestamp)) {
 //            if(!autoAiming) {
 //                try {
 //                    float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();

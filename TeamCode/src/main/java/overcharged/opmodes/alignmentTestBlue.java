@@ -63,7 +63,7 @@ public class alignmentTestBlue extends OpMode {
             telemetry.addLine("Cannot see, manually adjust");
         }
 
-        if (gamepad1.a && Button.BTN_LIMELIGHT.canPress(timestamp)) {
+        if (gamepad1.a && Button.BTN_TRACKING.canPress(timestamp)) {
             autoAiming = !autoAiming;
         }
         if (autoAiming) {
@@ -92,7 +92,7 @@ public class alignmentTestBlue extends OpMode {
                 robot.turrets.setPower(0);
             }
         }
-//        if(gamepad1.x && Button.BTN_LIMELIGHT.canPress(timestamp)) {
+//        if(gamepad1.x && Button.BTN_TRACKING.canPress(timestamp)) {
 //            if(!autoAiming) {
 //                try {
 //                    float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
