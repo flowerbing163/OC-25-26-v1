@@ -33,7 +33,7 @@ public class RobotMecanum {
     public shooter shooter;
     public IndexerLift indexerlift;
     public indexer indexer;
-    public kicker kicker;
+    public kicker kicker; //outdated
     public hood hood;
     public imu imu;
 

@@ -19,17 +19,14 @@ public class IndexerLift {
     }
 
     public void setDown() {
-        indexerliftR.setPosition(INIT);
-        indexerliftL.setPosition(INIT);
+        setPosition(INIT);
     }
     public void setInit() {
-        indexerliftR.setPosition(INIT);
-        indexerliftL.setPosition(INIT);
+        setPosition(INIT);
     }
 
     public void setUp() {
-        indexerliftR.setPosition(UP);
-        indexerliftL.setPosition(UP);
+        setPosition(UP);
     }
 
 }

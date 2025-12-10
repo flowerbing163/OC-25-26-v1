@@ -54,8 +54,8 @@ tester123
      */
     public enum ETest {
         NONE,
-        SWITCH,
-        ENCODER,
+        //SWITCH,
+        //ENCODER,
         MOTOR,
         DRIVE,
         SERVO_CALIBRATE,
@@ -115,10 +115,14 @@ tester123
         OcServo indexer = robot.indexer.indexer;
         OcServo kicker = robot.kicker.kicker;
         OcServo hood = robot.hood.hood;
+        OcServo liftR = robot.indexerlift.indexerliftR;
+        OcServo liftL = robot.indexerlift.indexerliftL;
         //servos.add(intakeTilt);
         servos.add(indexer);
         servos.add(kicker);
         servos.add(hood);
+        servos.add(liftR);
+        servos.add(liftL);
 
 
 
