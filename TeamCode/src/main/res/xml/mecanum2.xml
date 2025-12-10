@@ -18,8 +18,8 @@
 
         <LynxModule name="Expansion Hub 2" port="2">
 
-            <goBILDA5202SeriesMotor name="turret" port="1" />
-            <goBILDA5202SeriesMotor name="intake" port="0" />
+            <goBILDA5202SeriesMotor name="turret" port="0" />
+            <goBILDA5202SeriesMotor name="intake" port="1" />
             <goBILDA5202SeriesMotor name="botShooter" port="2" />
             <goBILDA5202SeriesMotor name="topShooter" port="3" />
 
@@ -29,10 +29,9 @@
 
         <LynxModule name="Servo Hub 3" port="3">
 
-            <Servo name="hood" port="0" />
-            <Servo name="indexer" port="2" />
-            <Servo name="kicker" port="3" />
-            <Servo name="lift" port="3" />
+            <Servo name="hood" port="2" />
+            <Servo name="indexer" port="4" />
+            <Servo name="lift" port="1" />
 
         </LynxModule>
 

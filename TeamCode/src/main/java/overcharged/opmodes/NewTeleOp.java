@@ -260,6 +260,7 @@ public class NewTeleOp extends OpMode {
 
         //TODO: ADD INDEXER HARD RESET
 
+        //TODO: SHOOT
         if ((gamepad1.right_bumper || gamepad2.right_trigger > 0.8) && Button.BTN_FLYWHEEL.canPress(timestamp)) {
             if (!shootPID && !hoodPID) {
                 if (!shooting) {
@@ -323,6 +324,84 @@ public class NewTeleOp extends OpMode {
             }
         }
 
+        if((gamepad1.dpad_right || gamepad2.left_bumper) && Button.INTAKE.canPress(timestamp)) {
+            if(hoodPID) {
+                shootPID = false;
+                hoodPID = false;
+            } else if (!hoodPID) {
+                gamepad2.rumble(100);
+                shootPID = false;
+                hoodPID = true;
+            }
+        }
+
+        if (shootPIDupdate) {
+            robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());
+            telemetry.addLine("shooter PID ON!!!");
+        }
+        else if(!shootPIDupdate){
+            robot.shooter.setUsePID(false);
+            telemetry.addLine("pid off");
+        }
+
+        if (hoodPIDupdate) {
+            robot.hood.setAutoAdjust(true, robot.shooter, distance);
+            robot.hood.setTargetDistance(distance);
+            telemetry.addLine("hood PID on!");
+        }
+        else if(!hoodPIDupdate){
+            robot.hood.setAutoAdjust(false, robot.shooter, 2000);
+            robot.hood.setTargetDistance(2000);
+            telemetry.addLine("pid off");
+        }
+
+        //TODO: SHOOTER INTAKING
+        if(gamepad2.left_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp) && !shootPID) {
+            if(!shooterTaking) {
+                robot.shooter.intake();
+                shootPIDupdate = false;
+                shooting = false;
+                shooterTaking = true;
+            } else if(shooterTaking) {
+                robot.shooter.off();
+                shootPIDupdate = false;
+                shooting = false;
+                shooterTaking = false;
+            }
+        }
+
+        //TODO: MANUAL HOOD
+        if(!hoodPIDupdate){
+            hoodStick = (gamepad2.left_stick_y)*1f;
+            if(Math.abs(hoodStick) >= 0.07) {
+                tempHood = robot.hood.getCurrentPos() + hoodStick;
+                tempHood = Math.max(robot.hood.MAX, Math.min(tempHood, robot.hood.INIT-1));
+                robot.hood.setPosition(tempHood);
+            }
+        }
+
+        //TODO: ADD FAST SHOOT ACTION
+
+        //TODO: TURRET RECENTER
+        if(gamepad2.guide && Button.BTN_MINUS.canPress(timestamp)) {
+            robot.turret.setCenter((int)robot.turret.getCurrentPosition());
+        }
+
+        //TODO: MODIFY PRESET HOOD POSITIONS
+        //TODO: FAR ZONE
+        if(gamepad2.dpad_up && Button.BTN_128.canPress(timestamp) && !hoodPID) {
+            robot.hood.setPosition(128);
+        }
+
+        //TODO: CLOSE ZONE
+        if(gamepad2.dpad_right && Button.BTN_95.canPress(timestamp) && !hoodPID) {
+            robot.hood.setPosition(95);
+        }
+
+        //TODO: DOWN
+        if(gamepad2.dpad_down && Button.BTN_HOODDOWN.canPress(timestamp) && !hoodPID) {
+            robot.hood.setPosition(250);
+        }
     }
 
 }
