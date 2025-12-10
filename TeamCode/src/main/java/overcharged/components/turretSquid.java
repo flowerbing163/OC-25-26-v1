@@ -23,12 +23,12 @@ public class turretSquid {
     public static final int minimum = -555;
     public static final int maximum = 103;
 
-    public float kp = 0.06f;
+    public float kp = 0.083f;
     public double start;
     public static double p = 18;
-    public static double i = 0.0003f;
+    public static double i = 0.003f;
     public static double d = 0.0005;
-    public static double f = 0.003f;
+    public static double f = 0f;
 
     private boolean useSquID = false;
     private double target = 0;
@@ -50,7 +50,7 @@ public class turretSquid {
 
         integral += error * dt;
         integral = Math.min(500, Math.max(-500, integral));
-        if (Math.abs(error) < 6) {
+        if (Math.abs(error) < 0.9) {
             integral = 0;
         }
 

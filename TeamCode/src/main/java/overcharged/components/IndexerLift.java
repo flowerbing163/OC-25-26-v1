@@ -3,19 +3,18 @@ package overcharged.components;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class IndexerLift {
-    public OcServo indexerliftR, indexerliftL;
+    public OcServo indexerlift;
 
-    public static final float INIT = 0f;
-    public static final float UP = 0f;
+    public static final float INIT = 13f;
+    public static final float UP = 231f;
 
     public IndexerLift(HardwareMap hardwareMap) {
-        indexerliftR = new OcServo(hardwareMap, "indexerliftR", INIT);
-        indexerliftL = new OcServo(hardwareMap, "indexerliftL", INIT);
+
+        indexerlift = new OcServo(hardwareMap, "indexerlift", INIT);
     }
 
     public void setPosition(float pos) {
-        indexerliftR.setPosition(pos);
-        indexerliftL.setPosition(pos);
+        indexerlift.setPosition(pos);
     }
 
     public void setDown() {

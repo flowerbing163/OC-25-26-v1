@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.Range;
 
 import java.text.DecimalFormat;
@@ -13,11 +12,8 @@ import java.util.List;
 
 import overcharged.components.Button;
 import overcharged.components.MecanumDrive;
-import overcharged.components.OcMotorEx;
 import overcharged.components.OcServo;
 import overcharged.components.RobotMecanum;
-import overcharged.test.MotorTestInfo;
-import overcharged.test.ServoTestInfo;
 
 /**
  * Overcharged Team #12599 Tester
@@ -111,18 +107,13 @@ tester123
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        //OcServo intakeTilt = robot.intakeTilt.intakeTilt;
-        OcServo indexer = robot.indexer.indexer;
-        OcServo kicker = robot.kicker.kicker;
         OcServo hood = robot.hood.hood;
-        OcServo liftR = robot.indexerlift.indexerliftR;
-        OcServo liftL = robot.indexerlift.indexerliftL;
+        OcServo indexerlift = robot.indexerlift.indexerlift;
+        OcServo indexer = robot.indexer.indexer;
         //servos.add(intakeTilt);
         servos.add(indexer);
-        servos.add(kicker);
         servos.add(hood);
-        servos.add(liftR);
-        servos.add(liftL);
+        servos.add(indexerlift);
 
 
 
@@ -134,9 +125,8 @@ tester123
                         robot.indexer.ONE,
                         robot.indexer.THREE),
                 new ServoTestInfo(
-                        kicker,
-                        robot.kicker.INIT,
-                        robot.kicker.KICK),
+                        indexerlift,
+                        robot.indexerlift.INIT),
                 new ServoTestInfo(
                         hood,
                         robot.hood.INIT)

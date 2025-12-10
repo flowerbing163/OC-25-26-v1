@@ -33,7 +33,7 @@ public class RobotMecanum {
     public shooter shooter;
     public IndexerLift indexerlift;
     public indexer indexer;
-    public kicker kicker; //outdated
+    public kicker kicker;
     public hood hood;
     public imu imu;
 
@@ -148,17 +148,17 @@ public class RobotMecanum {
         try {
             indexer = new indexer(hardwareMap);
         } catch (Exception e) {
-            RobotLog.ee(RobotConstants.TAG_R, "missing: hood " + e.getMessage());
-            missing = missing + ", hood";
+            RobotLog.ee(RobotConstants.TAG_R, "missing: indexer " + e.getMessage());
+            missing = missing + ", indexer";
             numberMissing++;
         }
-        try {
-            kicker = new kicker(hardwareMap);
-        } catch (Exception e) {
-            RobotLog.ee(RobotConstants.TAG_R, "missing: kicker " + e.getMessage());
-            missing = missing + ", kicker";
-            numberMissing++;
-        }
+//        try {
+//            kicker = new kicker(hardwareMap);
+//        } catch (Exception e) {
+//            RobotLog.ee(RobotConstants.TAG_R, "missing: kicker " + e.getMessage());
+//            missing = missing + ", kicker";
+//            numberMissing++;
+//        }
         try {
             hood = new hood(hardwareMap);
         } catch (Exception e) {
@@ -169,7 +169,7 @@ public class RobotMecanum {
         try {
             indexerlift = new IndexerLift(hardwareMap);
         } catch (Exception e) {
-            RobotLog.ee(RobotConstants.TAG_R, "missing: hood " + e.getMessage());
+            RobotLog.ee(RobotConstants.TAG_R, "missing: indexerlift " + e.getMessage());
             missing = missing + ", indexerlift";
             numberMissing++;;
         }

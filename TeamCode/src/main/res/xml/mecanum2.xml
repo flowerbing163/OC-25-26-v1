@@ -31,7 +31,7 @@
 
             <Servo name="hood" port="2" />
             <Servo name="indexer" port="4" />
-            <Servo name="lift" port="1" />
+            <Servo name="indexerlift" port="1" />
 
         </LynxModule>
 

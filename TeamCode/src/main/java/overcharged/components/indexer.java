@@ -9,6 +9,13 @@ public class indexer {
     public static final float TWO = .2f; //115f old
     public static final float THREE = .3f;//20f old
 
+
+    public static final float INIT = 6f; // 24, 42, 62, 82, 100, 119 about 18-20 for each hole turn,
+    public static final float ROTATE1 = 64f;
+    public static final float ROTATE2 = 121f;
+
+
+
     public static final float RONE = 10f;//211f old
     public static final float RTWO = 201f; //115f old
     public static final float RTHREE = 105f;//20f old

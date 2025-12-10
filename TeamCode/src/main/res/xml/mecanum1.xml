@@ -5,7 +5,7 @@
         <LynxModule name="Control Hub" port="173">
 
             <goBILDA5202SeriesMotor name="driveRF" port="0" />
-            <goBILDA5202SeriesMotor name="driveRB" port="1" />
+            <goBILDA5202SeriesMotor name="driveRB" port= "1" />
             <goBILDA5202SeriesMotor name="driveLF" port="2" />
             <goBILDA5202SeriesMotor name="driveLB" port="3" />
 
@@ -14,7 +14,7 @@
             <ControlHubImuBHI260AP name="imu" port="0" bus="0" />
 
         </LynxModule>
-
+ 
 
         <LynxModule name="Expansion Hub 2" port="2">
 
