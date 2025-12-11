@@ -18,7 +18,7 @@ import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 
 @Config
-@TeleOp(name = "correct tele", group = "(0tele")
+@TeleOp(name = "correct tele", group = "0tele")
 public class NewTeleOp extends OpMode {
 
     RobotMecanum robot;
@@ -158,7 +158,7 @@ public class NewTeleOp extends OpMode {
                 float ty = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetYDegrees();
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 telemetry.addData("goal tx: ", tx);
-                distance = (int) ((646.1125 - 410.15381) / Math.tan(Math.toRadians(ty))) + 300;
+                distance = (int) ((646.1125 - 317.5) / Math.tan(Math.toRadians(ty)));
             }
         } catch (IndexOutOfBoundsException e1) {
             telemetry.addLine("No vision");
@@ -172,16 +172,16 @@ public class NewTeleOp extends OpMode {
 //            ll = !ll;
 //        }
 
-        if (autoAiming && ll) {
+        if (autoAiming) {
             robot.turret.setUseSquID(true);
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 telemetry.addLine("aiming: limelight");
                 if (Math.abs(tx) >= 1.2f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
-                    calcPosition = (int) (-2.35115740740740 * tx);
+                    calcPosition = (int) (2.1 * tx); //2.3511740740740
                     telemetry.addData("calc pos: ", calcPosition);
                     if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 1f);
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, .7f);
                     }
                 }
             }

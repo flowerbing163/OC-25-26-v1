@@ -1,18 +1,22 @@
 package overcharged.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import overcharged.components.RobotMecanum;
+import overcharged.components.turretSquid;
+
 
 @Config
 @TeleOp(name="turret test", group="Test")
 public class turretTuner extends OpMode {
-    private RobotMecanum robot;
+    RobotMecanum robot;
 
-    public static float kP = 0.06f;
-    public static float kI = 0.0003f;
-    public static float f = 0.003f;
+    public static float kP = turretSquid.getKp();
+    public static float kI = (float) turretSquid.getI();
+    public static float f = (float) turretSquid.getF();
     public static int target = 0;
 
     public void loop(){

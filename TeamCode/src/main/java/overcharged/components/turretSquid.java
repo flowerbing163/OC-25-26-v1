@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class turretSquid {
     public final OcMotorEx turret;
 
-    public static int center = -215;
+    public static int center = 0;
     public static final int START = 0;
     public static final int NORMAL = 0;
     public static final int blueCloseAutoStart = 120;
@@ -23,12 +23,12 @@ public class turretSquid {
     public static final int minimum = -220;
     public static final int maximum = 150;
 
-    public float kp = 0.083f;
+    public static float kp = 0.083f;
     public double start;
     public static double p = 18;
-    public static double i = 0.003f;
+    public static double i = 0.01f;
     public static double d = 0.0005;
-    public static double f = 0f;
+    public static double f = -0.02f;
 
     private boolean useSquID = false;
     private double target = 0;
@@ -50,7 +50,7 @@ public class turretSquid {
 
         integral += error * dt;
         integral = Math.min(500, Math.max(-500, integral));
-        if (Math.abs(error) < 0.9) {
+        if (Math.abs(error) <= 1) {
             integral = 0;
         }
 
@@ -135,12 +135,12 @@ public class turretSquid {
     public int getMax() { return maximum;}
     public int getMin() {return minimum;}
 
-    public float getKp() {
+    public static float getKp() {
         return kp;
     }
 
-    public double getI() {return i;}
+    public static double getI() {return i;}
 
-    public double getF() {return f;}
+    public static double getF() {return f;}
 
 }
