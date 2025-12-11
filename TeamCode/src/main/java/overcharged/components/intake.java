@@ -32,5 +32,9 @@ public class intake {
         intake.setPower(-0.8f);
     }
 
+    public void shooter(){
+        intake.setPower(-1f);
+    }
+
     public void slowOut() {intake.setPower(-0.515f);}
 }

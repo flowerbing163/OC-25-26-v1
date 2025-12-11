@@ -23,7 +23,7 @@ import overcharged.pedroPathing.Constants;
 
 
 @Config
-@TeleOp(name = "imagine tele", group = "(0tele")
+@TeleOp(name = "imagine tele", group = "0tele")
 public class thinkTele1 extends OpMode{
 
     RobotMecanum robot;

@@ -21,7 +21,7 @@ import overcharged.actions.Actions;
 import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
-import overcharged.testModes.thinkTele1;
+import overcharged.opmodes.thinkTele1;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;

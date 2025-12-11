@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class IndexerLift {
     public OcServo indexerlift;
 
-    public static final float INIT = 13f;
+    public static final float INIT = 25f;
     public static final float UP = 231f;
 
     public IndexerLift(HardwareMap hardwareMap) {

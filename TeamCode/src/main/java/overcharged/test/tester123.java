@@ -279,6 +279,10 @@ tester123
                 posJoy1 = 0;
             } else if (gamepad1.right_stick_button && Button.BTN_MID.canPress(timeStamp)) {
                 posJoy1 = 128;
+            } else if (gamepad1.dpad_left && Button.BTN_MID.canPress(timeStamp)) {
+                posJoy1 -= 0.1;
+            } else if (gamepad1.dpad_right && Button.BTN_MID.canPress(timeStamp)) {
+                posJoy1 += 0.1;
             }
             posJoy1 = Range.clip(posJoy1, 0, 255);
             servoCalibrateList.get(servoCalibrateCounter).setPosition(posJoy1);

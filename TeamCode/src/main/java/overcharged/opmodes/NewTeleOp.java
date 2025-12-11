@@ -12,22 +12,21 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import overcharged.actions.Actions;
+import overcharged.actions.ActionsV2;
 import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
-import overcharged.opmodes.autoBlueCloseV2;
-import overcharged.opmodes.autoRedCloseV2;
-import overcharged.pedroPathing.Constants;
+
 @Config
 @TeleOp(name = "correct tele", group = "(0tele")
 public class NewTeleOp extends OpMode {
 
     RobotMecanum robot;
-    Actions actionHandler = new Actions();
+
+    ActionsV2 actionHandler = new ActionsV2();
 
     Limelight3A limelight;
-    private Follower follower;
+    //private Follower follower;
     public static Pose startPose;
 
     double slowPower = 1;
@@ -44,7 +43,7 @@ public class NewTeleOp extends OpMode {
     boolean hoodPID = false;
     boolean hoodPIDupdate = false;
 
-    boolean shootPID = false;
+    boolean shootPID = true;
     boolean shootPIDupdate = false;
 
     boolean checker = false;
@@ -59,7 +58,7 @@ public class NewTeleOp extends OpMode {
     long shootTimer = 0;
 
     int distance = 0;
-
+    String sideColor = "BLUE";
     int sideID = 20;
     float robotYaw;
     float goalAngle;
@@ -80,14 +79,16 @@ public class NewTeleOp extends OpMode {
             robot = new RobotMecanum(this, false, false);
             robot.setBulkReadManual();
 
+            actionHandler.fastShootSys(robot);
+            //actionHandler.sortShootSys(robot);
+            robot.indexerlift.setInit();
+
         } catch (Exception e) {
             telemetry.addData("Init Failed", e.getMessage());
             telemetry.update();
         }
 
         temp = new ElapsedTime();
-        robot.indexer.setInit();
-        robot.indexerlift.setInit();
         //robot.hood.
 
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
@@ -113,14 +114,24 @@ public class NewTeleOp extends OpMode {
         telemetry.addData("distance to goal: ", distance);
         telemetry.addData("Hood Angle", robot.hood.getCurrentAngle());
         telemetry.addData("Hood Position", robot.hood.getCurrentPos());
-        telemetry.addData("SIDE: ", sideID);
+
+        //color thing
+        telemetry.addData("SIDE: ", sideColor, sideID);
+        if(sideID == 20) {
+            sideColor = "BLUE";
+        } else if(sideID == 24) {
+            sideColor = "RED";
+        }
 
         //TODO: loop updates
         robot.clearBulkCache();
         robot.turret.update();
         robot.shooter.update();
         robot.hood.update();
-        follower.update();
+        //follower.update();
+
+        //actions updates
+        actionHandler.fastShoot();
 
         long timestamp = System.currentTimeMillis();
         long time = System.currentTimeMillis();
@@ -170,7 +181,7 @@ public class NewTeleOp extends OpMode {
                     calcPosition = (int) (-2.35115740740740 * tx);
                     telemetry.addData("calc pos: ", calcPosition);
                     if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.7f);
+                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 1f);
                     }
                 }
             }
@@ -260,6 +271,11 @@ public class NewTeleOp extends OpMode {
         //TODO: ADD INDEXER MANUAL MOVE
 
         //TODO: ADD INDEXER HARD RESET
+        if(gamepad1.x && Button.INTAKE.canPress(timestamp)) {
+            robot.indexer.reset();
+            robot.indexerlift.setInit();
+        }
+
 
         //TODO: SHOOT
         if ((gamepad1.right_bumper || gamepad2.right_trigger > 0.8) && Button.BTN_FLYWHEEL.canPress(timestamp)) {
@@ -325,16 +341,16 @@ public class NewTeleOp extends OpMode {
             }
         }
 
-        if((gamepad1.dpad_right || gamepad2.left_bumper) && Button.INTAKE.canPress(timestamp)) {
-            if(hoodPID) {
-                shootPID = false;
-                hoodPID = false;
-            } else if (!hoodPID) {
-                gamepad2.rumble(100);
-                shootPID = false;
-                hoodPID = true;
-            }
-        }
+//        if((gamepad1.dpad_right || gamepad2.left_bumper) && Button.INTAKE.canPress(timestamp)) {
+//            if(hoodPID) {
+//                shootPID = false;
+//                hoodPID = false;
+//            } else if (!hoodPID) {
+//                gamepad2.rumble(100);
+//                shootPID = false;
+//                hoodPID = true;
+//            }
+//        }
 
         if (shootPIDupdate) {
             robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());
@@ -345,16 +361,16 @@ public class NewTeleOp extends OpMode {
             telemetry.addLine("pid off");
         }
 
-        if (hoodPIDupdate) {
-            robot.hood.setAutoAdjust(true, robot.shooter, distance);
-            robot.hood.setTargetDistance(distance);
-            telemetry.addLine("hood PID on!");
-        }
-        else if(!hoodPIDupdate){
-            robot.hood.setAutoAdjust(false, robot.shooter, 2000);
-            robot.hood.setTargetDistance(2000);
-            telemetry.addLine("pid off");
-        }
+//        if (hoodPIDupdate) {
+//            robot.hood.setAutoAdjust(true, robot.shooter, distance);
+//            robot.hood.setTargetDistance(distance);
+//            telemetry.addLine("hood PID on!");
+//        }
+//        else if(!hoodPIDupdate){
+//            robot.hood.setAutoAdjust(false, robot.shooter, 2000);
+//            robot.hood.setTargetDistance(2000);
+//            telemetry.addLine("pid off");
+//        }
 
         //TODO: SHOOTER INTAKING
         if(gamepad2.left_trigger > 0.8 && Button.BTN_FLYWHEEL.canPress(timestamp) && !shootPID) {
@@ -381,7 +397,10 @@ public class NewTeleOp extends OpMode {
             }
         }
 
-        //TODO: ADD FAST SHOOT ACTION
+        //TODO: CHECK FAST SHOOT ACTION
+        if(gamepad2.touchpad && Button.BTN_SHOOT_PID.canPress(timestamp) && shooting) {
+            actionHandler.startFastShoot();
+        }
 
         //TODO: TURRET RECENTER
         if(gamepad2.guide && Button.BTN_MINUS.canPress(timestamp)) {

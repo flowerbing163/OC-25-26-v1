@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class hood {
     public OcServo hood;
 
-    public static final float INIT = 252f; //50
+    public static final float INIT = 189f; //50
     public static final float MAX = 0f; //25
     public static final float CLOSE = 148.4667f;
     public static final float MIDDLE = 155.4083f;
@@ -24,16 +24,18 @@ public class hood {
     private shooter shooterRef = null;
 
     public float getCurrentAngle() {
-        return (float) (Math.toRadians(getCurrentPos()/10.1+25));
-        // when hood is init: 40 = 255f // 50
-        // when hood is max: 65 = 0f // 25
+        return (float) (Math.toRadians(getCurrentPos()/6.3+30));
+        // when hood is init: 60 = 189f //
+        // when hood is max: 30 = 0f //
+
+
     }
     public float angToPos(double angleRad) {
         double angleDeg = Math.toDegrees(angleRad);
         // Reverse the formula from getCurrentAngle()
         // angleDeg = pos/9 + 25
         // pos = (angleDeg - 25) * 9
-        float pos = (float)((angleDeg - 25) * 10.1);
+        float pos = (float)((angleDeg - 30) * 6.3);
 
         return Math.max(MAX, Math.min(INIT, pos));
     }

@@ -30,7 +30,7 @@ public class indexer {
 
 
     public indexer(HardwareMap hardwareMap) {
-        indexer = new OcServo(hardwareMap, "indexer", TWO);
+        indexer = new OcServo(hardwareMap, "indexer", INIT);
     }
 
     public void setPosition(float pos){

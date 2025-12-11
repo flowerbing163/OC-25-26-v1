@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.opencv.core.Mat;
+
 @Config
 public class shooter {
     public final OcMotorEx topShooter;
@@ -27,6 +29,8 @@ public class shooter {
     public float powerCoeff = 7.2f; //ball initial speed
     public double maxPow = 1.0;
 
+    private double curVel;
+
     //TODO: motor velocity at max spin(1f) = 1.612
     //TODO:
 
@@ -36,7 +40,7 @@ public class shooter {
 
 
     public shooter(HardwareMap hardwareMap) {
-        topShooter = new OcMotorEx(hardwareMap, "topShooter", DcMotor.Direction.REVERSE, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        topShooter = new OcMotorEx(hardwareMap, "topShooter", DcMotor.Direction.FORWARD, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         botShooter = new OcMotorEx(hardwareMap, "botShooter", DcMotor.Direction.REVERSE, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
@@ -95,6 +99,10 @@ public class shooter {
         return botShooter.getPower();
     }
 
+    public float getPowerBoth() {
+        return (botShooter.getPower()+topShooter.getPower())/2;
+    }
+
     public void update() {
         if (usePID) {
             setPowerBoth(getPID());
@@ -104,8 +112,15 @@ public class shooter {
     public float getPID() {
         //power outputs in velocity of shoot, finpower converts to motor power through vel of ball
         float power = (float)Math.sqrt((9.81*Math.pow(targetDist, 2))/(2*Math.pow(Math.cos(hood), 2)*(targetDist*Math.tan(hood)-0.70485)));
-        float finPower = (float)(power/powerCoeff); //TODO: test whether this works for close zones
-        return (float) Math.max(-1, Math.min(finPower, 1));
+        curVel = topShooter.getVelocity();
+        if (Math.abs(curVel-power) <= 0.03) {
+            return getPowerBoth();
+        } else if (curVel - power > 0) {
+            return (float) Math.max(-1, Math.min(getPowerBoth() + 0.01, 1));
+        } else if (curVel - power < 0) {
+            return (float) Math.max(-1, Math.min(getPowerBoth() + 0.01, 1));
+        }
+        return getPowerBoth();
     }
 
     public double getCurrentSpeed() {
