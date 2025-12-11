@@ -50,4 +50,12 @@ public class indexer {
     public void setTwo() { indexer.setPosition(TWO); }
 
     public void setThree() { indexer.setPosition(THREE); }
+
+    public void setInit() { indexer.setPosition(INIT); }
+
+    public void rotate1() { indexer.setPosition(ROTATE1);}
+
+    public void reset() { indexer.setPosition(INIT); }
+
+    public void rotate2() { indexer.setPosition(ROTATE2); }
 }

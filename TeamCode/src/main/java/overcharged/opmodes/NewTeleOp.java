@@ -86,17 +86,18 @@ public class NewTeleOp extends OpMode {
         }
 
         temp = new ElapsedTime();
-        robot.indexer.setTwo();
+        robot.indexer.setInit();
         robot.indexerlift.setInit();
+        //robot.hood.
 
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
         limelight.pipelineSwitch(1);
         limelight.start();
 
         startPose = new Pose(0,0, Math.toRadians(0));
-        follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(startPose == null ? new Pose() : startPose);
-        follower.update();
+//        follower = Constants.createFollower(hardwareMap);
+//        follower.setStartingPose(startPose == null ? new Pose() : startPose);
+//        follower.update();
         robot.imu.resetYaw();
 
         robot.turret.setUseSquID(true, turretSquid.center, .8f);
@@ -152,13 +153,13 @@ public class NewTeleOp extends OpMode {
             telemetry.addLine("No vision");
         }
 
-        if (gamepad1.touchpad && Button.BTN_TRACKING.canPress(timestamp)) {
+        if (gamepad1.touchpad || gamepad2.touchpad && Button.BTN_TRACKING.canPress(timestamp)) {
             autoAiming = !autoAiming;
         }
 
-        if (gamepad2.touchpad && Button.BTN_LIMELIGHT.canPress(timestamp)) {
-            ll = !ll;
-        }
+//        if (gamepad2.touchpad && Button.BTN_LIMELIGHT.canPress(timestamp)) {
+//            ll = !ll;
+//        }
 
         if (autoAiming && ll) {
             robot.turret.setUseSquID(true);
@@ -174,26 +175,26 @@ public class NewTeleOp extends OpMode {
                 }
             }
             catch (IndexOutOfBoundsException e1){
-                telemetry.addLine("Cant autoaim, no vision");
+                telemetry.addLine("Can't autoaim, no vision");
             }
         }
-        else if (autoAiming & !ll) {
-            telemetry.addLine("aiming: imu");
-
-            if (sideID == 20) { // blue
-                goalAngle = (float) Math.toDegrees(Math.atan((Math.abs(follower.getPose().getX() + autoBlueCloseV2.getPoseX() - 7)) / (Math.abs(follower.getPose().getY() + autoBlueCloseV2.getPoseY() - 137))));
-                if (0 <= robotYaw && robotYaw <= 360) {
-                    imuAdjust = (int) (-215 + 2.35115740740740 * (180 - robotYaw + goalAngle));
-                    robot.turret.setUseSquID(true, imuAdjust, .75f);
-                }
-            }
-            else if (sideID == 24) {
-                goalAngle = (float) Math.toDegrees(Math.atan((Math.abs(follower.getPose().getX() + autoRedCloseV2.getPoseX() - 137))/(Math.abs(follower.getPose().getY() + autoRedCloseV2.getPoseY() - 137))));
-                if (-215 - 2.35115740740740 * (goalAngle + robotYaw) <= 122 && -215 - 2.35115740740740 * (goalAngle + robotYaw) >= -555) {
-                    robot.turret.setUseSquID(true, (int) (-215 - 2.35115740740740 * (goalAngle + robotYaw)), .75f);
-                }
-            }
-        }
+//        else if (autoAiming & !ll) {
+//            telemetry.addLine("aiming: imu");
+//
+//            if (sideID == 20) { // blue
+//                goalAngle = (float) Math.toDegrees(Math.atan((Math.abs(follower.getPose().getX() + autoBlueCloseV2.getPoseX() - 7)) / (Math.abs(follower.getPose().getY() + autoBlueCloseV2.getPoseY() - 137))));
+//                if (0 <= robotYaw && robotYaw <= 360) {
+//                    imuAdjust = (int) (-215 + 2.35115740740740 * (180 - robotYaw + goalAngle));
+//                    robot.turret.setUseSquID(true, imuAdjust, .75f);
+//                }
+//            }
+//            else if (sideID == 24) {
+//                goalAngle = (float) Math.toDegrees(Math.atan((Math.abs(follower.getPose().getX() + autoRedCloseV2.getPoseX() - 137))/(Math.abs(follower.getPose().getY() + autoRedCloseV2.getPoseY() - 137))));
+//                if (-215 - 2.35115740740740 * (goalAngle + robotYaw) <= 122 && -215 - 2.35115740740740 * (goalAngle + robotYaw) >= -555) {
+//                    robot.turret.setUseSquID(true, (int) (-215 - 2.35115740740740 * (goalAngle + robotYaw)), .75f);
+//                }
+//            }
+//        }
         else {
             telemetry.addLine("aiming: manual");
             robot.turret.setUseSquID(false);

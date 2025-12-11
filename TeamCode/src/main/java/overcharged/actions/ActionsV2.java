@@ -16,6 +16,47 @@ public class ActionsV2 {
     private int retractPause = 250;
     private int setIndPause = 250;
 
+    public void startFastShoot() {
+        shootStep++; // 0 -> 1
+        shootTimer = System.currentTimeMillis();
+    }
+
+    public void fastShoot() {
+        robot.shooter.shoot();
+        robot.indexerlift.setUp();
+        robot.intake.out();
+        robot.indexer.rotate1();
+
+        if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
+            robot.shooter.shoot();
+            shootStep++; // 1 -> 2
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 2 && System.currentTimeMillis() - shootTimer > 50) {
+            robot.indexerlift.setUp();
+            shootStep++; // 2 -> 3
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 3 && System.currentTimeMillis() - shootTimer > 500) {
+            robot.intake.out();
+            shootStep++; // 3 -> 4
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 100) {
+            robot.indexer.rotate1();
+            shootStep++; // 4 -> 5
+            shootTimer = System.currentTimeMillis();
+        }
+        if (shootStep == 5 && System.currentTimeMillis() - shootTimer > 200) {
+            robot.indexer.reset();
+            robot.intake.off();
+            robot.indexerlift.setInit();
+            shootStep = 0;
+            shootTimer = 0;
+        }
+    }
+
+
     public void sortShootSys(RobotMecanum robot) {
         this.robot = robot;
         this.shootStep = 0;
