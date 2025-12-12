@@ -22,6 +22,7 @@ import overcharged.actions.ActionsV2;
 import overcharged.actions.PathStateHandler;
 import overcharged.components.RobotMecanum;
 import overcharged.components.hood;
+import overcharged.components.indexer;
 import overcharged.components.turretSquid;
 import overcharged.pedroPathing.Constants;
 
@@ -93,6 +94,9 @@ public class AutoBlueCloseV4 extends OpMode {
         }
     }
 
+    private float CURRENTINDSTART;
+    private float CURRENTINDEND;
+
 
 
     private static Pose startPose = new Pose(15, 114, Math.toRadians(90)); // heading: 90
@@ -157,7 +161,7 @@ public class AutoBlueCloseV4 extends OpMode {
                 break;
             case 11:
                 // initialize indexer
-                robot.indexer.setTwo();
+                robot.indexer.setPosition(indexer.CRONE);
                 setInitState(13);
                 break;
             case 13:
@@ -249,7 +253,7 @@ public class AutoBlueCloseV4 extends OpMode {
         }
 
 
-        int[] currentOrder = this.getFastShootOrder(obbyID, colorMode);
+        //int[] currentOrder = this.getFastShootOrder(obbyID, colorMode);
         //actionHandler.fastShootSeqByOrder(currentOrder);
 
         actionHandler.fastShoot();
@@ -257,41 +261,42 @@ public class AutoBlueCloseV4 extends OpMode {
         LOGGER.info("loop end");
     }
 
-    public int[] getFastShootOrder(int obbyID , COLORSTATE currentColorState){
+    public float[] getIndexerOrder(int obbyID , COLORSTATE currentColorState){
         if(obbyID == 21) { //gpp
             if(currentColorState == COLORSTATE.GPP){ // yyy
                 //231
-                return new int[]{1,3,2};
+                return new float[]{indexer.CRONE, indexer.BACK1};
             } else if (colorMode == COLORSTATE.PGP) { // nny
                 //213
-                return new int[]{2,1,3};
+                return new float[]{indexer.CRONE, indexer.BACK1};
             } else if (colorMode == COLORSTATE.PPG) { // nyn
                 //321
-                return new int[]{3,1,2};
+                return new float[]{indexer.CRONE, indexer.BACK1};
             }
         }
 
         else if (obbyID == 22) { //pgp
             if(colorMode == COLORSTATE.GPP){
-                return new int[]{2,1,3};
+                return new float[]{indexer.CRONE, indexer.BACK1};
             } else if (colorMode == COLORSTATE.PGP) {
-                return new int[]{1,2,3};
+                return new float[]{indexer.CRONE, indexer.BACK1};
             } else if (colorMode == COLORSTATE.PPG) {
-                return new int[]{2,3,1};
-            }
-        }
-        else if (obbyID == 23){ //ppg
-            if(colorMode == COLORSTATE.GPP){
-                //actionHandler.fastShootSeq321();
-                return new int[]{2,3,1};
-            } else if (colorMode == COLORSTATE.PGP) {
-                return new int[]{1,3,2};
-            } else if (colorMode == COLORSTATE.PPG) {
-                return new int[]{1,2,3};
+                return new float[]{indexer.CRONE, indexer.BACK1};
             }
         }
 
-        return new int[]{2,3,1};
+        else if (obbyID == 23){ //ppg
+            if(colorMode == COLORSTATE.GPP){
+                //actionHandler.fastShootSeq321();
+                return new float[]{indexer.CRONE, indexer.BACK1};
+            } else if (colorMode == COLORSTATE.PGP) {
+                return new float[]{indexer.CRONE, indexer.BACK1};
+            } else if (colorMode == COLORSTATE.PPG) {
+                return new float[]{indexer.CRONE, indexer.BACK1};
+            }
+        }
+
+        return new float[]{indexer.INIT, indexer.FORWARD1};
     }
 
     @Override
@@ -319,6 +324,8 @@ public class AutoBlueCloseV4 extends OpMode {
         pathHandlers.put(PathState.S10_FOLLOW_PATH, () -> {
             follower.followPath(firstScore);
             colorMode = COLORSTATE.GPP;
+            CURRENTINDSTART = getIndexerOrder(obbyID, colorMode)[0];
+            CURRENTINDEND = getIndexerOrder(obbyID, colorMode)[1];
             setPathState(PathState.S101_START_TURRET);
         });
 
@@ -338,14 +345,14 @@ public class AutoBlueCloseV4 extends OpMode {
 
         pathHandlers.put(PathState.S12_SET_HOOD, () -> {
             if(!follower.isBusy()) {
-                robot.hood.setPosition(hood.INIT);
+                robot.indexer.setPosition(CURRENTINDSTART);
                 setPathState(PathState.S121_SHOOT);
             }
         });
 
         pathHandlers.put(PathState.S121_SHOOT, () -> {
-            if(pathTimer.milliseconds()>200) {
-                actionHandler.startFastShoot();
+            if(pathTimer.milliseconds()>300) {
+                actionHandler.startFastShoot(CURRENTINDEND);
                 setPathState(PathState.S100_TEST);
             }
         });

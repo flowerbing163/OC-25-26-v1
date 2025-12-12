@@ -17,6 +17,8 @@ import overcharged.components.Button;
 import overcharged.components.RobotMecanum;
 import overcharged.components.turretSquid;
 
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+
 @Config
 @TeleOp(name = "correct tele", group = "0tele")
 public class NewTeleOp extends OpMode {
@@ -28,6 +30,8 @@ public class NewTeleOp extends OpMode {
     Limelight3A limelight;
     //private Follower follower;
     public static Pose startPose;
+
+    private VoltageSensor chubVoltageSensor;
 
     double slowPower = 1;
     int calcPosition;
@@ -82,6 +86,7 @@ public class NewTeleOp extends OpMode {
             actionHandler.fastShootSys(robot);
             //actionHandler.sortShootSys(robot);
             robot.indexerlift.setInit();
+            chubVoltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
 
         } catch (Exception e) {
             telemetry.addData("Init Failed", e.getMessage());
@@ -92,7 +97,7 @@ public class NewTeleOp extends OpMode {
         //robot.hood.
 
         limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
-        limelight.pipelineSwitch(1);
+        limelight.pipelineSwitch(0);
         limelight.start();
 
         startPose = new Pose(0,0, Math.toRadians(0));
@@ -114,6 +119,7 @@ public class NewTeleOp extends OpMode {
         telemetry.addData("distance to goal: ", distance);
         telemetry.addData("Hood Angle", robot.hood.getCurrentAngle());
         telemetry.addData("Hood Position", robot.hood.getCurrentPos());
+        telemetry.addData("volt", chubVoltageSensor.getVoltage());
 
         //color thing
         telemetry.addData("SIDE: ", sideColor, sideID);
@@ -164,7 +170,7 @@ public class NewTeleOp extends OpMode {
             telemetry.addLine("No vision");
         }
 
-        if (gamepad1.touchpad || gamepad2.touchpad && Button.BTN_TRACKING.canPress(timestamp)) {
+        if (gamepad1.touchpad || gamepad2.share && Button.BTN_TRACKING.canPress(timestamp)) {
             autoAiming = !autoAiming;
         }
 
@@ -177,7 +183,7 @@ public class NewTeleOp extends OpMode {
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 telemetry.addLine("aiming: limelight");
-                if (Math.abs(tx) >= 1.2f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
+                if (Math.abs(tx) >= 1.3f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
                     calcPosition = (int) (2.1 * tx); //2.3511740740740
                     telemetry.addData("calc pos: ", calcPosition);
                     if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {

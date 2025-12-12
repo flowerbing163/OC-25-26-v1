@@ -1,6 +1,7 @@
 package overcharged.actions;
 
 import overcharged.components.RobotMecanum;
+import overcharged.components.indexer;
 
 public class ActionsV2 {
     private RobotMecanum robot;
@@ -10,8 +11,9 @@ public class ActionsV2 {
     //fast shooting vars
     private long shootTimer;
     private int shootStep;
+    private float endPos = indexer.FORWARD1;
 
-    private int raiseTime = 600;
+    private int raiseTime = 200;
 
     public void fastShootSys(RobotMecanum robot) {
         this.robot = robot;
@@ -22,16 +24,21 @@ public class ActionsV2 {
     public void fastShoot() {
         if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
             robot.indexerlift.setUp();
-            robot.intake.shooter();
             shootStep++; // 1 -> 2
             shootTimer = System.currentTimeMillis();
         }
         if (shootStep == 2 && System.currentTimeMillis() - shootTimer > raiseTime) {
-            robot.indexer.rotate1();
+            robot.intake.shooter();
             shootStep++; // 2 -> 3
             shootTimer = System.currentTimeMillis();
         }
-        if (shootStep == 3 && System.currentTimeMillis() - shootTimer > 3000) {
+        if (shootStep == 3 && System.currentTimeMillis() - shootTimer > raiseTime+150) {
+            robot.indexer.setPosition(endPos);
+            shootStep++; // 3 -> 4
+            shootTimer = System.currentTimeMillis();
+        }
+
+        if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 3000) {
             robot.indexer.reset();
             robot.intake.off();
             robot.indexerlift.setInit();
@@ -43,6 +50,13 @@ public class ActionsV2 {
     public void startFastShoot() {
         shootStep++; // 0 -> 1
         shootTimer = System.currentTimeMillis();
+        this.endPos = indexer.FORWARD1;
+
+    }
+    public void startFastShoot(float finalPos) {
+        shootStep++; // 0 -> 1
+        shootTimer = System.currentTimeMillis();
+        this.endPos = finalPos;
     }
 
     // Sort Shoot Sys

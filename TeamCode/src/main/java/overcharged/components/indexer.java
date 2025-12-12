@@ -1,6 +1,5 @@
 package overcharged.components;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 public class indexer {
     public OcServo indexer;
@@ -10,19 +9,19 @@ public class indexer {
     public static final float THREE = .3f;//20f old
 
 
-    public static final float INIT = 6f; // 24, 42, 62, 82, 100, 119 about 18-20 for each hole turn,
-    public static final float ROTATE1 = 64f;
-    public static final float ROTATE2 = 121f;
+    public static final float BACK1 = 6f; // 24, 42, 62, 82, 100, 119 about 18-20 for each hole turn,
+    public static final float INIT = 64f;
+    public static final float FORWARD1 = 121f;
 
 
 
-    public static final float RONE = 10f;//211f old
-    public static final float RTWO = 201f; //115f old
-    public static final float RTHREE = 105f;//20f old
+    public static final float RONE = 64f;//211f old
+    public static final float RTWO = 82f; //115f old
+    public static final float RTHREE = 100f;//20f old
 
-    public static final float CRONE = 10f;//211f old
-    public static final float CRTWO = 201f; //115f old
-    public static final float CRTHREE = 105f;//20f old
+    public static final float CRONE = 6f;//211f old
+    public static final float CRTWO = 24f; //115f old
+    public static final float CRTHREE = 42f;//20f old
 
     public static final float MIN = 0f; //115f old
     public static final float MAX = 255f;//20f old
@@ -53,9 +52,9 @@ public class indexer {
 
     public void setInit() { indexer.setPosition(INIT); }
 
-    public void rotate1() { indexer.setPosition(ROTATE1);}
+    public void setBack1() { indexer.setPosition(BACK1);}
 
     public void reset() { indexer.setPosition(INIT); }
 
-    public void rotate2() { indexer.setPosition(ROTATE2); }
+    public void setForward1() { indexer.setPosition(FORWARD1); }
 }

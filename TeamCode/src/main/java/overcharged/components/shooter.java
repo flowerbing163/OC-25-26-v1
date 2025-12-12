@@ -7,15 +7,21 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+
 import org.opencv.core.Mat;
 
 @Config
 public class shooter {
+
+    RobotMecanum robot;
+    private VoltageSensor chubVoltageSensor;
+
     public final OcMotorEx topShooter;
     public final OcMotorEx botShooter;
 
     public double targetSpeed;
-    public double targetDist = 1000;
+    public double targetDist = 1.5;
     public double hood = Math.toRadians(50);
     public double lastError;
     public double integral;
@@ -26,10 +32,14 @@ public class shooter {
     public double f = 0.003;
 
     public float power = 0f;
-    public float powerCoeff = 7.2f; //ball initial speed
-    public double maxPow = 1.0;
+    public float powerCoeff = 9.8f; //ball initial speed
+    public float volPowerCoeff;
+    public float maxPow = 1.0f;
+    private float curVolt;
+    private float powerCoeffAdjuster = 0;
 
     private double curVel;
+    private double addCoeff;
 
     //TODO: motor velocity at max spin(1f) = 1.612
     //TODO:
@@ -42,6 +52,8 @@ public class shooter {
     public shooter(HardwareMap hardwareMap) {
         topShooter = new OcMotorEx(hardwareMap, "topShooter", DcMotor.Direction.FORWARD, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         botShooter = new OcMotorEx(hardwareMap, "botShooter", DcMotor.Direction.REVERSE, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        chubVoltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
     }
 
     public void setPowerBoth(float power){
@@ -112,15 +124,32 @@ public class shooter {
     public float getPID() {
         //power outputs in velocity of shoot, finpower converts to motor power through vel of ball
         float power = (float)Math.sqrt((9.81*Math.pow(targetDist, 2))/(2*Math.pow(Math.cos(hood), 2)*(targetDist*Math.tan(hood)-0.70485)));
+        /*
         curVel = topShooter.getVelocity();
-        if (Math.abs(curVel-power) <= 0.03) {
+        addCoeff = (curVel-power)/14;
+        if (Math.abs(curVel - power) <= 0.03) {
             return getPowerBoth();
         } else if (curVel - power > 0) {
-            return (float) Math.max(-1, Math.min(getPowerBoth() + 0.01, 1));
+            return (float) Math.max(-1, Math.min(getPowerBoth() + addCoeff, 1));
         } else if (curVel - power < 0) {
-            return (float) Math.max(-1, Math.min(getPowerBoth() + 0.01, 1));
+            return (float) Math.max(-1, Math.min(getPowerBoth() + addCoeff, 1));
         }
         return getPowerBoth();
+
+         */
+        if(targetDist>2.000) {
+            powerCoeffAdjuster = (float)targetDist/10+0.14f;
+        } else {
+            powerCoeffAdjuster = 0f;
+        }
+        curVolt = (float)chubVoltageSensor.getVoltage();
+        if(curVolt < 12) {
+            volPowerCoeff = powerCoeff - 1.65f*Math.max(-1, Math.min((12 - curVolt), 1)) / (powerCoeff);
+        } else {
+            volPowerCoeff = powerCoeff;
+        }
+        float maxPow = (float)(power/(volPowerCoeff + powerCoeffAdjuster));
+        return Math.max(-1, Math.min(maxPow, 1));
     }
 
     public double getCurrentSpeed() {
