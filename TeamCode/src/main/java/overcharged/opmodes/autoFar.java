@@ -63,7 +63,7 @@ public class autoFar extends OpMode {
 //        firstBall = new Pose(126.5, 80.5, Math.toRadians(0));
 //        secondShoot = new Pose(87.5, 78, Math.toRadians(0));
 //        secondBall = new Pose(131.5, 56.5, Math.toRadians(0));
-        endPose = new Pose(56, 40, Math.toRadians(90));
+        endPose = new Pose(56, 20, Math.toRadians(90));
 
     }
 
