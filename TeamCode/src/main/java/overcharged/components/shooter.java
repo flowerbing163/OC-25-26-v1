@@ -66,7 +66,13 @@ public class shooter {
         setPowerBoth(power);
     }
     public void shoot() {
-        setPowerBoth(1);
+    if ((float) chubVoltageSensor.getVoltage() > 12) {
+        setPowerBoth(0.43f);
+    }
+    else {
+        setPowerBoth(0.63f);
+    }
+
     }
 
     public void intake() {

@@ -40,7 +40,7 @@ public class ActionsV2 {
 
         if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 3000) {
             robot.indexer.reset();
-            robot.intake.off();
+            robot.intake.in();
             robot.indexerlift.setInit();
             shootStep = 0;
             shootTimer = 0;

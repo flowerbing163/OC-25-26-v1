@@ -6,6 +6,7 @@ public class IndexerLift {
     public OcServo indexerlift;
 
     public static final float INIT = 25f;
+    public static final float MID = 170f;
     public static final float UP = 231f;
 
     public IndexerLift(HardwareMap hardwareMap) {
@@ -23,6 +24,7 @@ public class IndexerLift {
     public void setInit() {
         setPosition(INIT);
     }
+    public void setMid() {setPosition(MID);}
 
     public void setUp() {
         setPosition(UP);

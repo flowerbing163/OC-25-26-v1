@@ -170,7 +170,7 @@ public class NewTeleOp extends OpMode {
             telemetry.addLine("No vision");
         }
 
-        if (gamepad1.touchpad || gamepad2.share && Button.BTN_TRACKING.canPress(timestamp)) {
+        if (gamepad1.dpad_down || gamepad2.b && Button.BTN_TRACKING.canPress(timestamp)) {
             autoAiming = !autoAiming;
         }
 
@@ -183,11 +183,33 @@ public class NewTeleOp extends OpMode {
             try {
                 float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
                 telemetry.addLine("aiming: limelight");
-                if (Math.abs(tx) >= 1.3f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
-                    calcPosition = (int) (2.1 * tx); //2.3511740740740
-                    telemetry.addData("calc pos: ", calcPosition);
-                    if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, .7f);
+                if (distance > 2000) {
+                    if (sideID == 20) {
+                        if ((tx < -0.8f || tx > 1.65) && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) {
+                            calcPosition = (int) (2.15 * tx); //2.3511740740740
+                            telemetry.addData("calc pos: ", calcPosition);
+                            if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
+                                robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, .7f);
+                            }
+                        }
+                    }
+                    else {
+                        if ((tx > 0.8f || tx < -1.65) && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) {
+                            calcPosition = (int) (2.15 * tx); //2.3511740740740
+                            telemetry.addData("calc pos: ", calcPosition);
+                            if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
+                                robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, .7f);
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (Math.abs(tx) >= 1.31f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == sideID) { //20 blue, 24 red
+                        calcPosition = (int) (2.15 * tx); //2.3511740740740
+                        telemetry.addData("calc pos: ", calcPosition);
+                        if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
+                            robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, .7f);
+                        }
                     }
                 }
             }
@@ -393,6 +415,15 @@ public class NewTeleOp extends OpMode {
             }
         }
 
+        if (gamepad2.x && Button.BTN_KICKER.canPress(timestamp)) {
+            robot.indexerlift.setMid();
+        }
+
+        if(gamepad2.a && Button.BTN_95.canPress(timestamp)) {
+            robot.indexerlift.setInit();
+            robot.indexer.reset();
+        }
+
         //TODO: MANUAL HOOD
         if(!hoodPIDupdate){
             hoodStick = (gamepad2.left_stick_y)*1f;
@@ -404,7 +435,7 @@ public class NewTeleOp extends OpMode {
         }
 
         //TODO: CHECK FAST SHOOT ACTION
-        if(gamepad2.touchpad && Button.BTN_SHOOT_PID.canPress(timestamp) && shooting) {
+        if(gamepad2.y && Button.BTN_SHOOT_PID.canPress(timestamp) && shooting) {
             actionHandler.startFastShoot();
         }
 
@@ -415,18 +446,18 @@ public class NewTeleOp extends OpMode {
 
         //TODO: MODIFY PRESET HOOD POSITIONS
         //TODO: FAR ZONE
-        if(gamepad2.dpad_up && Button.BTN_128.canPress(timestamp) && !hoodPID) {
-            robot.hood.setPosition(128);
+        if(gamepad2.dpad_down && Button.BTN_128.canPress(timestamp) && !hoodPID) {
+            robot.hood.setInit();
         }
 
         //TODO: CLOSE ZONE
         if(gamepad2.dpad_right && Button.BTN_95.canPress(timestamp) && !hoodPID) {
-            robot.hood.setPosition(95);
+            robot.hood.setPosition(34);
         }
 
         //TODO: DOWN
-        if(gamepad2.dpad_down && Button.BTN_HOODDOWN.canPress(timestamp) && !hoodPID) {
-            robot.hood.setPosition(250);
+        if(gamepad2.dpad_left && Button.BTN_HOODDOWN.canPress(timestamp) && !hoodPID) {
+            robot.hood.setPosition(189);
         }
     }
 
