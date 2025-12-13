@@ -149,7 +149,7 @@ public class shooter {
         }
         if(getVelocityBoth() - power > 0.02)  {
             secondaryAdjuster = 0.03f;
-        } else if (getVelocityBoth() - power > 0.02 && getVelocityBoth() - power < 0.35) {
+        } else if (getVelocityBoth() - power > 0.05 && getVelocityBoth() - power < 0.325) {
             secondaryAdjuster = 0.065f;
         } else {
             secondaryAdjuster = 0;
