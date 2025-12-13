@@ -445,6 +445,10 @@ public class NewTeleOp extends OpMode {
             robot.turret.setCenter((int)robot.turret.getCurrentPosition());
         }
 
+        if((gamepad2.x || gamepad1.b) && Button.BTN_MINUS.canPress(timestamp)) {
+            robot.indexer.rotateBit();
+        }
+
         //TODO: MODIFY PRESET HOOD POSITIONS
         //TODO: FAR ZONE
         if(gamepad2.dpad_down && Button.BTN_128.canPress(timestamp) && !hoodPID) {

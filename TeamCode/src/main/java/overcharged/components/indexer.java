@@ -44,6 +44,8 @@ public class indexer {
         }
     }
 
+    public void rotateBit() {indexer.setPosition(indexer.getPosition()+20);}
+
     public void setOne() { indexer.setPosition(ONE); }
 
     public void setTwo() { indexer.setPosition(TWO); }
