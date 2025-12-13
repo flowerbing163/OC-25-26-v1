@@ -261,7 +261,7 @@ public class NewTeleOp extends OpMode {
             autoAiming = true;
         }
 
-        if(gamepad1.dpad_up && Button.BTN_PLUS.canPress(timestamp)) {
+        if((gamepad1.dpad_up || gamepad2.dpad_up) && Button.BTN_PLUS.canPress(timestamp)) {
             if(sideID == 20) {
                 sideID = 24;
                 gamepad1.setLedColor(255,0,0,10000);
@@ -415,9 +415,9 @@ public class NewTeleOp extends OpMode {
             }
         }
 
-        if (gamepad2.x && Button.BTN_KICKER.canPress(timestamp)) {
-            robot.indexerlift.setMid();
-        }
+//        if (gamepad2.x && Button.BTN_KICKER.canPress(timestamp)) {
+//            robot.indexerlift.setMid();
+//        }
 
         if(gamepad2.a && Button.BTN_95.canPress(timestamp)) {
             robot.indexerlift.setInit();
@@ -436,6 +436,7 @@ public class NewTeleOp extends OpMode {
 
         //TODO: CHECK FAST SHOOT ACTION
         if(gamepad2.y && Button.BTN_SHOOT_PID.canPress(timestamp) && shooting) {
+            intakeMode = intakeState.IN;
             actionHandler.startFastShoot();
         }
 

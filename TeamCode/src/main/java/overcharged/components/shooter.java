@@ -32,11 +32,12 @@ public class shooter {
     public double f = 0.003;
 
     public float power = 0f;
-    public float powerCoeff = 9.8f; //ball initial speed
+    public float powerCoeff = 10f; //ball initial speed
     public float volPowerCoeff;
     public float maxPow = 1.0f;
     private float curVolt;
     private float powerCoeffAdjuster = 0;
+    private float secondaryAdjuster = 0;
 
     private double curVel;
     private double addCoeff;
@@ -121,6 +122,8 @@ public class shooter {
         return (botShooter.getPower()+topShooter.getPower())/2;
     }
 
+    public double getVelocityBoth() {return (botShooter.getVelocity() + topShooter.getVelocity())/2 ;}
+
     public void update() {
         if (usePID) {
             setPowerBoth(getPID());
@@ -130,31 +133,28 @@ public class shooter {
     public float getPID() {
         //power outputs in velocity of shoot, finpower converts to motor power through vel of ball
         float power = (float)Math.sqrt((9.81*Math.pow(targetDist, 2))/(2*Math.pow(Math.cos(hood), 2)*(targetDist*Math.tan(hood)-0.70485)));
-        /*
-        curVel = topShooter.getVelocity();
-        addCoeff = (curVel-power)/14;
-        if (Math.abs(curVel - power) <= 0.03) {
-            return getPowerBoth();
-        } else if (curVel - power > 0) {
-            return (float) Math.max(-1, Math.min(getPowerBoth() + addCoeff, 1));
-        } else if (curVel - power < 0) {
-            return (float) Math.max(-1, Math.min(getPowerBoth() + addCoeff, 1));
-        }
-        return getPowerBoth();
 
-         */
-        if(targetDist>2.000) {
-            powerCoeffAdjuster = (float)targetDist/10+0.14f;
+        if(targetDist>2.000 && targetDist<2.800) {
+            powerCoeffAdjuster = (float)targetDist/10-0.2f;
+        } else if(targetDist>2.800) {
+            powerCoeffAdjuster = (float)targetDist/10-0.2f;
         } else {
             powerCoeffAdjuster = 0f;
         }
         curVolt = (float)chubVoltageSensor.getVoltage();
-        if(curVolt < 12) {
-            volPowerCoeff = powerCoeff - 1.65f*Math.max(-1, Math.min((12 - curVolt), 1)) / (powerCoeff);
+        if(curVolt < 12.01) {
+            volPowerCoeff = powerCoeff - 0.4f*Math.max(-1, Math.min((12 - curVolt), 1));
         } else {
             volPowerCoeff = powerCoeff;
         }
-        float maxPow = (float)(power/(volPowerCoeff + powerCoeffAdjuster));
+        if(getVelocityBoth() - power > 0.02)  {
+            secondaryAdjuster = 0.03f;
+        } else if (getVelocityBoth() - power > 0.02 && getVelocityBoth() - power < 0.35) {
+            secondaryAdjuster = 0.065f;
+        } else {
+            secondaryAdjuster = 0;
+        }
+        float maxPow = (float)(power/(volPowerCoeff + powerCoeffAdjuster)) + secondaryAdjuster;
         return Math.max(-1, Math.min(maxPow, 1));
     }
 

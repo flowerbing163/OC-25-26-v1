@@ -13,7 +13,7 @@ public class ActionsV2 {
     private int shootStep;
     private float endPos = indexer.FORWARD1;
 
-    private int raiseTime = 200;
+    private int raiseTime = 400;
 
     public void fastShootSys(RobotMecanum robot) {
         this.robot = robot;
@@ -23,16 +23,17 @@ public class ActionsV2 {
 
     public void fastShoot() {
         if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
+            robot.intake.in();
             robot.indexerlift.setUp();
             shootStep++; // 1 -> 2
             shootTimer = System.currentTimeMillis();
         }
-        if (shootStep == 2 && System.currentTimeMillis() - shootTimer > raiseTime) {
+        if (shootStep == 2 && System.currentTimeMillis() - shootTimer > raiseTime-20) {
             robot.intake.shooter();
             shootStep++; // 2 -> 3
             shootTimer = System.currentTimeMillis();
         }
-        if (shootStep == 3 && System.currentTimeMillis() - shootTimer > raiseTime+150) {
+        if (shootStep == 3 && System.currentTimeMillis() - shootTimer > raiseTime+50) {
             robot.indexer.setPosition(endPos);
             shootStep++; // 3 -> 4
             shootTimer = System.currentTimeMillis();
