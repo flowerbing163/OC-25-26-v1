@@ -135,9 +135,9 @@ public class shooter {
         float power = (float)Math.sqrt((9.81*Math.pow(targetDist, 2))/(2*Math.pow(Math.cos(hood), 2)*(targetDist*Math.tan(hood)-0.70485)));
 
         if(targetDist>2.000 && targetDist<2.800) {
-            powerCoeffAdjuster = (float)targetDist/10-0.2f;
+            powerCoeffAdjuster = (float)targetDist/10-0.19f;
         } else if(targetDist>2.800) {
-            powerCoeffAdjuster = (float)targetDist/10-0.2f;
+            powerCoeffAdjuster = (float)targetDist/10-0.14f;
         } else {
             powerCoeffAdjuster = 0f;
         }

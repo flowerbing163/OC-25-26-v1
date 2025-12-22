@@ -100,8 +100,8 @@ public class autoFar extends OpMode {
     public void initBody() {
         switch(initState){
             case 10:
-                robot.turret.setUseSquID(false);
-                robot.turret.moveEncoderTo(turretSquid.redCloseAutoStart, 0.7f);
+//                robot.turret.setUseSquID(false);
+//                robot.turret.moveEncoderTo(turretSquid.redCloseAutoStart, 0.7f);
                 setInitState(11);
                 break;
             case 11:
@@ -151,7 +151,7 @@ public class autoFar extends OpMode {
         switch(pathState){
             case 10:
                 follower.followPath(forward);
-                autoTurret = true;
+//                autoTurret = true;
                 setPathState(100);
                 break;
             case 100:
@@ -171,7 +171,7 @@ public class autoFar extends OpMode {
         temp.reset();
         follower.update();
         autoPath();
-        robot.turret.update();
+//        robot.turret.update();
         robot.shooter.update();
 
         telemetry.addLine("lag: " + temp);
@@ -193,24 +193,24 @@ public class autoFar extends OpMode {
             telemetry.addLine("Cannot see, manually adjust");
         }
 
-        if(autoTurret) {
-            robot.turret.setUseSquID(true);
-            try {
-                float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
-                if (Math.abs(tx) >= 1.2f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
-                    calcPosition = (int) (-2.8081 * tx - 0.7685);
-                    telemetry.addData("calc pos", calcPosition);
-                    if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
-                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.68f);
-                    }
-                }
-            }
-            catch (IndexOutOfBoundsException e1){
-                telemetry.addLine("cant see vro :skull:");
-            }
-        } else if (!autoTurret){
-            robot.turret.setUseSquID(false, calcPosition );
-        }
+//        if(autoTurret) {
+//            robot.turret.setUseSquID(true);
+//            try {
+//                float tx = (float) limelight.getLatestResult().getFiducialResults().get(0).getTargetXDegrees();
+//                if (Math.abs(tx) >= 1.2f && limelight.getLatestResult().getFiducialResults().get(0).getFiducialId() == 24) { //20 blue, 24 red
+//                    calcPosition = (int) (-2.8081 * tx - 0.7685);
+//                    telemetry.addData("calc pos", calcPosition);
+//                    if (robot.turret.getCurrentPosition() + calcPosition <= robot.turret.getMax() && robot.turret.getCurrentPosition() + calcPosition >= robot.turret.getMin()) {
+//                        robot.turret.setUseSquID(true, (int) robot.turret.getCurrentPosition() + calcPosition, 0.68f);
+//                    }
+//                }
+//            }
+//            catch (IndexOutOfBoundsException e1){
+//                telemetry.addLine("cant see vro :skull:");
+//            }
+//        } else if (!autoTurret){
+//            robot.turret.setUseSquID(false, calcPosition );
+//        }
 
         if(shootPIDupdate) {
             robot.shooter.setUsePID(true, distance, robot.hood.getCurrentAngle());

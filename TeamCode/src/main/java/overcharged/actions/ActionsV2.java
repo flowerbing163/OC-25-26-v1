@@ -23,6 +23,7 @@ public class ActionsV2 {
 
     public void fastShoot() {
         if (shootStep == 1 && System.currentTimeMillis() - shootTimer > 10) {
+            robot.indexer.setInit();
             robot.intake.in();
             robot.indexerlift.setUp();
             shootStep++; // 1 -> 2
@@ -39,10 +40,10 @@ public class ActionsV2 {
             shootTimer = System.currentTimeMillis();
         }
 
-        if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 3000) {
-            robot.indexer.reset();
-            robot.intake.in();
-            robot.indexerlift.setInit();
+        if (shootStep == 4 && System.currentTimeMillis() - shootTimer > 1200) {
+//            robot.indexer.reset();
+//            robot.intake.in();
+//            robot.indexerlift.setInit();
             shootStep = 0;
             shootTimer = 0;
         }

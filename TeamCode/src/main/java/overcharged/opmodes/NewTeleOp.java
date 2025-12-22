@@ -237,7 +237,7 @@ public class NewTeleOp extends OpMode {
         else {
             telemetry.addLine("aiming: manual");
             robot.turret.setUseSquID(false);
-            turretTurn = -(gamepad2.right_stick_x) * 0.35;
+            turretTurn = (gamepad2.right_stick_x) * 0.35;
             if (Math.abs(turretTurn) >= 0.03) {
                 robot.turrets.setPower((float) turretTurn);
                 checker = true;
@@ -310,6 +310,7 @@ public class NewTeleOp extends OpMode {
             if (!shootPID && !hoodPID) {
                 if (!shooting) {
                     gamepad1.rumble(100);
+                    gamepad2.rumble(100);
                     robot.shooter.shoot();
                     shootPIDupdate = false;
                     hoodPIDupdate = false;
@@ -327,6 +328,7 @@ public class NewTeleOp extends OpMode {
             else if (shootPID) {
                 if(!shooting) {
                     gamepad1.rumble(100);
+                    gamepad2.rumble(100);
                     shootPIDupdate = true;
                     hoodPIDupdate = true;
                     shooting = true;
@@ -343,6 +345,7 @@ public class NewTeleOp extends OpMode {
             else if (hoodPID) {
                 if(!shooting) {
                     gamepad1.rumble(100);
+                    gamepad2.rumble(100);
                     robot.shooter.shoot();
                     shootPIDupdate = false;
                     hoodPIDupdate = true;
